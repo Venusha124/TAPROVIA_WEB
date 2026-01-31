@@ -25,10 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-[#050505] text-[#F3EFE9]`}
       >
+        {/* Cinematic Grain Overlay */}
+        <div className="fixed inset-0 pointer-events-none z-[1000] opacity-[0.04] bg-[url('https://www.transparenttextures.com/patterns/pinstripe.png')]" />
+
         <Header />
         <main className="flex-1">
           {children}

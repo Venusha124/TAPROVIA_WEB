@@ -3,7 +3,7 @@ import { Facebook, Instagram, Linkedin, Twitter, ArrowUpRight } from "lucide-rea
 
 export function Footer() {
     return (
-        <footer className="bg-black text-[#F3EFE9] border-t border-white/5 relative overflow-hidden">
+        <footer className="bg-background text-[#F3EFE9] border-t border-white/5 relative overflow-hidden">
             {/* Ambient Background Element */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-[#D2B48C]/20 to-transparent" />
 

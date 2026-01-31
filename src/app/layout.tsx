@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-[#050505] text-[#F3EFE9]`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-background text-[#F3EFE9]`}
       >
         {/* Cinematic Grain Overlay */}
         <div className="fixed inset-0 pointer-events-none z-[1000] opacity-[0.04] bg-[url('https://www.transparenttextures.com/patterns/pinstripe.png')]" />

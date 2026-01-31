@@ -16,7 +16,7 @@ export function Header() {
             <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
             <div className="relative z-[100] flex flex-col">
                 {/* Sovereign Top Bar */}
-                <div className="bg-[#D2B48C] text-black text-[9px] font-bold tracking-[0.4em] uppercase py-2 px-4 flex overflow-hidden">
+                <div className="bg-[#D2B48C] text-background text-[9px] font-bold tracking-[0.4em] uppercase py-2 px-4 flex overflow-hidden">
                     <div className="flex animate-marquee whitespace-nowrap">
                         <span className="mx-8">EST. 1924 | THE BENCHMARK OF CEYLON</span>
                         <span className="mx-8">•</span>
@@ -29,7 +29,7 @@ export function Header() {
                     </div>
                 </div>
 
-                <header className="w-full bg-black/40 backdrop-blur-3xl border-b border-white/5">
+                <header className="w-full bg-background/40 backdrop-blur-3xl border-b border-white/5">
                     <div className="container relative flex flex-col py-8 px-4">
 
                         {/* TOP ROW: Search - Logo - Icons */}

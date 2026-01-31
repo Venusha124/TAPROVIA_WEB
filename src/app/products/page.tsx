@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
     motion,
@@ -24,74 +25,108 @@ import {
     CheckCircle2,
     Quote,
     ShoppingCart,
-    PhoneCall
+    PhoneCall,
+    X,
+    ChevronRight,
+    Minus,
+    Plus,
+    Trash2,
+    MapPin,
+    Info,
+    ShoppingBag
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const products = [
     {
         id: 1,
-        name: "Artisan Cinnamon Oil",
-        badge: "The Alchemist's Choice",
+        name: "Ceylon Alba Sticks",
+        badge: "Highest Grade",
         origin: "Southern Sri Lanka",
-        grade: "Ultra-Premium Bark Oil",
-        price: "Enquire for Price",
-        image: "/products/oil.png",
-        category: "Oils",
-        description: "Double-distilled for maximum purity and aromatic depth. A treasure for connoisseurs.",
+        grade: "Alba",
+        image: "/products/cinnamon_powder_spoon.png",
+        category: "Sticks",
+        description: "The most prized grade of Ceylon cinnamon, known for its slender diameter and exceptional sweetness.",
         rating: 5.0,
-        reviews: 24,
-        scale: 1.2,
-        parallax: -40,
-        features: ["99.8% Purity", "Cold Distilled", "Single Origin"]
+        reviews: 48,
+        scale: 1,
+        parallax: 0,
+        features: ["Ultra-Thin Quills", "Hand-Peeled", "Golden Hue"]
     },
     {
         id: 2,
-        name: "Vintage Alba Quills",
-        badge: "Master Grade",
+        name: "Cinnamon Leaf Oil",
+        badge: "Aromatic Essence",
         origin: "Matara Highlands",
-        grade: "Alba (The Sovereign)",
-        price: "US $48.50",
+        grade: "Pure Leaf Extract",
         image: "/products/oil.png",
-        category: "Sticks",
-        description: "Thinly peeled, golden quills with a sweet, refined profile rarely found in commercial markets.",
+        category: "Oils",
+        description: "Steam-distilled from the leaves, this oil offers a rich, clove-like aroma perfect for wellness and culinary use.",
         rating: 4.9,
-        reviews: 142,
+        reviews: 32,
         scale: 1,
-        parallax: 60,
-        features: ["Zero Additives", "Sun-Dried", "Hand-Rolled"]
+        parallax: 0,
+        features: ["High Eugenol", "Natural Distillation", "Sustainably Sourced"]
     },
     {
         id: 3,
-        name: "TAPROVIA Legacy Set",
-        badge: "The Archive",
-        origin: "Multi-Region",
-        grade: "Curated Selection",
-        price: "US $120.00",
-        image: "/products/gift-set.png",
-        category: "Bulk & Exports",
-        description: "A hand-crafted mahogany box containing our three flagship offerings. The ultimate expression of Ceylon.",
-        rating: 5.0,
-        reviews: 56,
-        scale: 1.1,
-        parallax: -80,
-        features: ["Limited Edition", "Custom Engraving", "Global Shipping"]
+        name: "Ceylon Cinnamon Powder",
+        badge: "Kitchen Essential",
+        origin: "Ratnapura",
+        grade: "Extra Fine",
+        image: "/products/cinnamon_powder_bowl.png",
+        category: "Powders",
+        description: "Finely ground premium quills, delivering the authentic warmth and sweetness of Ceylon in a versatile form.",
+        rating: 4.8,
+        reviews: 124,
+        scale: 1,
+        parallax: 0,
+        features: ["Micro-milled", "No Additives", "Coumarin-free"]
     },
     {
         id: 4,
-        name: "High-Alt Cinnamon Powder",
-        badge: "Chef's Treasure",
-        origin: "Ratnapura",
-        grade: "Extra Fine (A++)",
-        price: "US $22.00",
-        image: "/products/oil.png", // Fallback to oil if powder missing
-        category: "Powders",
-        description: "Ground to a silk-like consistency using cold-milling technology to preserve volatile oils.",
-        rating: 4.8,
-        reviews: 89,
-        scale: 0.9,
-        parallax: 30,
-        features: ["Micro-milled", "Air-tight Glass", "High Eugenol"]
+        name: "Ceylon Quills",
+        badge: "Artisanal Classic",
+        origin: "Galle District",
+        grade: "Custom Lengths",
+        image: "/products/cinnamon_powder_spoon.png",
+        category: "Sticks",
+        description: "Uniformly hand-filled quills that preserve the full aromatic profile of the inner bark.",
+        rating: 4.9,
+        reviews: 86,
+        scale: 1,
+        parallax: 0,
+        features: ["Slow-Dried", "Hand-Filled", "Rich Aroma"]
+    },
+    {
+        id: 5,
+        name: "Cinnamon Powder (Export)",
+        badge: "Global Standard",
+        origin: "Multi-Region",
+        grade: "Export Ready",
+        image: "/products/cinnamon_powder_bowl.png",
+        category: "Bulk & Exports",
+        description: "Optimized for global distribution, maintaining potency and flavor for industrial and retail partners.",
+        rating: 4.7,
+        reviews: 15,
+        scale: 1,
+        parallax: 0,
+        features: ["Standardized Quality", "Sealed for Export", "Bulk Availability"]
+    },
+    {
+        id: 6,
+        name: "Cinnamon Bark Oil",
+        badge: "Rare Concentrate",
+        origin: "Southern Sri Lanka",
+        grade: "Premium Bark Extract",
+        image: "/products/oil.png",
+        category: "Oils",
+        description: "Extracted from the bark itself, this oil represents the pinnacle of cinnamon potency and complexity.",
+        rating: 5.0,
+        reviews: 12,
+        scale: 1,
+        parallax: 0,
+        features: ["Intense Aroma", "High Purity", "Exclusive Reserve"]
     }
 ];
 
@@ -164,6 +199,7 @@ const hotspots = [
 ];
 
 export default function ProductsPage() {
+    const router = useRouter();
     const [activeCategory, setActiveCategory] = useState("All");
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [favorites, setFavorites] = useState<number[]>([]);
@@ -244,9 +280,9 @@ export default function ProductsPage() {
                 </section>
 
                 {/* Asymmetrical Gallery Grid */}
-                <section className="py-40 relative">
+                <section className="py-20 relative">
                     <div className="container px-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-y-60 lg:gap-x-12">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-20 gap-x-12">
                             <AnimatePresence mode="popLayout">
                                 {filteredProducts.map((product, index) => (
                                     <GalleryItem
@@ -367,24 +403,20 @@ export default function ProductsPage() {
                                     "{selectedProduct.description}"
                                 </p>
 
-                                <div className="grid grid-cols-2 gap-12 mb-16 border-t border-white/5 pt-12">
+                                <div className="grid grid-cols-1 gap-12 mb-16 border-t border-white/5 pt-12">
                                     <div>
-                                        <span className="block text-[10px] font-bold text-white/20 uppercase tracking-widest mb-4">Engagement Model</span>
+                                        <span className="block text-[10px] font-bold text-white/20 uppercase tracking-widest mb-4">Availability</span>
                                         <span className="text-2xl font-serif text-white uppercase">Sovereign Direct</span>
-                                    </div>
-                                    <div>
-                                        <span className="block text-[10px] font-bold text-white/20 uppercase tracking-widest mb-4">Provenance Price</span>
-                                        <span className="text-2xl font-serif text-[#D2B48C] uppercase">{selectedProduct.price}</span>
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col gap-4">
-                                    <Button className="w-full bg-[#D2B48C] hover:bg-white text-black font-bold h-24 rounded-full text-[10px] uppercase tracking-[0.4em] transition-all group shadow-xl">
-                                        <ShoppingCart className="mr-4 group-hover:-translate-y-1 transition-transform" size={18} />
-                                        Acquire from Collection
-                                    </Button>
-                                    <Button variant="outline" className="w-full border-white/10 hover:border-[#D2B48C] hover:bg-transparent text-white font-bold h-20 rounded-full text-[10px] uppercase tracking-[0.4em] transition-all">
-                                        Request Custom Spec Sheet
+                                    <Button
+                                        onClick={() => router.push('/contact')}
+                                        className="w-full bg-[#D2B48C] hover:bg-white text-black font-bold h-24 rounded-full text-[10px] uppercase tracking-[0.4em] transition-all group shadow-xl"
+                                    >
+                                        <MessageCircle size={18} className="mr-4 group-hover:-translate-y-1 transition-transform" />
+                                        Enquire
                                     </Button>
                                 </div>
                             </div>
@@ -482,27 +514,18 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
     onToggleFavorite: (e: React.MouseEvent, id: number) => void,
     onSelect: () => void
 }) {
+    const router = useRouter();
     const itemRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: itemRef,
         offset: ["start end", "end start"]
     });
 
-    const y = useTransform(scrollYProgress, [0, 1], [0, product.parallax]);
-    const springY = useSpring(y, { damping: 20, stiffness: 40 });
-
-    const isLarge = index % 3 === 0;
-
     return (
         <motion.div
             ref={itemRef}
             layoutId={`gallery-${product.id}`}
-            style={{ y: springY }}
-            className={cn(
-                "relative group cursor-pointer",
-                isLarge ? "lg:col-span-8" : "lg:col-span-4",
-                index % 5 === 0 && "lg:-mt-40"
-            )}
+            className="relative group cursor-pointer"
             onClick={onSelect}
         >
             <div className="relative aspect-[3/4] rounded-[4rem] overflow-hidden bg-white/5 border border-white/5 shadow-3xl">
@@ -554,17 +577,28 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                     <h3 className="text-4xl md:text-5xl font-serif font-light text-white mb-6 transform group-hover:translate-x-4 transition-transform duration-700">
                         {product.name}
                     </h3>
-                    <div className="flex justify-between items-center py-6 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
-                        <div className="flex flex-col">
-                            <span className="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em] mb-1">Observation Unit</span>
-                            <span className="text-xl font-serif text-white/70 tracking-tight">{product.price}</span>
-                        </div>
-                        <div className="flex items-center gap-6">
-                            <span className="text-[9px] font-bold text-white/20 uppercase tracking-[0.3em]">Examine Detail</span>
-                            <div className="w-14 h-14 rounded-full bg-[#D2B48C] flex items-center justify-center text-black shadow-xl transform group-hover:rotate-[360deg] transition-all duration-1000">
-                                <MoveRight size={20} />
+
+                    <div className="flex flex-col gap-4 py-6 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-all duration-700 delay-100 translate-y-4 group-hover:translate-y-0">
+                        <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em]">Sovereign Reserve</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold text-white uppercase tracking-widest">Examine Detail</span>
+                                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/50">
+                                    <MoveRight size={14} />
+                                </div>
                             </div>
                         </div>
+
+                        <Button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                router.push('/contact');
+                            }}
+                            className="w-full bg-[#D2B48C] hover:bg-white text-black font-bold h-14 rounded-full text-[9px] uppercase tracking-[0.3em] transition-all group"
+                        >
+                            <MessageCircle size={14} className="mr-2 group-hover:-translate-y-0.5 transition-transform" />
+                            Enquire Now
+                        </Button>
                     </div>
                 </div>
             </div>

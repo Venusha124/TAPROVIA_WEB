@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -65,6 +66,7 @@ const testimonials = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -300,6 +302,7 @@ export default function Home() {
 }
 
 function CollectionCard({ title, grade, image }: { title: string, grade: string, image: string }) {
+  const router = useRouter();
   return (
     <div className="relative aspect-square group cursor-pointer bg-black overflow-hidden">
       <Image src={image} alt={title} fill className="object-cover group-hover:scale-110 transition-all duration-[3s]" />

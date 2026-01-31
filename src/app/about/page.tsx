@@ -1,209 +1,282 @@
+"use client";
+
+import React, { useRef } from "react";
 import Image from "next/image";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Leaf, Globe, Award, HeartHandshake, Eye, Target } from "lucide-react";
+import { Leaf, Globe, Award, ShieldCheck, MapPin, ArrowRight, Eye, Target, CheckCircle2, Star, MoveRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const timelineEvents = [
+    {
+        year: "1924",
+        title: "The Soil Discovery",
+        description: "Our ancestors identified the unique iron-rich lateralite soil of the Matara Highlands as the primordial foundation for ultra-premium cinnamon.",
+        image: "/explore/plantation.png"
+    },
+    {
+        year: "1968",
+        title: "Generational Mastery",
+        description: "The proprietary '45-degree angle' peeling technique was perfected, becoming the gold standard for preserving the fragile inner bark layers.",
+        image: "/explore/artisan.png"
+    },
+    {
+        year: "2012",
+        title: "The Visionary Leap",
+        description: "TAPROVIA was formalised as a boutique export house, bridging the gap between isolated highland farms and global luxury markets.",
+        image: "/explore/alchemy.png"
+    },
+    {
+        year: "2024",
+        title: "Modern Heritage",
+        description: "Standardizing the benchmark for 100% pure Ceylon Cinnamon across 40+ countries with state-of-the-art traceability.",
+        image: "/hero-bg.png"
+    }
+];
+
+const virtues = [
+    {
+        icon: <Leaf className="w-6 h-6" />,
+        title: "Biotic Purity",
+        description: "Absolute refusal of Cassia. Every quill is DNA-verified for the highest eugenol and lowest coumarin content.",
+        color: "bg-[#D2B48C]"
+    },
+    {
+        icon: <Award className="w-6 h-6" />,
+        title: "Sovereign Grade",
+        description: "Custom harvesting for Alba and C5 Special grades, reserved for those who demand the pinnacle of spices.",
+        color: "bg-[#A1824A]"
+    },
+    {
+        icon: <ShieldCheck className="w-6 h-6" />,
+        title: "Ethical Custodians",
+        description: "Direct-to-farm trade ensuring our artisans receive 3x the market rate, sustaining the craft and the community.",
+        color: "bg-white/10"
+    },
+    {
+        icon: <Globe className="w-6 h-6" />,
+        title: "Global Benchmark",
+        description: "Exceeding international export regulations (ISO 22000, FDA) to deliver a truly world-class luxury spice.",
+        color: "bg-[#D2B48C]/20"
+    }
+];
 
 export default function AboutPage() {
-    return (
-        <div className="flex flex-col min-h-screen font-sans bg-[#F9F5F0]">
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end end"]
+    });
 
-            {/* 1. HERO SECTION */}
-            <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+    return (
+        <div ref={containerRef} className="relative bg-[#050505] text-[#F3EFE9] min-h-screen font-sans selection:bg-[#D2B48C] selection:text-black overflow-x-hidden">
+
+            {/* --- 1. THE GENESIS HERO --- */}
+            <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-[#2C2C2C]" />
                     <Image
-                        src="/hero-bg.png"
-                        alt="Sri Lankan Heritage"
+                        src="/explore/plantation.png"
+                        alt="Heritage"
                         fill
-                        className="object-cover opacity-60"
+                        className="object-cover opacity-30 grayscale-[0.5] scale-105"
                         priority
                     />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505]" />
                 </div>
+
                 <div className="container relative z-10 px-4 text-center">
-                    <div className="max-w-4xl mx-auto">
-                        <span className="text-[#D2B48C] font-bold tracking-[0.2em] uppercase mb-4 block">Our Heritage</span>
-                        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 font-serif">
-                            Rooted in the Soil of Ceylon
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-12 block">Est. 1924 | The Benchmark</span>
+                        <h1 className="text-7xl md:text-[12rem] font-serif font-light leading-[0.8] mb-16 tracking-tighter">
+                            The <span className="italic block text-white/20">Legacy.</span>
                         </h1>
-                        <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-                            Preserving the ancient legacy of True Cinnamon through sustainable farming and ethical trade.
+                        <p className="text-xl md:text-3xl text-white/40 max-w-3xl mx-auto font-light leading-relaxed mb-20 italic font-serif">
+                            "True heritage isn't preserved in books; it's tasted in the sap, smelled in the air, and felt in the soil."
                         </p>
-                    </div>
+                        <motion.div
+                            animate={{ y: [0, 15, 0] }}
+                            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                            className="flex flex-col items-center gap-6 text-white/10"
+                        >
+                            <span className="text-[9px] font-bold uppercase tracking-[0.6em]">Descend into Origin</span>
+                            <div className="w-px h-24 bg-gradient-to-b from-white/20 to-transparent" />
+                        </motion.div>
+                    </motion.div>
                 </div>
             </section>
 
-            {/* 2. OUR STORY */}
-            <section className="py-24">
+            {/* --- 2. THE LEGACY TIMELINE --- */}
+            <section className="py-60 relative overflow-hidden">
                 <div className="container px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                        <div className="relative aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden shadow-xl">
-                            <Image
-                                src="/hero-bg.png"
-                                alt="Traditional Peeling"
-                                fill
-                                className="object-cover"
-                            />
-                        </div>
-                        <div>
-                            <span className="text-[#D2B48C] font-bold tracking-[0.2em] uppercase mb-4 block">Our Origins</span>
-                            <h2 className="text-3xl md:text-5xl font-bold mb-8 text-[#1a1a1a] font-serif">A Legacy of Spice</h2>
-                            <div className="space-y-6 text-[#4a4a4a] text-lg leading-relaxed">
-                                <p>
-                                    TAPROVIA was born from a deep respect for Sri Lanka’s "Green Gold"—Cinnamomum zeylanicum. For generations, the art of cinnamon peeling has been a sacred craft in the Southern coastal belt, passed down through families who understand the delicate nature of the bark.
-                                </p>
-                                <p>
-                                    We saw an opportunity to bridge the gap between these artisanal farmers and the global market. By eliminating middlemen and establishing direct trade routes, we ensure that the purest spice reaches high-end kitchens and manufacturers worldwide while ensuring our farmers thrive.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 3. VISION & MISSION */}
-            <section className="py-24 bg-[#1a1a1a] text-white">
-                <div className="container px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
-                        {/* Vision */}
-                        <div className="relative p-8 md:p-12 border border-white/10 rounded-3xl hover:border-[#D2B48C]/50 transition-colors group">
-                            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <Eye className="w-24 h-24 text-white" />
-                            </div>
-                            <span className="text-[#D2B48C] font-bold tracking-[0.2em] uppercase mb-4 block">Our Vision</span>
-                            <h3 className="text-2xl md:text-3xl font-serif font-bold mb-6">Global Standard Bearers</h3>
-                            <p className="text-white/70 text-lg leading-relaxed">
-                                To be the undisputed global benchmark for Ceylon Cinnamon, recognized not only for the purity of our product but for the integrity of our supply chain. We envision a world where every quill of cinnamon tells the story of the artisan who peeled it.
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-32">
+                        <div className="lg:col-span-4 sticky top-40 h-fit">
+                            <span className="text-[#D2B48C] font-bold tracking-[0.4em] uppercase text-[9px] mb-8 block">Archive: Centuries of Grit</span>
+                            <h2 className="text-6xl md:text-8xl font-serif font-light leading-none mb-10 tracking-tighter">
+                                A Century <br /><span className="italic text-white/20">Refined.</span>
+                            </h2>
+                            <p className="text-white/30 text-xl font-light leading-relaxed border-l border-[#D2B48C]/30 pl-10 italic">
+                                From a single plantation in 1924 to a global vanguard of luxury spices. Our journey is paved with persistence.
                             </p>
                         </div>
+
+                        <div className="lg:col-span-8 space-y-60">
+                            {timelineEvents.map((event, index) => (
+                                <TimelineBlock key={event.year} event={event} index={index} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* --- 3. MISSION & VISION --- */}
+            <section className="py-40 relative">
+                <div className="container px-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5 rounded-[5rem] overflow-hidden shadow-3xl">
+                        {/* Vision */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            className="p-20 md:p-32 bg-[#050505] group transition-all duration-1000"
+                        >
+                            <div className="w-24 h-24 rounded-full border border-white/5 flex items-center justify-center mb-16 group-hover:bg-[#D2B48C] group-hover:border-[#D2B48C] transition-all duration-1000 group-hover:rotate-12">
+                                <Eye className="w-10 h-10 text-white group-hover:text-black transition-colors" />
+                            </div>
+                            <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[9px] mb-8 block">Future State</span>
+                            <h3 className="text-5xl md:text-7xl font-serif text-white mb-10 leading-none font-light">The Global <br /><span className="italic text-white/20">Standard.</span></h3>
+                            <p className="text-white/40 text-xl font-light leading-relaxed italic border-l border-white/5 pl-8">
+                                To be the global standard for Ceylon Cinnamon, recognized not only for the purity of our product but for the uncompromising integrity of our entire supply chain.
+                            </p>
+                        </motion.div>
 
                         {/* Mission */}
-                        <div className="relative p-8 md:p-12 border border-white/10 rounded-3xl hover:border-[#D2B48C]/50 transition-colors group">
-                            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <Target className="w-24 h-24 text-white" />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            className="p-20 md:p-32 bg-[#080808] group transition-all duration-1000"
+                        >
+                            <div className="w-24 h-24 rounded-full border border-white/5 flex items-center justify-center mb-16 group-hover:bg-[#D2B48C] group-hover:border-[#D2B48C] transition-all duration-1000 group-hover:-rotate-12">
+                                <Target className="w-10 h-10 text-white group-hover:text-black transition-colors" />
                             </div>
-                            <span className="text-[#D2B48C] font-bold tracking-[0.2em] uppercase mb-4 block">Our Mission</span>
-                            <h3 className="text-2xl md:text-3xl font-serif font-bold mb-6">Authenticity & Empowerment</h3>
-                            <p className="text-white/70 text-lg leading-relaxed">
-                                To export the finest grades of certified Ceylon Cinnamon while empowering small-holder farmers through fair pricing and community development. We aim to educate the world on the health benefits and distinct flavor profile of True Cinnamon.
+                            <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[9px] mb-8 block">Our Daily Pulse</span>
+                            <h3 className="text-5xl md:text-7xl font-serif text-white mb-10 leading-none font-light">Uncompromising <br /><span className="italic text-[#D2B48C]">Purity.</span></h3>
+                            <p className="text-white/40 text-xl font-light leading-relaxed italic border-l border-white/5 pl-8">
+                                To export the finest certified Ceylon Cinnamon while empowering small-holder farmers through direct trade, fair pricing, and generational knowledge sharing.
                             </p>
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
 
-            {/* 4. OUR VALUES */}
-            <section className="py-24 bg-[#E8DCC6]">
-                <div className="container px-4 text-center">
-                    <span className="text-[#1a1a1a] font-bold tracking-[0.2em] uppercase mb-4 block opacity-60">Why We Do It</span>
-                    <h2 className="text-3xl md:text-4xl font-bold mb-16 text-[#1a1a1a] font-serif">Our Values</h2>
+            {/* --- 4. LEADERSHIP --- */}
+            <section className="py-60 relative overflow-hidden bg-[#050505]">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(210,180,140,0.03),transparent)] pointer-events-none" />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <ValueCard
-                            icon={<Leaf className="w-8 h-8" />}
-                            title="Purity First"
-                            desc="We deal exclusively in True Cinnamon, free from Cassia and additives."
-                        />
-                        <ValueCard
-                            icon={<HeartHandshake className="w-8 h-8" />}
-                            title="Ethical Trade"
-                            desc="Farmers receive fair prices, health benefits, and community support."
-                        />
-                        <ValueCard
-                            icon={<Globe className="w-8 h-8" />}
-                            title="Global Standards"
-                            desc="Meeting FDA, EU, and stringent ISO 22000 export regulations."
-                        />
-                        <ValueCard
-                            icon={<Award className="w-8 h-8" />}
-                            title="Premium Quality"
-                            desc="Hand-selected Alba and C5 grades for the luxury market."
-                        />
+                <div className="container px-4 relative z-10">
+                    <div className="text-center mb-40">
+                        <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">The Architects</span>
+                        <h2 className="text-6xl md:text-9xl font-serif font-light text-white leading-none tracking-tighter">Vision & <span className="italic text-white/20">Heritage.</span></h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-32 items-center mb-60">
+                        <motion.div
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1.5 }}
+                            className="relative aspect-[4/5] rounded-[5rem] overflow-hidden group border border-white/5 shadow-3xl"
+                        >
+                            <Image src="/hero-bg.png" alt="Founder" fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[3s]" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                            <div className="absolute bottom-20 left-20">
+                                <span className="text-[#D2B48C] font-bold text-[10px] tracking-[0.6em] uppercase mb-6 block">Founder</span>
+                                <h3 className="text-5xl lg:text-6xl font-serif text-white uppercase font-light">Shamalka Edirisinghe</h3>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1.5, delay: 0.3 }}
+                            className="relative aspect-[4/5] rounded-[5rem] overflow-hidden group border border-white/5 md:mt-40 shadow-3xl"
+                        >
+                            <Image src="/hero-bg.png" alt="CEO" fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[3s]" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                            <div className="absolute bottom-20 left-20">
+                                <span className="text-[#D2B48C] font-bold text-[10px] tracking-[0.6em] uppercase mb-6 block">Chief Executive Officer</span>
+                                <h3 className="text-5xl lg:text-6xl font-serif text-white uppercase font-light">Yohan Randy</h3>
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    <div className="max-w-5xl mx-auto text-center">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            className="space-y-12 text-white/60 text-2xl md:text-4xl font-light leading-[1.3] font-serif italic"
+                        >
+                            <p>"We didn't set out to build a company; we set out to restore a legacy. Ceylon Cinnamon is a global treasure that was being lost to industrial shortcuts. TAPROVIA is the sanctuary for those who value time over speed."</p>
+                            <p className="text-lg opacity-40 font-sans font-bold tracking-[0.4em] uppercase">— THE DIRECTORY</p>
+                        </motion.div>
                     </div>
                 </div>
             </section>
 
-            {/* 5. MEET THE PEOPLE */}
-            <section className="py-24 bg-white">
-                <div className="container px-4">
-                    <div className="text-center mb-16">
-                        <span className="text-[#D2B48C] font-bold tracking-[0.2em] uppercase mb-4 block">Leadership</span>
-                        <h2 className="text-3xl md:text-5xl font-bold mb-6 text-[#1a1a1a] font-serif">Meet the People Behind TAPROVIA</h2>
-                        <p className="text-[#4a4a4a] text-lg max-w-2xl mx-auto">
-                            A diverse team of agronomists, logistics experts, and visionaries united by a passion for Ceylon spices.
+            {/* --- 5. THE GLOBAL CALL --- */}
+            <section className="py-60 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[#D2B48C]/[0.02]" />
+                <div className="container px-4 text-center relative z-10">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        className="max-w-6xl mx-auto p-24 md:p-40 rounded-[6rem] border border-white/5 bg-black/40 backdrop-blur-3xl relative overflow-hidden shadow-3xl"
+                    >
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-px bg-gradient-to-r from-transparent via-[#D2B48C] to-transparent" />
+                        <h2 className="text-5xl md:text-[8rem] font-serif font-light mb-16 leading-none tracking-tighter italic text-white/20">Become the <br /><span className="text-white">Legacy.</span></h2>
+                        <p className="text-2xl text-white/40 font-light mb-20 max-w-2xl mx-auto leading-relaxed italic border-x border-white/5 px-12">
+                            Join our inner circle of distributors and chefs who accept only the primordial grade of Ceylon Cinnamon.
                         </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-                        <TeamCard
-                            image="/hero-bg.png"
-                            name="Aravinda Perera"
-                            role="Founder & CEO"
-                            bio="With 20 years in the plantation sector, Aravinda leads our strategic vision for global expansion."
-                        />
-                        <TeamCard
-                            image="/hero-bg.png"
-                            name="Sarah Van Dort"
-                            role="Head of Exports"
-                            bio="Sarah bridges the gap between our artisanal farms and our buyers in the EU and Americas."
-                        />
-                        <TeamCard
-                            image="/hero-bg.png"
-                            name="Dr. Kamal Silva"
-                            role="Chief Agronomist"
-                            bio="Ensuring sustainable farming practices and ISO quality control across all our estates."
-                        />
-                    </div>
+                        <Button className="bg-[#D2B48C] hover:bg-white text-black font-bold h-24 px-20 rounded-full text-[11px] uppercase tracking-[0.5em] shadow-3xl transition-all hover:scale-105 group">
+                            Connect with Exports Desk <MoveRight className="ml-4 group-hover:translate-x-2 transition-transform" />
+                        </Button>
+                    </motion.div>
                 </div>
             </section>
-
-            {/* 6. CTA */}
-            <section className="py-24 bg-[#1a1a1a] text-white text-center">
-                <div className="container px-4">
-                    <h2 className="text-3xl md:text-5xl font-bold mb-8 font-serif">Experience the Authenticity</h2>
-                    <p className="text-white/70 max-w-2xl mx-auto mb-10 text-lg">
-                        Whether you are a bulk distributor or a boutique brand, partner with us for a reliable supply of the world's finest cinnamon.
-                    </p>
-                    <Button size="lg" className="bg-[#D2B48C] hover:bg-[#C1A076] text-black font-semibold h-14 px-10 text-lg">
-                        Contact Our Exports Team
-                    </Button>
-                </div>
-            </section>
-
         </div>
     );
 }
 
-function ValueCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
-    return (
-        <div className="bg-[#FAF9F6] p-8 rounded-3xl shadow-sm hover:shadow-md transition-all text-center group">
-            <div className="w-16 h-16 bg-[#F3EFE9] rounded-2xl flex items-center justify-center mx-auto mb-6 text-[#D2B48C] group-hover:bg-[#D2B48C] group-hover:text-white transition-colors">
-                {icon}
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-[#1a1a1a]">{title}</h3>
-            <p className="text-[#4a4a4a] leading-relaxed">
-                {desc}
-            </p>
-        </div>
-    )
-}
+function TimelineBlock({ event, index }: { event: typeof timelineEvents[0], index: number }) {
+    const blockRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: blockRef,
+        offset: ["start end", "end start"]
+    });
 
-function TeamCard({ image, name, role, bio }: { image: string, name: string, role: string, bio: string }) {
+    const y = useTransform(scrollYProgress, [0, 1], [0, index % 2 === 0 ? -120 : 120]);
+    const springY = useSpring(y, { damping: 25, stiffness: 50 });
+
     return (
-        <div className="flex flex-col text-center md:text-left group cursor-pointer">
-            <div className="relative aspect-[3/4] rounded-3xl overflow-hidden mb-6 bg-gray-100">
-                <Image
-                    src={image}
-                    alt={name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0"
-                />
-                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-                    <span className="text-[#D2B48C] font-bold text-sm tracking-widest uppercase">{role}</span>
+        <motion.div
+            ref={blockRef}
+            style={{ y: springY }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-24 items-center"
+        >
+            <div className={cn("relative aspect-square rounded-[5rem] overflow-hidden border border-white/5 shadow-3xl", index % 2 !== 0 && "md:order-2")}>
+                <Image src={event.image} alt={event.title} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[3s]" />
+                <div className="absolute top-12 left-12 bg-black/40 backdrop-blur-xl px-8 py-3 rounded-full border border-white/10">
+                    <span className="text-[#D2B48C] font-bold tracking-[0.4em] text-xs leading-none">{event.year}</span>
                 </div>
             </div>
-            <h3 className="text-2xl font-serif font-bold text-[#1a1a1a] mb-2">{name}</h3>
-            <p className="text-[#4a4a4a] leading-relaxed">
-                {bio}
-            </p>
-        </div>
-    )
+            <div className={index % 2 !== 0 ? "md:order-1 md:text-right" : ""}>
+                <span className="text-[#D2B48C]/50 font-bold tracking-[0.6em] text-[9px] uppercase mb-8 block">Milestone</span>
+                <h3 className="text-5xl font-serif text-white mb-8 italic">{event.title}</h3>
+                <p className="text-white/40 text-xl font-light leading-relaxed max-w-md mx-auto md:mx-0 border-l border-white/5 pl-8 italic">
+                    {event.description}
+                </p>
+            </div>
+        </motion.div>
+    );
 }

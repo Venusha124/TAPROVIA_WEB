@@ -9,7 +9,8 @@
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
+  --primary: 34 44% 69%;
+  /* #D2B48C Goldish */
   --primary-foreground: 210 40% 98%;
   --secondary: 210 40% 96.1%;
   --secondary-foreground: 222.2 47.4% 11.2%;
@@ -21,30 +22,31 @@
   --destructive-foreground: 210 40% 98%;
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
+  --ring: 34 44% 69%;
   --radius: 0.5rem;
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
+  --background: 0 0% 2%;
+  /* #050505 */
+  --foreground: 34 20% 94%;
+  --card: 0 0% 4%;
+  --card-foreground: 34 20% 94%;
+  --popover: 0 0% 2%;
+  --popover-foreground: 34 20% 94%;
+  --primary: 34 44% 69%;
   --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
+  --secondary: 0 0% 8%;
+  --secondary-foreground: 34 20% 94%;
+  --muted: 0 0% 8%;
+  --muted-foreground: 0 0% 40%;
+  --accent: 0 0% 8%;
+  --accent-foreground: 34 20% 94%;
   --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 48%;
+  --destructive-foreground: 34 20% 94%;
+  --border: 0 0% 10%;
+  --input: 0 0% 10%;
+  --ring: 34 44% 69%;
 }
 
 @theme inline {
@@ -108,28 +110,24 @@
   }
 }
 
-@layer utilities {
-  .animate-marquee {
-    animation: marquee 20s linear infinite;
-  }
-
-  .animate-marquee:hover {
-    animation-play-state: paused;
-  }
-}
-
-/* Base Styles */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
 
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/10 selection:text-primary;
+    @apply bg-background text-foreground antialiased selection:bg-primary selection:text-black;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   html {
     scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   }
 }

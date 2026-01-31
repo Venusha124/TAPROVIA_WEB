@@ -74,7 +74,7 @@ export default function ExplorePage() {
                         {chapters.map((chapter) => (
                             <section
                                 key={chapter.id}
-                                className="relative w-screen h-full flex flex-col justify-center px-12 md:px-32 lg:px-48"
+                                className="relative w-screen h-full flex flex-col justify-center px-12 md:px-32 lg:px-48 pt-96"
                             >
                                 {/* Background Glow */}
                                 <div className={cn("absolute inset-0 bg-gradient-to-tr transition-opacity duration-1000", chapter.accent)} />

@@ -27,22 +27,20 @@
 }
 
 .dark {
-  --background: 30 10% 4%;
-  /* #0F0D0B Deep Charred Bark */
+  --background: 0 0% 2%;
+  /* #050505 */
   --foreground: 34 20% 94%;
-  --card: 30 10% 6%;
-  /* #141210 Lighter Bark */
+  --card: 0 0% 4%;
   --card-foreground: 34 20% 94%;
-  --popover: 30 10% 4%;
+  --popover: 0 0% 2%;
   --popover-foreground: 34 20% 94%;
   --primary: 34 44% 69%;
-  --primary-foreground: 30 10% 4%;
-  --secondary: 30 5% 10%;
-  /* Dark Warm Grey */
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 0 0% 8%;
   --secondary-foreground: 34 20% 94%;
-  --muted: 30 5% 10%;
-  --muted-foreground: 30 5% 40%;
-  --accent: 30 5% 10%;
+  --muted: 0 0% 8%;
+  --muted-foreground: 0 0% 40%;
+  --accent: 0 0% 8%;
   --accent-foreground: 34 20% 94%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 34 20% 94%;

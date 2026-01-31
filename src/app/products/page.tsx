@@ -435,13 +435,13 @@ function PrologueSection({ step, index, total }: { step: typeof prologueSteps[0]
     const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
     return (
-        <section ref={sectionRef} className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+        <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
             <motion.div style={{ opacity, scale }} className="absolute inset-0 z-0">
                 <Image src={step.image} alt={step.title} fill className="object-cover opacity-60 grayscale-[0.3]" />
                 <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
             </motion.div>
 
-            <div className="container relative z-10 px-4">
+            <div className="container relative z-10 px-4 pt-48">
                 <div className="max-w-4xl mx-auto text-center">
                     <motion.span
                         style={{ y: useTransform(scrollYProgress, [0, 1], [50, -50]) }}

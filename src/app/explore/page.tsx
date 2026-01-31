@@ -195,17 +195,20 @@ export default function ExplorePage() {
                         viewport={{ once: true }}
                         className="bg-[#0A0A0A] border border-[#D2B48C]/20 rounded-[3rem] p-12 md:p-24 text-white relative overflow-hidden group shadow-3xl"
                     >
-                        <div className="relative z-10 max-w-3xl">
-                            <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block font-sans">Corporate & Export</span>
-                            <h2 className="text-5xl md:text-7xl font-serif font-light mb-12 tracking-tighter italic">Bulk & <span className="text-white/30">Export Orders.</span></h2>
-                            <p className="text-xl md:text-2xl text-white/40 mb-16 font-light italic font-serif leading-relaxed max-w-2xl">
-                                "Extending the Sovereign reach. We provide wholesale quantities, export documentation, and private label support for the world's most discerning partners."
-                            </p>
+                        {chapters.map((chapter) => (
+                            <section
+                                key={chapter.id}
+                                className="relative w-screen h-full flex flex-col justify-center px-12 md:px-32 lg:px-48 pt-96"
+                            >
+                                {/* Background Glow */}
+                                <div className={cn("absolute inset-0 bg-gradient-to-tr transition-opacity duration-1000", chapter.accent)} />
 
-                            <div className="flex flex-col sm:flex-row gap-8">
-                                <Button
-                                    onClick={() => router.push('/contact')}
-                                    className="bg-[#D2B48C] hover:bg-white text-black rounded-full h-20 px-12 text-[11px] font-bold uppercase tracking-[0.3em] shadow-2xl transition-all border-none group"
+                                {/* Background Large Text Label */}
+                                <motion.div
+                                    initial={{ opacity: 0, x: 100 }}
+                                    whileInView={{ opacity: 0.05, x: 0 }}
+                                    transition={{ duration: 1.5 }}
+                                    className="absolute top-1/2 right-12 -translate-y-1/2 text-[40vh] font-serif font-light uppercase pointer-events-none select-none italic text-white/5"
                                 >
                                     Request Bulk Quote <ArrowRight size={16} className="ml-4 group-hover:translate-x-1 transition-transform" />
                                 </Button>

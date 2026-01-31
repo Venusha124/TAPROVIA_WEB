@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Clock, ArrowUpRight, Send, Globe, MessageSquare, ShieldCheck, Zap, Diamond } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+
 export default function ContactPage() {
     const [status, setStatus] = useState<"LIVE" | "STANDBY">("STANDBY");
 
@@ -26,7 +27,7 @@ export default function ContactPage() {
         <div className="flex flex-col min-h-screen bg-[#050505] text-[#F3EFE9] selection:bg-[#D2B48C] selection:text-black overflow-x-hidden">
 
             {/* --- 1. THE CONCIERGE HERO --- */}
-            <section className="relative pt-40 pb-24 text-center border-b border-white/5 bg-[radial-gradient(circle_at_top,rgba(210,180,140,0.05),transparent)]">
+            <section className="relative pt-64 pb-24 text-center border-b border-white/5 bg-[radial-gradient(circle_at_top,rgba(210,180,140,0.05),transparent)]">
                 <div className="container px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

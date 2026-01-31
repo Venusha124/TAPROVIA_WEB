@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Clock, ArrowUpRight, Send, Globe, MessageSquare, ShieldCheck, Zap, Diamond } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+
 export default function ContactPage() {
     const [status, setStatus] = useState<"LIVE" | "STANDBY">("STANDBY");
 

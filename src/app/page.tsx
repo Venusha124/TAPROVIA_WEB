@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -47,6 +48,7 @@ const features = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -253,8 +255,12 @@ export default function Home() {
 }
 
 function CollectionCard({ title, grade, image }: { title: string, grade: string, image: string }) {
+  const router = useRouter();
   return (
-    <div className="relative aspect-square group cursor-pointer bg-black overflow-hidden">
+    <div
+      onClick={() => router.push('/products')}
+      className="relative aspect-square group cursor-pointer bg-black overflow-hidden"
+    >
       <Image src={image} alt={title} fill className="object-cover opacity-40 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[3s]" />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-20 flex flex-col justify-end">
         <span className="text-[#D2B48C] font-bold text-[10px] tracking-[0.8em] uppercase mb-6 opacity-0 group-hover:opacity-100 translate-y-6 group-hover:translate-y-0 transition-all duration-1000">{grade}</span>

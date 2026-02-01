@@ -15,7 +15,10 @@ import {
     X,
     Search,
     Inbox, // Added Inbox
-    Bell
+    Bell,
+    Ticket,
+    Mail,
+    PanelLeft
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAdmin } from "@/actions/auth";
@@ -52,15 +55,17 @@ export default function AdminDashboardLayout({
         { name: "Inquiries", icon: Inbox, href: "/admin/inquiries" },
         { name: "Orders", icon: ShoppingCart, href: "/admin/orders" },
         { name: "Customers", icon: Users, href: "/admin/customers" },
+        { name: "Coupons", icon: Ticket, href: "/admin/coupons" },
+        { name: "Newsletter", icon: Mail, href: "/admin/newsletter" },
         { name: "Settings", icon: Settings, href: "/admin/settings" },
     ];
 
     return (
-        <div className="min-h-screen bg-[#09090b] text-[#F3EFE9] font-sans selection:bg-[#D2B48C] selection:text-black flex">
+        <div className="h-screen overflow-hidden bg-[#09090b] text-[#F3EFE9] font-sans selection:bg-[#D2B48C] selection:text-black flex">
             {/* --- SIDEBAR --- */}
             <aside
                 className={cn(
-                    "fixed inset-y-0 left-0 z-50 w-64 bg-[#050505] border-r border-white/5 transition-transform duration-300 md:translate-x-0 md:static flex flex-col",
+                    "fixed inset-y-0 left-0 z-50 w-64 bg-[#050505] border-r border-white/5 transition-all duration-300 md:translate-x-0 md:static flex flex-col",
                     !isSidebarOpen && "-translate-x-full md:w-20"
                 )}
             >
@@ -127,7 +132,14 @@ export default function AdminDashboardLayout({
                         <Menu size={20} />
                     </button>
 
-                    <div className="hidden md:flex flex-1 max-w-xl mx-8 relative">
+                    <button
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        className="hidden md:block p-2 text-white/40 hover:text-white hover:bg-white/5 rounded-lg mr-4"
+                    >
+                        <PanelLeft size={20} />
+                    </button>
+
+                    <div className="hidden md:flex flex-1 max-w-xl mx-4 relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" size={16} />
                         <input
                             type="text"

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { ShoppingBag, User, Search, Menu } from "lucide-react"
+import { motion, useScroll, useTransform } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -10,30 +11,55 @@ import { SearchOverlay } from "./search-overlay"
 
 export function Header() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const { scrollY } = useScroll();
+
+    // Transform values for marquee collapse
+    const marqueeHeight = useTransform(scrollY, [0, 50], ["auto", "0px"]);
+    const marqueeOpacity = useTransform(scrollY, [0, 30], [1, 0]);
+    const headerBackground = useTransform(
+        scrollY,
+        [0, 100],
+        ["rgba(0,0,0,0.4)", "rgba(5,5,5,0.8)"]
+    );
+    const headerBorder = useTransform(
+        scrollY,
+        [0, 100],
+        ["rgba(255,255,255,0.05)", "rgba(210,180,140,0.1)"] // Goldish hint on scroll
+    );
 
     return (
         <>
             <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-            <div className="relative z-[100] flex flex-col">
-                {/* Sovereign Top Bar */}
-                <div className="bg-[#D2B48C] text-black text-[9px] font-bold tracking-[0.4em] uppercase py-2 px-4 flex overflow-hidden">
-                    <div className="flex animate-marquee whitespace-nowrap">
-                        <span className="mx-8">EST. 1924 | THE BENCHMARK OF CEYLON</span>
-                        <span className="mx-8">•</span>
-                        <span className="mx-8">GLOBAL LOGISTICS OPTIMIZED</span>
-                        <span className="mx-8">•</span>
-                        <span className="mx-8">SOVEREIGN PURITY GUARANTEED</span>
-                        <span className="mx-8">•</span>
-                        <span className="mx-8">CURATED ARCHIVE OF RARE GRADES</span>
-                        <span className="mx-8">•</span>
+            <motion.div
+                className="fixed top-0 left-0 right-0 z-[100] flex flex-col"
+            >
+                {/* Sovereign Top Bar - Collapsible */}
+                <motion.div
+                    style={{ height: marqueeHeight, opacity: marqueeOpacity }}
+                    className="bg-[#D2B48C] text-black text-[9px] font-bold tracking-[0.4em] uppercase overflow-hidden"
+                >
+                    <div className="py-2 px-4 flex">
+                        <div className="flex animate-marquee whitespace-nowrap">
+                            <span className="mx-8">EST. 1924 | THE BENCHMARK OF CEYLON</span>
+                            <span className="mx-8">•</span>
+                            <span className="mx-8">GLOBAL LOGISTICS OPTIMIZED</span>
+                            <span className="mx-8">•</span>
+                            <span className="mx-8">SOVEREIGN PURITY GUARANTEED</span>
+                            <span className="mx-8">•</span>
+                            <span className="mx-8">CURATED ARCHIVE OF RARE GRADES</span>
+                            <span className="mx-8">•</span>
+                        </div>
                     </div>
-                </div>
+                </motion.div>
 
-                <header className="w-full bg-black/40 backdrop-blur-3xl border-b border-white/5">
-                    <div className="container relative flex flex-col py-8 px-4">
+                <motion.header
+                    style={{ backgroundColor: headerBackground, borderColor: headerBorder }}
+                    className="w-full backdrop-blur-3xl border-b transition-colors duration-500"
+                >
+                    <div className="container relative flex flex-col py-4 md:py-6 px-4">
 
                         {/* TOP ROW: Search - Logo - Icons */}
-                        <div className="flex items-center justify-between w-full mb-8">
+                        <div className="flex items-center justify-between w-full mb-4 md:mb-6">
                             {/* Left: Search */}
                             <div className="flex-1 flex justify-start hidden md:flex">
                                 <Button
@@ -53,10 +79,10 @@ export function Header() {
                             {/* Center: Logo */}
                             <div className="flex-0">
                                 <Link href="/" className="flex flex-col items-center">
-                                    <span className="font-serif text-4xl md:text-5xl font-light tracking-[-0.05em] text-white">
+                                    <span className="font-serif text-3xl md:text-4xl font-light tracking-[-0.05em] text-white">
                                         TAPRO<span className="text-[#D2B48C] italic">VIA</span>
                                     </span>
-                                    <span className="text-[8px] font-bold tracking-[1em] text-white/20 uppercase mt-2">Sovereign Collection</span>
+                                    <span className="text-[6px] md:text-[8px] font-bold tracking-[1em] text-white/20 uppercase mt-2 hidden md:block">Sovereign Collection</span>
                                 </Link>
                             </div>
 
@@ -93,8 +119,8 @@ export function Header() {
                             ))}
                         </nav>
                     </div>
-                </header>
-            </div>
+                </motion.header>
+            </motion.div>
         </>
     )
 }

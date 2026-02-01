@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createCoupon } from "@/actions/marketing";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
+import { toast } from "sonner";
 
 export default function NewCouponPage() {
     const router = useRouter();
@@ -20,10 +21,9 @@ export default function NewCouponPage() {
             if (result && result.error) {
                 setError(result.error);
                 setIsLoading(false);
-            } else {
-                // Redirect is handled by server action or we can do it here if needed
-                // But createCoupon calls redirect() which might throw an error in client component context usually? 
-                // Wait, redirect() in server action works fine.
+            } else if (result && result.success) {
+                toast.success("Coupon created successfully");
+                router.push("/admin/coupons");
             }
         } catch (e) {
             console.error(e);

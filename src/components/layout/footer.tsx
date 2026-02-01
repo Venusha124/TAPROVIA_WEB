@@ -70,7 +70,7 @@ export function Footer() {
                 {/* Bottom Bar */}
                 <div className="mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
                     <p className="text-[10px] font-bold text-white/10 uppercase tracking-[0.4em]">
-                        &copy; {new Date().getFullYear()} TAPROVIA EXPORT CO. BENCHMARK QUALITY.
+                        &copy; {new Date().getFullYear()} TAPROVIA EXPORT CO.
                     </p>
                     <div className="flex space-x-12 text-[10px] font-bold text-white/10 uppercase tracking-[0.4em]">
                         <Link href="/privacy" className="hover:text-white/30 transition-colors">Privacy</Link>

@@ -72,7 +72,7 @@ export default function AboutPage() {
         <div ref={containerRef} className="relative bg-[#050505] text-[#F3EFE9] min-h-screen font-sans selection:bg-[#D2B48C] selection:text-black overflow-x-hidden">
 
             {/* --- 1. THE GENESIS HERO --- */}
-            <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+            <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <Image
                         src="/explore/plantation.png"
@@ -84,7 +84,7 @@ export default function AboutPage() {
                     <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505]" />
                 </div>
 
-                <div className="container relative z-10 px-4 text-center pt-48">
+                <div className="container relative z-10 px-4 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}

@@ -45,7 +45,7 @@ export default function StoriesPage() {
         <div className="relative min-h-screen bg-[#050505] text-[#F3EFE9] selection:bg-[#D2B48C] selection:text-black font-sans overflow-x-hidden">
 
             {/* --- 1. EDITORIAL HERO --- */}
-            <section className="relative pt-64 pb-24 overflow-hidden">
+            <section className="relative pt-48 pb-24 overflow-hidden">
                 <div className="container px-4">
                     <div className="max-w-5xl border-l border-white/5 pl-8 md:pl-20">
                         <motion.span

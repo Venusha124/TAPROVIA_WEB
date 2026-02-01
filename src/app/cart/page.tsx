@@ -7,39 +7,17 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, ChevronRight, X, Minus, Plus, ArrowRight, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// Mock cart data
-const initialCartItems = [
-    {
-        id: "alba",
-        name: "Ceylon Alba Sticks",
-        origin: "Ceylon • Sri Lanka",
-        price: 6500.00,
-        quantity: 1,
-        image: "/products/cinnamon_powder_spoon.png"
-    }
-];
+import { useCart } from "@/contexts/cart-context";
 
 export default function CartPage() {
     const router = useRouter();
-    const [items, setItems] = useState(initialCartItems);
+    const { items, updateQuantity, removeFromCart, clearCart } = useCart();
 
-    const updateQuantity = (id: string, delta: number) => {
-        setItems(prev => prev.map(item => {
-            if (item.id === id) {
-                const newQty = Math.max(1, item.quantity + delta);
-                return { ...item, quantity: newQty };
-            }
-            return item;
-        }));
-    };
-
-    const removeItem = (id: string) => {
-        setItems(prev => prev.filter(item => item.id !== id));
-    };
-
-    const clearCart = () => {
-        setItems([]);
+    const updateQuantityHandler = (id: string, delta: number) => {
+        const item = items.find(i => i.id === id);
+        if (item) {
+            updateQuantity(id, item.quantity + delta);
+        }
     };
 
     const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
@@ -146,14 +124,14 @@ export default function CartPage() {
                                                     <div className="flex items-center gap-6 bg-white/5 border border-white/10 rounded-full p-2 pr-8">
                                                         <div className="flex items-center gap-1">
                                                             <button
-                                                                onClick={() => updateQuantity(item.id, -1)}
+                                                                onClick={() => updateQuantityHandler(item.id, -1)}
                                                                 className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:bg-white/10 hover:text-white transition-all"
                                                             >
                                                                 <Minus size={14} />
                                                             </button>
                                                             <span className="w-8 text-center font-bold text-sm text-white">{item.quantity}</span>
                                                             <button
-                                                                onClick={() => updateQuantity(item.id, 1)}
+                                                                onClick={() => updateQuantityHandler(item.id, 1)}
                                                                 className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:bg-white/10 hover:text-white transition-all"
                                                             >
                                                                 <Plus size={14} />
@@ -166,7 +144,7 @@ export default function CartPage() {
                                                 </div>
 
                                                 <button
-                                                    onClick={() => removeItem(item.id)}
+                                                    onClick={() => removeFromCart(item.id)}
                                                     className="flex items-center gap-3 text-white/20 hover:text-red-400/60 transition-all group/btn"
                                                 >
                                                     <Trash2 size={14} />

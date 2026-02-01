@@ -195,42 +195,38 @@ export default function ExplorePage() {
                         viewport={{ once: true }}
                         className="bg-[#0A0A0A] border border-[#D2B48C]/20 rounded-[3rem] p-12 md:p-24 text-white relative overflow-hidden group shadow-3xl"
                     >
-                        {chapters.map((chapter) => (
-                            <section
-                                key={chapter.id}
-                                className="relative w-screen h-full flex flex-col justify-center px-12 md:px-32 lg:px-48 pt-96"
-                            >
-                                {/* Background Glow */}
-                                <div className={cn("absolute inset-0 bg-gradient-to-tr transition-opacity duration-1000", chapter.accent)} />
+                        <section className="relative w-full h-full flex flex-col justify-center items-center py-32">
+                            {/* Background Glow */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-[#D2B48C]/20 to-transparent transition-opacity duration-1000" />
 
-                                {/* Background Large Text Label */}
-                                <motion.div
-                                    initial={{ opacity: 0, x: 100 }}
-                                    whileInView={{ opacity: 0.05, x: 0 }}
-                                    transition={{ duration: 1.5 }}
-                                    className="absolute top-1/2 right-12 -translate-y-1/2 text-[40vh] font-serif font-light uppercase pointer-events-none select-none italic text-white/5"
-                                >
-                                    Request Bulk Quote <ArrowRight size={16} className="ml-4 group-hover:translate-x-1 transition-transform" />
-                                </Button>
-                                <Button
-                                    onClick={() => setIsQualityModalOpen(true)}
-                                    variant="outline"
-                                    className="border-white/10 text-white/50 hover:bg-white/5 hover:text-white rounded-full h-20 px-12 text-[11px] font-bold uppercase tracking-[0.3em] bg-transparent transition-all"
-                                >
-                                    Our Quality Process
-                                </Button>
-                            </div>
-                        </div>
+                            {/* Background Large Text Label */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 100 }}
+                                whileInView={{ opacity: 0.05, x: 0 }}
+                                transition={{ duration: 1.5 }}
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10vw] font-serif font-light uppercase pointer-events-none select-none italic text-white/5 whitespace-nowrap"
+                            >
+                                Request Bulk Quote <ArrowRight size={48} className="inline ml-8 opacity-50" />
+                            </motion.div>
+
+                            <Button
+                                onClick={() => setIsQualityModalOpen(true)}
+                                variant="outline"
+                                className="relative z-10 border-white/10 text-white/50 hover:bg-white/5 hover:text-white rounded-full h-20 px-12 text-[11px] font-bold uppercase tracking-[0.3em] bg-transparent transition-all"
+                            >
+                                Our Quality Process
+                            </Button>
+                        </section>
 
                         {/* Decorative cinematic light flare */}
                         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#D2B48C]/10 via-transparent to-transparent pointer-events-none opacity-50" />
                         <div className="absolute -bottom-40 -right-40 w-[40rem] h-[40rem] bg-[#D2B48C]/5 rounded-full blur-[120px] pointer-events-none" />
                     </motion.div>
                 </div>
-            </div>
+            </div >
 
             {/* THE HERITAGE MAP SECTION */}
-            <section className="py-60 border-t border-white/5 bg-[#050505] relative z-20">
+            < section className="py-60 border-t border-white/5 bg-[#050505] relative z-20" >
                 <div className="container px-4">
                     <div className="max-w-4xl border-l border-[#D2B48C]/30 pl-12 mb-32">
                         <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">Geographic Provenance</span>
@@ -241,10 +237,10 @@ export default function ExplorePage() {
                     </div>
                     <HeritageMap />
                 </div>
-            </section>
+            </section >
 
             {/* CTA SECTION */}
-            <section className="py-60 relative z-20 overflow-hidden border-t border-white/5 bg-[#050505]">
+            < section className="py-60 relative z-20 overflow-hidden border-t border-white/5 bg-[#050505]" >
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-[#D2B48C]/30 to-transparent" />
                 <div className="container px-4 text-center">
                     <motion.div
@@ -267,27 +263,31 @@ export default function ExplorePage() {
                 <div className="absolute bottom-20 right-10 text-[15vw] font-serif font-black text-white/[0.02] select-none pointer-events-none uppercase italic leading-none">
                     Purity.
                 </div>
-            </section>
+            </section >
 
             {/* Product Detail Modal */}
             <AnimatePresence>
-                {selectedProduct && (
-                    <ProductModal
-                        product={selectedProduct}
-                        onClose={() => setSelectedProduct(null)}
-                        onAddToCart={() => {
-                            setSelectedProduct(null);
-                            router.push('/contact');
-                        }}
-                    />
-                )}
-                {isQualityModalOpen && (
-                    <QualityProcessModal onClose={() => setIsQualityModalOpen(false)} />
-                )}
-            </AnimatePresence>
+                {
+                    selectedProduct && (
+                        <ProductModal
+                            product={selectedProduct}
+                            onClose={() => setSelectedProduct(null)}
+                            onAddToCart={() => {
+                                setSelectedProduct(null);
+                                router.push('/contact');
+                            }}
+                        />
+                    )
+                }
+                {
+                    isQualityModalOpen && (
+                        <QualityProcessModal onClose={() => setIsQualityModalOpen(false)} />
+                    )
+                }
+            </AnimatePresence >
 
             {/* Cinematic Filter HUD */}
-            <div className="fixed bottom-12 right-12 z-50 text-white/5 select-none hidden xl:block pointer-events-none">
+            < div className="fixed bottom-12 right-12 z-50 text-white/5 select-none hidden xl:block pointer-events-none" >
                 <div className="flex gap-12 text-[9px] font-bold uppercase tracking-[0.8em] items-center">
                     <span>Ethically Harvested</span>
                     <span className="w-1.5 h-1.5 rounded-full bg-[#D2B48C]/40" />
@@ -295,8 +295,8 @@ export default function ExplorePage() {
                     <span className="w-1.5 h-1.5 rounded-full bg-[#D2B48C]/40" />
                     <span>Certified Export Quality</span>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
 

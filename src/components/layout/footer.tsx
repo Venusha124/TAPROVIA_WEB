@@ -52,7 +52,7 @@ export function Footer() {
 
                     {/* Subscription Section */}
                     <div className="lg:col-span-3">
-                        <h4 className="mb-10 text-[10px] font-bold uppercase tracking-[0.5em] text-[#D2B48C]">The Registry</h4>
+                        <h4 className="mb-10 text-[10px] font-bold uppercase tracking-[0.5em] text-[#D2B48C]">Subscribe to our newsletter</h4>
                         <p className="text-white/30 text-xs font-light mb-8 leading-relaxed">Join our registry for exclusive access to reserve grades and seasonal field reports.</p>
                         <div className="relative group">
                             <input

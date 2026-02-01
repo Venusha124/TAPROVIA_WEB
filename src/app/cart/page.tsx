@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -8,44 +8,55 @@ import { Button } from "@/components/ui/button";
 import { ShoppingBag, ChevronRight, X, Minus, Plus, ArrowRight, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Mock cart data
-const initialCartItems = [
-    {
-        id: "alba",
-        name: "Ceylon Alba Sticks",
-        origin: "Ceylon • Sri Lanka",
-        price: 6500.00,
-        quantity: 1,
-        image: "/products/cinnamon_powder_spoon.png"
-    }
-];
-
 export default function CartPage() {
     const router = useRouter();
-    const [items, setItems] = useState(initialCartItems);
+    const [items, setItems] = useState<any[]>([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        // Validate and fix prices to prevent NaN
+        const validatedCart = cart.map((item: any) => ({
+            ...item,
+            price: typeof item.price === 'string' ? parseFloat(item.price.replace(/[^0-9.]/g, '')) : Number(item.price) || 0
+        }));
+        setItems(validatedCart);
+        setIsLoaded(true);
+    }, []);
+
+    const updateLocalStorage = (newItems: any[]) => {
+        localStorage.setItem('cart', JSON.stringify(newItems));
+        setItems(newItems);
+    };
 
     const updateQuantity = (id: string, delta: number) => {
-        setItems(prev => prev.map(item => {
+        const newItems = items.map(item => {
             if (item.id === id) {
                 const newQty = Math.max(1, item.quantity + delta);
                 return { ...item, quantity: newQty };
             }
             return item;
-        }));
+        });
+        updateLocalStorage(newItems);
     };
 
     const removeItem = (id: string) => {
-        setItems(prev => prev.filter(item => item.id !== id));
+        const newItems = items.filter(item => item.id !== id);
+        updateLocalStorage(newItems);
     };
 
     const clearCart = () => {
-        setItems([]);
+        updateLocalStorage([]);
     };
 
     const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     const shipping = items.length > 0 ? 8.00 : 0;
     const tax = subtotal * 0.05;
     const total = subtotal + shipping + tax;
+
+    if (!isLoaded) {
+        return <div className="bg-[#050505] min-h-screen" />;
+    }
 
     return (
         <main className="bg-[#050505] min-h-screen text-[#F3EFE9] pt-32 pb-60 overflow-x-hidden selection:bg-[#D2B48C] selection:text-black">
@@ -65,21 +76,19 @@ export default function CartPage() {
                             Review your selected TAPROVIA items. Update quantities, remove items, and proceed to checkout when ready.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-6">
-                            <Button
-                                onClick={() => router.push('/products')}
-                                className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 px-10 text-[11px] font-bold uppercase tracking-[0.3em] transition-all"
-                            >
-                                Continue Shopping
-                            </Button>
-                            <Button
-                                variant="outline"
-                                onClick={() => router.push('/checkout')}
-                                className="border-white/10 text-white/50 hover:bg-white/5 hover:text-white rounded-full h-16 px-10 text-[11px] font-bold uppercase tracking-[0.3em] bg-transparent transition-all"
-                            >
-                                Go to Checkout
-                            </Button>
-                        </div>
+                        <Button
+                            onClick={() => router.push('/explore')}
+                            className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 px-10 text-[11px] font-bold uppercase tracking-[0.3em] transition-all"
+                        >
+                            Continue Shopping
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => router.push('/checkout')}
+                            className="border-white/10 text-white/50 hover:bg-white/5 hover:text-white rounded-full h-16 px-10 text-[11px] font-bold uppercase tracking-[0.3em] bg-transparent transition-all"
+                        >
+                            Go to Checkout
+                        </Button>
                     </div>
 
                     {/* Atmospheric Glow */}
@@ -102,7 +111,7 @@ export default function CartPage() {
                                 <div className="flex gap-4">
                                     <Button
                                         variant="outline"
-                                        onClick={() => router.push('/products')}
+                                        onClick={() => router.push('/explore')}
                                         className="border-white/5 text-white/40 hover:text-white rounded-full h-12 px-6 text-[9px] font-bold uppercase tracking-widest bg-transparent transition-all"
                                     >
                                         Add More Items
@@ -135,7 +144,7 @@ export default function CartPage() {
                                             <div className="md:col-span-4 text-center md:text-left">
                                                 <h3 className="text-2xl font-serif text-white mb-2">{item.name}</h3>
                                                 <p className="text-[#D2B48C] text-[10px] font-bold uppercase tracking-widest mb-6 opacity-60">{item.origin}</p>
-                                                <p className="text-white/40 text-lg font-serif italic">${item.price.toFixed(2)} each</p>
+                                                <p className="text-white/40 text-lg font-serif italic">${item.price ? item.price.toFixed(2) : "0.00"} each</p>
                                             </div>
 
                                             {/* Actions */}
@@ -216,7 +225,7 @@ export default function CartPage() {
                                     </Button>
                                     <Button
                                         variant="outline"
-                                        onClick={() => router.push('/products')}
+                                        onClick={() => router.push('/explore')}
                                         className="w-full border-white/10 text-white/50 hover:bg-white/5 hover:text-white rounded-full h-20 text-[11px] font-bold uppercase tracking-[0.3em] bg-transparent transition-all"
                                     >
                                         Continue Shopping
@@ -242,7 +251,7 @@ export default function CartPage() {
                         <ShoppingBag size={64} className="mx-auto text-white/5 mb-12" />
                         <h2 className="text-4xl font-serif text-white mb-8 italic">Your cart is as empty as a morning mist.</h2>
                         <Button
-                            onClick={() => router.push('/products')}
+                            onClick={() => router.push('/explore')}
                             className="bg-[#D2B48C]/10 text-[#D2B48C] hover:bg-[#D2B48C] hover:text-black rounded-full h-16 px-12 text-[10px] font-bold uppercase tracking-[0.4em] transition-all"
                         >
                             Explore the Collection

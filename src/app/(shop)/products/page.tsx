@@ -127,6 +127,36 @@ const products = [
         scale: 1,
         parallax: 0,
         features: ["Intense Aroma", "High Purity", "Exclusive Reserve"]
+    },
+    {
+        id: 7,
+        name: "Cinnamon Imperiale",
+        badge: "Sovereign Gift",
+        origin: "Matara Estate",
+        grade: "Alba Special",
+        image: "/products/cinnamon_powder_spoon.png",
+        category: "Sticks",
+        description: "A ceremonial selection of our finest Alba quills, presented in a handcrafted mahogany chest for the ultimate connoisseur.",
+        rating: 5.0,
+        reviews: 8,
+        scale: 1,
+        parallax: 0,
+        features: ["Gift Presentation", "Limited Harvest", "Certificate of Origin"]
+    },
+    {
+        id: 8,
+        name: "Ceylon Cinnamon Chips",
+        badge: "Rustic Infusion",
+        origin: "Ratnapura Wilds",
+        grade: "H2 Standard",
+        image: "/products/cinnamon_powder_bowl.png",
+        category: "Bulk & Exports",
+        description: "Sun-dried unpeeled bark chips rich in essential oils, perfectly suited for heavy infusions, mulled wines, and distillation bases.",
+        rating: 4.6,
+        reviews: 42,
+        scale: 1,
+        parallax: 0,
+        features: ["High Oil Content", "Rough Cut", "Intense Flavor"]
     }
 ];
 
@@ -179,22 +209,26 @@ const prologueSteps = [
     }
 ];
 
-const hotspots = [
+const trustFeatures = [
     {
-        id: "soil",
-        x: "30%",
-        y: "40%",
-        title: "Mineral Rich Terroir",
-        label: "GEOLOGY",
-        description: "Deep lateralite layers rich in iron and minerals."
+        title: "Batch Details",
+        description: "Lot info, origin notes, and cinnamon type labeling.",
+        icon: Layers
     },
     {
-        id: "peeling",
-        x: "70%",
-        y: "60%",
-        title: "The 45° Intuition",
-        label: "MASTERY",
-        description: "A technique passed through bloodlines, never written."
+        title: "Quality Checks",
+        description: "Consistency-focused checks before packing.",
+        icon: CheckCircle2
+    },
+    {
+        title: "Secure Packing",
+        description: "Premium packaging designed for export shipping.",
+        icon: ShoppingBag
+    },
+    {
+        title: "Customer Care",
+        description: "Fast responses and a premium buying experience.",
+        icon: PhoneCall
     }
 ];
 
@@ -226,12 +260,8 @@ export default function ProductsPage() {
             {/* Cinematic Grain Overlay */}
             <div className="fixed inset-0 pointer-events-none z-[100] opacity-[0.04] bg-[url('https://www.transparenttextures.com/patterns/pinstripe.png')]" />
 
-            {/* --- 1. THE SOVEREIGN PROLOGUE (VERTICAL REVEAL) --- */}
-            <div className="relative z-10">
-                {prologueSteps.map((step, index) => (
-                    <PrologueSection key={step.id} step={step} index={index} total={prologueSteps.length} />
-                ))}
-            </div>
+            {/* --- 1. THE SOVEREIGN PROLOGUE (CAROUSEL) --- */}
+            <PrologueCarousel />
 
             {/* --- 2. THE SOVEREIGN GALLERY (ASYMMETRICAL) --- */}
             <div className="relative z-20 bg-[#050505]">
@@ -302,32 +332,48 @@ export default function ProductsPage() {
                 {/* Testimonials Segment */}
                 <TestimonialsSection />
 
-                {/* Heritage Deep-Dive Spotlight */}
-                <HeritageDeepDive />
+                {/* Trust & Transparency Feature */}
+                <TrustAndTransparency />
 
-                {/* Concierge CTA */}
+                {/* The Sommelier's Note */}
                 <section className="py-60 relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#D2B48C]/5 to-transparent pointer-events-none" />
                     <div className="container px-4 text-center">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
-                            className="max-w-4xl mx-auto p-24 rounded-[5rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl relative overflow-hidden group"
+                            className="max-w-5xl mx-auto p-24 rounded-[5rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl relative overflow-hidden group"
                         >
                             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#D2B48C]/30 to-transparent" />
-                            <h2 className="text-5xl md:text-7xl font-serif font-light mb-12 italic">The Custom Reserve.</h2>
-                            <p className="text-xl text-white/30 font-light mb-16 max-w-xl mx-auto leading-relaxed">
-                                For enterprise partners requiring bespoke grades, white-labeling, or strategic logistics optimization.
+
+                            <span className="text-[#D2B48C] font-bold tracking-[0.5em] uppercase text-[10px] mb-8 block">Sensory Analysis</span>
+                            <h2 className="text-5xl md:text-7xl font-serif font-light mb-12 italic">The Sommelier's Note.</h2>
+                            <p className="text-xl text-white/40 font-light mb-16 max-w-2xl mx-auto leading-relaxed">
+                                "Defined by a delicate sweetness and a complex, warm aroma. The 'True Cinnamon' signature features hints of citrus, clove, and a lingering floral finish."
                             </p>
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                                <Button className="bg-[#D2B48C] hover:bg-white text-black font-bold h-24 px-16 rounded-full text-[10px] uppercase tracking-[0.4em] shadow-2xl transition-all hover:scale-105 active:scale-95 group">
-                                    <PhoneCall className="mr-4 group-hover:rotate-12 transition-transform" size={18} />
-                                    Speak with Concierge
-                                </Button>
-                                <button className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/40 hover:text-white transition-colors group flex items-center gap-4">
-                                    View Export Grades
-                                    <MoveRight className="group-hover:translate-x-2 transition-transform" />
-                                </button>
+
+                            {/* Tasting Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-3xl mx-auto">
+                                {[
+                                    { label: "Sweetness", val: 92 },
+                                    { label: "Warmth", val: 96 },
+                                    { label: "Complexity", val: 98 }
+                                ].map((item, i) => (
+                                    <div key={i} className="flex flex-col gap-4">
+                                        <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-[#D2B48C]">
+                                            <span>{item.label}</span>
+                                            <span>{item.val}/100</span>
+                                        </div>
+                                        <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                whileInView={{ width: `${item.val}%` }}
+                                                transition={{ duration: 1.5, delay: 0.5 }}
+                                                className="h-full bg-[#D2B48C]"
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </motion.div>
                     </div>
@@ -425,82 +471,94 @@ export default function ProductsPage() {
                 )}
             </AnimatePresence>
 
-            {/* Floating Global Action */}
-            <motion.div
-                initial={{ opacity: 0, y: 100 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="fixed bottom-12 right-12 z-[500] flex items-center gap-4"
-            >
-                <div className="px-8 py-4 rounded-full bg-black/80 backdrop-blur-2xl border border-white/10 shadow-2xl flex items-center gap-6">
-                    <div className="flex -space-x-4">
-                        {[1, 2, 3].map(i => (
-                            <div key={i} className="w-10 h-10 rounded-full border-2 border-black bg-gradient-to-tr from-[#D2B48C]/30 to-black flex items-center justify-center text-[10px] text-white/50">
-                                {String.fromCharCode(64 + i)}
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-[10px] font-bold text-white uppercase tracking-widest">Global Desk</span>
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                            <span className="text-[10px] font-bold text-[#D2B48C] uppercase tracking-[0.2em]">Active Concierge</span>
-                        </div>
-                    </div>
-                </div>
-                <button className="w-16 h-16 rounded-full bg-[#D2B48C] text-black shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all">
-                    <MessageCircle size={24} />
-                </button>
-            </motion.div>
         </div>
     );
 }
 
-function PrologueSection({ step, index, total }: { step: typeof prologueSteps[0], index: number, total: number }) {
-    const sectionRef = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: sectionRef,
-        offset: ["start end", "end start"]
-    });
+function PrologueCarousel() {
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-    const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.1, 1, 1.1]);
-    const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-    const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % prologueSteps.length);
+        }, 8000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % prologueSteps.length);
+    const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + prologueSteps.length) % prologueSteps.length);
 
     return (
-        <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-            <motion.div style={{ opacity, scale }} className="absolute inset-0 z-0">
-                <Image src={step.image} alt={step.title} fill className="object-cover opacity-60 grayscale-[0.3]" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
-            </motion.div>
+        <section className="relative h-screen w-full overflow-hidden bg-black flex items-center justify-center">
+            {/* Background Transition */}
+            <AnimatePresence mode="popLayout">
+                <motion.div
+                    key={currentIndex}
+                    initial={{ opacity: 0, scale: 1.1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                    className="absolute inset-0 z-0"
+                >
+                    <Image
+                        src={prologueSteps[currentIndex].image}
+                        alt={prologueSteps[currentIndex].title}
+                        fill
+                        className="object-cover opacity-60 grayscale-[0.3]"
+                        priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+                </motion.div>
+            </AnimatePresence>
 
-            <div className="container relative z-10 px-4 pt-48">
-                <div className="max-w-4xl mx-auto text-center">
-                    <motion.span
-                        style={{ y: useTransform(scrollYProgress, [0, 1], [50, -50]) }}
-                        className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block"
-                    >
-                        {step.subtitle}
-                    </motion.span>
-                    <motion.h2
-                        style={{ y: useTransform(scrollYProgress, [0, 1], [30, -30]) }}
-                        className="text-6xl md:text-[8rem] font-serif font-light text-white mb-10 leading-none tracking-tighter"
-                    >
-                        {step.title}
-                    </motion.h2>
-                    <motion.p
-                        style={{ opacity: useTransform(scrollYProgress, [0.4, 0.5, 0.6], [0, 1, 0]) }}
-                        className="text-xl md:text-2xl text-white/40 max-w-2xl mx-auto font-light leading-relaxed italic"
-                    >
-                        "{step.description}"
-                    </motion.p>
+            <div className="container relative z-10 px-4">
+                <div className="max-w-5xl mx-auto text-center">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentIndex}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                        >
+                            <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">
+                                {prologueSteps[currentIndex].subtitle}
+                            </span>
+                            <h2 className="text-6xl md:text-[8rem] font-serif font-light text-white mb-10 leading-none tracking-tighter">
+                                {prologueSteps[currentIndex].title}
+                            </h2>
+                            <p className="text-xl md:text-2xl text-white/40 max-w-2xl mx-auto font-light leading-relaxed italic">
+                                "{prologueSteps[currentIndex].description}"
+                            </p>
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
             </div>
 
-            {/* Progress indicator */}
-            <div className="absolute right-12 top-1/2 -translate-y-1/2 flex flex-col gap-6 items-center">
-                <span className="text-[10px] font-bold text-white/10 uppercase [writing-mode:vertical-lr]">{index + 1} / {total}</span>
-                <div className="w-px h-24 bg-white/5 relative">
-                    <motion.div style={{ scaleY: scrollYProgress, originY: 0 }} className="absolute inset-0 bg-[#D2B48C]" />
+            {/* Navigation & Progress */}
+            <div className="absolute bottom-12 right-12 flex items-center gap-12 z-20">
+                <div className="flex gap-4">
+                    <button onClick={prevSlide} className="text-white/30 hover:text-[#D2B48C] transition-colors">
+                        <ArrowRight className="rotate-180" size={24} />
+                    </button>
+                    <button onClick={nextSlide} className="text-white/30 hover:text-[#D2B48C] transition-colors">
+                        <ArrowRight size={24} />
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-6">
+                    <span className="text-[12px] font-bold text-[#D2B48C] tabular-nums">
+                        {currentIndex + 1} <span className="text-white/20 mx-2">/</span> {prologueSteps.length}
+                    </span>
+                    <div className="w-24 h-px bg-white/10 relative overflow-hidden">
+                        <motion.div
+                            key={currentIndex}
+                            initial={{ x: "-100%" }}
+                            animate={{ x: "0%" }}
+                            transition={{ duration: 8, ease: "linear" }}
+                            className="absolute inset-0 bg-[#D2B48C]"
+                        />
+                    </div>
                 </div>
             </div>
         </section>
@@ -646,52 +704,42 @@ function TestimonialsSection() {
     );
 }
 
-function HeritageDeepDive() {
+function TrustAndTransparency() {
+    const router = useRouter();
     return (
-        <section className="py-60 relative overflow-hidden bg-black mt-40 border-y border-white/5">
-            <div className="absolute inset-0 opacity-20">
+        <section className="py-40 bg-black text-[#F3EFE9] border-y border-white/5 relative overflow-hidden mt-40 rounded-[4rem] mx-4">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-[0.2]">
                 <div className="absolute inset-0 bg-[url('/explore/plantation.png')] bg-cover bg-fixed grayscale pointer-events-none" />
                 <div className="absolute inset-0 bg-black/80" />
             </div>
 
             <div className="container relative z-10 px-4">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-24 gap-12">
                     <div>
-                        <span className="text-[#D2B48C] font-bold tracking-[0.5em] uppercase text-[10px] mb-8 block">Terroir Intelligence</span>
-                        <h2 className="text-6xl md:text-8xl font-serif font-light text-white mb-12">Secrets of the <br /><span className="italic">Southern Highlands.</span></h2>
-                        <div className="space-y-12">
-                            {hotspots.map((spot) => (
-                                <div key={spot.id} className="group cursor-default">
-                                    <div className="flex items-center gap-8 mb-4">
-                                        <div className="w-12 h-12 rounded-full border border-[#D2B48C]/30 flex items-center justify-center text-[#D2B48C] group-hover:bg-[#D2B48C] group-hover:text-black transition-all">
-                                            <Sparkles size={16} />
-                                        </div>
-                                        <h4 className="text-2xl font-serif text-white uppercase tracking-tight">{spot.title}</h4>
-                                    </div>
-                                    <p className="text-white/30 text-lg font-light pl-20 leading-relaxed italic border-l border-white/5 ml-6">
-                                        {spot.description}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
+                        <span className="text-[#D2B48C] font-bold tracking-[0.5em] uppercase text-[10px] mb-8 block">Our Commitment</span>
+                        <h2 className="text-6xl md:text-8xl font-serif font-light mb-8 tracking-tighter text-white">Trust & <br />Transparency</h2>
+                        <p className="text-xl md:text-2xl font-light text-white/50 max-w-2xl leading-relaxed italic border-l-2 border-[#D2B48C]/50 pl-8">
+                            Clear product information, careful handling, and premium export readiness.
+                        </p>
                     </div>
+                    <Button onClick={() => router.push('/contact')} className="bg-[#D2B48C] hover:bg-white text-black font-bold h-20 px-12 rounded-full text-[11px] uppercase tracking-[0.3em] transition-all shadow-[0_0_30px_rgba(210,180,140,0.2)]">
+                        Ask for Specifications
+                    </Button>
+                </div>
 
-                    <div className="relative aspect-square">
-                        <div className="absolute inset-0 rounded-[5rem] border border-white/5 bg-gradient-to-tr from-[#D2B48C]/10 to-transparent" />
-                        <div className="absolute inset-20 rounded-[4rem] overflow-hidden border border-white/10">
-                            <Image src="/explore/alchemy.png" alt="Pure Extraction" fill className="object-cover" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {trustFeatures.map((feature, i) => (
+                        <div key={i} className="bg-white/[0.03] backdrop-blur-xl p-10 rounded-[2.5rem] hover:bg-white/[0.05] transition-all duration-500 border border-white/5 group hover:-translate-y-2">
+                            <div className="w-16 h-16 rounded-full bg-[#D2B48C]/10 border border-[#D2B48C]/20 flex items-center justify-center text-[#D2B48C] mb-8 group-hover:bg-[#D2B48C] group-hover:text-black transition-all">
+                                <feature.icon size={24} />
+                            </div>
+                            <h3 className="text-2xl font-serif mb-4 text-white group-hover:text-[#D2B48C] transition-colors">{feature.title}</h3>
+                            <p className="font-sans font-light text-white/40 leading-relaxed text-sm group-hover:text-white/60 transition-colors">
+                                {feature.description}
+                            </p>
                         </div>
-                        {/* Interactive UI elements floating */}
-                        <motion.div
-                            animate={{ y: [0, -20, 0] }}
-                            transition={{ duration: 6, repeat: Infinity }}
-                            className="absolute -top-10 -right-10 p-12 bg-black/60 backdrop-blur-3xl border border-white/10 rounded-[3rem]"
-                        >
-                            <span className="text-[10px] font-bold text-[#D2B48C] uppercase tracking-widest block mb-4">Yield Quality</span>
-                            <span className="text-4xl font-serif text-white">99.8%</span>
-                            <span className="text-[8px] font-bold text-white/20 uppercase tracking-widest block mt-2">Purity Gradient</span>
-                        </motion.div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </section>

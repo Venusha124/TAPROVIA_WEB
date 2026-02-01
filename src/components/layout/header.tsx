@@ -88,13 +88,17 @@ export function Header() {
 
                             {/* Right: User & Cart */}
                             <div className="flex-1 flex justify-end items-center space-x-6">
-                                <Button variant="ghost" size="icon" className="hover:bg-white/5 text-white/40 hover:text-white transition-all hidden md:flex">
-                                    <User className="h-5 w-5" />
-                                </Button>
-                                <Button variant="ghost" size="icon" className="relative hover:bg-white/5 text-white/40 hover:text-white transition-all">
-                                    <ShoppingBag className="h-5 w-5" />
-                                    <span className="absolute top-0 right-0 w-2 h-2 bg-[#D2B48C] rounded-full" />
-                                </Button>
+                                <Link href="/admin/login" className="hidden md:flex">
+                                    <Button variant="ghost" size="icon" className="hover:bg-white/5 text-white/40 hover:text-white transition-all">
+                                        <User className="h-5 w-5" />
+                                    </Button>
+                                </Link>
+                                <Link href="/cart">
+                                    <Button variant="ghost" size="icon" className="relative hover:bg-white/5 text-white/40 hover:text-white transition-all">
+                                        <ShoppingBag className="h-5 w-5" />
+                                        <span className="absolute top-0 right-0 w-2 h-2 bg-[#D2B48C] rounded-full" />
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
 

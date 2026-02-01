@@ -1,6 +1,7 @@
 import React from "react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { GlobalLiveChat } from "@/components/layout/global-live-chat";
 
 export default function ShopLayout({
     children,
@@ -17,6 +18,7 @@ export default function ShopLayout({
                 {children}
             </main>
             <Footer />
+            <GlobalLiveChat />
         </div>
     );
 }

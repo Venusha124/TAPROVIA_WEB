@@ -1,42 +1,36 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, ShoppingBag, ChevronRight, X, MessageCircle, Minus, Plus, ArrowRight, Trash2, MapPin, Info } from "lucide-react";
+import { ShoppingCart, ShoppingBag, ChevronRight, X, Minus, Plus, ArrowRight, Trash2, MapPin, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HeritageMap } from "@/components/layout/heritage-map";
 
 // Story Chapters
-const storyChapters = [
+const prologueSteps = [
     {
         id: "origin",
-        title: "The Sacred Highlands",
-        subtitle: "CHAPTER 01: ORIGIN",
-        description: "Our journey begins in the mist-shrouded peaks of Southern Sri Lanka, where the unique lateralite soil and persistent humidity create the perfect cradle for Cinnamomum zeylanicum.",
-        origin: "Southern Sri Lanka",
-        image: "/explore/plantation.png",
-        accent: "from-[#4A5D23]/30 to-transparent",
+        title: "The Primordial Soil",
+        subtitle: "CHAPTER I",
+        description: "In the Southern Highlands of Sri Lanka, the red lateralite soil holds a secret—the highest concentration of Eugenol ever recorded in Cinnamomum zeylanicum.",
+        image: "/explore/plantation.png"
     },
     {
-        id: "craft",
-        title: "Mastery of the Quill",
-        subtitle: "CHAPTER 02: THE CRAFT",
-        description: "Generations of wisdom come together in the hands of our master peelers. Each sovereign quill is hand-rolled at the break of dawn, a delicate process that preserves the bark's precious essential oils.",
-        origin: "Traditional Workshops",
-        image: "/explore/artisan.png",
-        accent: "from-[#8B4513]/30 to-transparent",
+        id: "timing",
+        title: "The Dawn Rhythm",
+        subtitle: "CHAPTER II",
+        description: "The bark is most elastic at the break of dawn. Our artisans begin their work before the sun touches the hills, capturing the sap at its peak vitality.",
+        image: "/explore/artisan.png"
     },
     {
-        id: "alchemy",
-        title: "Essence of Pure Gold",
-        subtitle: "CHAPTER 03: THE ALCHEMY",
-        description: "Through precise steam distillation and alchemical cold-milling, we capture the pure soul of the spice, delivering unparalleled aroma and wellness benefits.",
-        origin: "Distillation Vaults",
-        image: "/explore/alchemy.png",
-        accent: "from-[#D2B48C]/30 to-transparent",
+        id: "purity",
+        title: "The Alchemical Purity",
+        subtitle: "CHAPTER III",
+        description: "Beyond the harvest lies the vault. Through precise steam distillation, we extract the essence—a liquid gold that transcends mere spice.",
+        image: "/explore/alchemy.png"
     }
 ];
 
@@ -145,12 +139,8 @@ export default function ExplorePage() {
                 </motion.div>
             </section>
 
-            {/* Stage 1: The Narrative Arc (Vertical Scroll) */}
-            <div className="relative z-20">
-                {storyChapters.map((chapter, index) => (
-                    <NarrativeSection key={chapter.id} chapter={chapter} index={index} />
-                ))}
-            </div>
+            {/* Stage 1: The Sovereign Prologue (Carousel) */}
+            <PrologueCarousel />
 
             {/* Stage 2: The Sovereign Archive (Grid Layout) */}
             <div className="relative bg-[#050505] z-30 border-t border-white/5">
@@ -170,7 +160,17 @@ export default function ExplorePage() {
                                 key={product.id}
                                 product={product}
                                 onSelect={() => setSelectedProduct(product)}
-                                onAddToCart={() => router.push('/contact')}
+                                onAddToCart={() => {
+                                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                                    const existingItem = cart.find((item: any) => item.id === product.id);
+                                    if (existingItem) {
+                                        existingItem.quantity += 1;
+                                    } else {
+                                        cart.push({ ...product, quantity: 1 });
+                                    }
+                                    localStorage.setItem('cart', JSON.stringify(cart));
+                                    router.push('/cart');
+                                }}
                             />
                         ))}
                     </div>
@@ -195,27 +195,39 @@ export default function ExplorePage() {
                         viewport={{ once: true }}
                         className="bg-[#0A0A0A] border border-[#D2B48C]/20 rounded-[3rem] p-12 md:p-24 text-white relative overflow-hidden group shadow-3xl"
                     >
-                        <section className="relative w-full h-full flex flex-col justify-center items-center py-32">
-                            {/* Background Glow */}
-                            <div className="absolute inset-0 bg-gradient-to-tr from-[#D2B48C]/20 to-transparent transition-opacity duration-1000" />
+                        <section className="relative w-full h-full flex flex-col justify-center items-center text-center py-32 px-4">
+                            {/* Cinematic Background Glows */}
+                            <div className="absolute inset-0 bg-gradient-to-b from-[#D2B48C]/5 via-transparent to-black/40" />
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#D2B48C]/5 rounded-full blur-[100px] pointer-events-none" />
 
-                            {/* Background Large Text Label */}
-                            <motion.div
-                                initial={{ opacity: 0, x: 100 }}
-                                whileInView={{ opacity: 0.05, x: 0 }}
-                                transition={{ duration: 1.5 }}
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10vw] font-serif font-light uppercase pointer-events-none select-none italic text-white/5 whitespace-nowrap"
-                            >
-                                Request Bulk Quote <ArrowRight size={48} className="inline ml-8 opacity-50" />
-                            </motion.div>
+                            <div className="relative z-10 max-w-3xl mx-auto space-y-10">
+                                <div>
+                                    <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[10px] mb-6 block opacity-80">Global Distribution</span>
+                                    <h3 className="text-5xl md:text-7xl font-serif text-white mb-6 leading-none tracking-tight">
+                                        Bulk & <span className="italic text-white/40">Export.</span>
+                                    </h3>
+                                    <div className="w-12 h-px bg-[#D2B48C]/40 mx-auto my-8" />
+                                    <p className="text-white/60 text-lg md:text-xl font-light leading-relaxed font-serif italic max-w-2xl mx-auto">
+                                        "Looking for wholesale quantities or private label packaging? We support global export with documentation and custom solutions."
+                                    </p>
+                                </div>
 
-                            <Button
-                                onClick={() => setIsQualityModalOpen(true)}
-                                variant="outline"
-                                className="relative z-10 border-white/10 text-white/50 hover:bg-white/5 hover:text-white rounded-full h-20 px-12 text-[11px] font-bold uppercase tracking-[0.3em] bg-transparent transition-all"
-                            >
-                                Our Quality Process
-                            </Button>
+                                <div className="flex flex-col sm:flex-row items-center justify-center gap-8 pt-4">
+                                    <Button
+                                        onClick={() => router.push('/contact')}
+                                        className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 px-12 text-[11px] font-bold uppercase tracking-[0.3em] transition-all shadow-[0_0_30px_-5px_rgba(210,180,140,0.3)] hover:shadow-[0_0_40px_-5px_rgba(255,255,255,0.4)]"
+                                    >
+                                        Request Bulk Quote
+                                    </Button>
+                                    <Button
+                                        onClick={() => setIsQualityModalOpen(true)}
+                                        variant="outline"
+                                        className="border-white/10 text-white/40 hover:bg-white/5 hover:text-white rounded-full h-16 px-12 text-[11px] font-bold uppercase tracking-[0.3em] bg-transparent transition-all hover:border-white/20"
+                                    >
+                                        Our Quality Process
+                                    </Button>
+                                </div>
+                            </div>
                         </section>
 
                         {/* Decorative cinematic light flare */}
@@ -225,19 +237,72 @@ export default function ExplorePage() {
                 </div>
             </div >
 
-            {/* THE HERITAGE MAP SECTION */}
-            < section className="py-60 border-t border-white/5 bg-[#050505] relative z-20" >
+            {/* ORIGIN INTELLIGENCE SECTION */}
+            <section className="py-40 border-t border-white/5 bg-[#050505] relative z-20">
                 <div className="container px-4">
-                    <div className="max-w-4xl border-l border-[#D2B48C]/30 pl-12 mb-32">
+                    <div className="max-w-4xl border-l border-[#D2B48C]/30 pl-12 mb-20">
                         <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">Geographic Provenance</span>
                         <h2 className="text-5xl md:text-8xl font-serif font-light mb-12 tracking-tighter">The Heartland <br /><span className="italic text-white/20">of Purity.</span></h2>
                         <p className="text-xl text-white/40 font-light italic font-serif leading-relaxed">
                             TAPROVIA cinnamon is cultivated exclusively within the humid micro-climates of the Southern Highlands, where the soil is enriched by centuries of organic sediment.
                         </p>
                     </div>
-                    <HeritageMap />
+
+                    <div className="relative w-full aspect-[2/1] bg-[#080808] rounded-[3rem] border border-white/5 overflow-hidden group">
+                        {/* Grid Background */}
+                        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
+
+                        {/* Top Left Label */}
+                        <div className="absolute top-12 left-12 flex items-center gap-4 z-20">
+                            <div className="w-12 h-px bg-[#D2B48C]" />
+                            <span className="text-[#D2B48C] font-bold tracking-[0.4em] uppercase text-[10px]">Origin Intelligence</span>
+                        </div>
+
+                        {/* Matara Highlands Label */}
+                        <div className="absolute bottom-12 right-12 text-right z-20">
+                            <h3 className="text-4xl md:text-5xl font-serif text-white/10 font-bold leading-none tracking-tight group-hover:text-white/20 transition-colors duration-1000">
+                                Matara <br /> Highlands.
+                            </h3>
+                        </div>
+
+                        {/* Organic Paths & Markers */}
+                        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-60" viewBox="0 0 1000 500" preserveAspectRatio="none">
+                            <motion.path
+                                d="M0,400 C300,450 400,300 600,350 S900,200 1000,100"
+                                fill="none"
+                                stroke="#D2B48C"
+                                strokeWidth="1"
+                                strokeDasharray="5,5"
+                                className="opacity-30"
+                                initial={{ pathLength: 0, opacity: 0 }}
+                                whileInView={{ pathLength: 1, opacity: 0.3 }}
+                                transition={{ duration: 3, ease: "easeInOut" }}
+                            />
+                            <motion.path
+                                d="M200,100 C300,50 500,150 600,100 S900,400 1000,450"
+                                fill="none"
+                                stroke="#D2B48C"
+                                strokeWidth="1"
+                                strokeDasharray="10,10"
+                                className="opacity-20"
+                                initial={{ pathLength: 0, opacity: 0 }}
+                                whileInView={{ pathLength: 1, opacity: 0.2 }}
+                                transition={{ duration: 4, delay: 0.5, ease: "easeInOut" }}
+                            />
+                        </svg>
+
+                        {/* Interactive Markers */}
+                        <div className="absolute inset-0 z-10">
+                            <OriginMarker x="30%" y="40%" label="Plantation A" delay={0.2} />
+                            <OriginMarker x="55%" y="60%" label="Processing Unit" delay={0.6} />
+                            <OriginMarker x="75%" y="30%" label="Export Hub" delay={1.0} />
+                        </div>
+
+                        {/* Cinematic Vignette */}
+                        <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-black/80 pointer-events-none" />
+                    </div>
                 </div>
-            </section >
+            </section>
 
             {/* CTA SECTION */}
             < section className="py-60 relative z-20 overflow-hidden border-t border-white/5 bg-[#050505]" >
@@ -273,8 +338,16 @@ export default function ExplorePage() {
                             product={selectedProduct}
                             onClose={() => setSelectedProduct(null)}
                             onAddToCart={() => {
+                                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                                const existingItem = cart.find((item: any) => item.id === selectedProduct.id);
+                                if (existingItem) {
+                                    existingItem.quantity += 1;
+                                } else {
+                                    cart.push({ ...selectedProduct, quantity: 1 });
+                                }
+                                localStorage.setItem('cart', JSON.stringify(cart));
                                 setSelectedProduct(null);
-                                router.push('/contact');
+                                router.push('/cart');
                             }}
                         />
                     )
@@ -300,45 +373,105 @@ export default function ExplorePage() {
     );
 }
 
-function NarrativeSection({ chapter, index }: { chapter: typeof storyChapters[0], index: number }) {
-    const sectionRef = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: sectionRef,
-        offset: ["start end", "end start"]
-    });
+function PrologueCarousel() {
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-    const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.1, 1, 1.1]);
-    const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-    const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+    // Using a ref to prevent interval buildup if re-renders occur frequently
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        const startTimer = () => {
+            timerRef.current = setInterval(() => {
+                setCurrentIndex((prev) => (prev + 1) % prologueSteps.length);
+            }, 8000);
+        };
+        startTimer();
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
+    }, []);
+
+    const nextSlide = () => {
+        if (timerRef.current) clearInterval(timerRef.current);
+        setCurrentIndex((prev) => (prev + 1) % prologueSteps.length);
+    };
+
+    const prevSlide = () => {
+        if (timerRef.current) clearInterval(timerRef.current);
+        setCurrentIndex((prev) => (prev - 1 + prologueSteps.length) % prologueSteps.length);
+    };
 
     return (
-        <section ref={sectionRef} className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
-            <motion.div style={{ opacity, scale }} className="absolute inset-0 z-0">
-                <Image src={chapter.image} alt={chapter.title} fill className="object-cover opacity-60 grayscale-[0.3]" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
-                <div className={cn("absolute inset-0 bg-gradient-to-tr", chapter.accent)} />
-            </motion.div>
+        <section className="relative h-screen w-full overflow-hidden bg-black flex items-center justify-center border-t border-white/5">
+            {/* Background Transition */}
+            <AnimatePresence mode="popLayout">
+                <motion.div
+                    key={currentIndex}
+                    initial={{ opacity: 0, scale: 1.1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                    className="absolute inset-0 z-0"
+                >
+                    <Image
+                        src={prologueSteps[currentIndex].image}
+                        alt={prologueSteps[currentIndex].title}
+                        fill
+                        className="object-cover opacity-60 grayscale-[0.3]"
+                        priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+                </motion.div>
+            </AnimatePresence>
 
             <div className="container relative z-10 px-4">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center max-w-7xl mx-auto">
-                    <motion.div style={{ y }}>
-                        <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">{chapter.subtitle}</span>
-                        <h2 className="text-6xl md:text-8xl font-serif font-light text-white mb-10 leading-none tracking-tighter italic">{chapter.title}</h2>
-                        <p className="text-xl md:text-2xl text-white/40 max-w-xl font-light leading-relaxed italic border-l border-[#D2B48C]/30 pl-8">
-                            "{chapter.description}"
-                        </p>
-                    </motion.div>
+                <div className="max-w-5xl mx-auto text-center">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentIndex}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                        >
+                            <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">
+                                {prologueSteps[currentIndex].subtitle}
+                            </span>
+                            <h2 className="text-6xl md:text-[8rem] font-serif font-light text-white mb-10 leading-none tracking-tighter">
+                                {prologueSteps[currentIndex].title}
+                            </h2>
+                            <p className="text-xl md:text-2xl text-white/40 max-w-2xl mx-auto font-light leading-relaxed italic">
+                                "{prologueSteps[currentIndex].description}"
+                            </p>
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
+            </div>
 
-                    <motion.div
-                        style={{ y: useTransform(scrollYProgress, [0, 1], [-50, 50]) }}
-                        className="hidden lg:flex flex-col items-center gap-6"
-                    >
-                        <div className="w-px h-64 bg-gradient-to-b from-transparent via-[#D2B48C]/30 to-transparent" />
-                        <div className="flex items-center gap-4 text-[#D2B48C]">
-                            <MapPin size={20} />
-                            <span className="text-[10px] font-bold tracking-[0.4em] uppercase">{chapter.origin}</span>
-                        </div>
-                    </motion.div>
+            {/* Navigation & Progress */}
+            <div className="absolute bottom-12 right-12 flex items-center gap-12 z-20">
+                <div className="flex gap-4">
+                    <button onClick={prevSlide} className="text-white/30 hover:text-[#D2B48C] transition-colors">
+                        <ArrowRight className="rotate-180" size={24} />
+                    </button>
+                    <button onClick={nextSlide} className="text-white/30 hover:text-[#D2B48C] transition-colors">
+                        <ArrowRight size={24} />
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-6">
+                    <span className="text-[12px] font-bold text-[#D2B48C] tabular-nums">
+                        {currentIndex + 1} <span className="text-white/20 mx-2">/</span> {prologueSteps.length}
+                    </span>
+                    <div className="w-24 h-px bg-white/10 relative overflow-hidden">
+                        <motion.div
+                            key={currentIndex}
+                            initial={{ x: "-100%" }}
+                            animate={{ x: "0%" }}
+                            transition={{ duration: 8, ease: "linear" }}
+                            className="absolute inset-0 bg-[#D2B48C]"
+                        />
+                    </div>
                 </div>
             </div>
         </section>
@@ -370,7 +503,7 @@ function ProductCard({ product, onSelect, onAddToCart }: { product: typeof produ
                     onClick={() => onAddToCart?.()}
                     className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-14 px-8 text-[10px] font-bold uppercase tracking-[0.2em] transform translate-y-4 group-hover:translate-y-0 transition-all duration-500"
                 >
-                    <MessageCircle size={14} className="mr-2" /> Enquire
+                    <ShoppingCart size={14} className="mr-2" /> Add to Cart
                 </Button>
                 <button
                     onClick={onSelect}
@@ -485,6 +618,31 @@ function QualityProcessModal({ onClose }: { onClose: () => void }) {
     );
 }
 
+
+function OriginMarker({ x, y, label, delay }: { x: string, y: string, label: string, delay: number }) {
+    return (
+        <motion.div
+            style={{ left: x, top: y }}
+            initial={{ scale: 0, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ delay, duration: 0.5, type: "spring" }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 group/marker cursor-pointer"
+        >
+            <div className="relative flex items-center justify-center w-12 h-12">
+                <div className="absolute inset-0 bg-[#D2B48C]/20 rounded-full animate-ping opacity-20" />
+                <div className="absolute inset-0 bg-[#D2B48C]/10 rounded-full border border-[#D2B48C]/30 transition-all duration-500 group-hover/marker:scale-150 group-hover/marker:bg-[#D2B48C]/20" />
+                <MapPin size={16} className="text-[#D2B48C] relative z-10" />
+            </div>
+            {/* Tooltip */}
+            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 opacity-0 group-hover/marker:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+                <span className="text-[#D2B48C] text-[9px] font-bold uppercase tracking-[0.2em] bg-black/80 px-3 py-1 rounded-full border border-white/10">
+                    {label}
+                </span>
+            </div>
+        </motion.div>
+    );
+}
+
 function ProductModal({ product, onClose, onAddToCart }: { product: typeof products[0], onClose: () => void, onAddToCart?: () => void }) {
     return (
         <motion.div
@@ -517,7 +675,7 @@ function ProductModal({ product, onClose, onAddToCart }: { product: typeof produ
                                 onClick={onAddToCart}
                                 className="w-full bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 text-[11px] font-bold uppercase tracking-[0.3em] transition-all"
                             >
-                                <MessageCircle size={18} className="mr-4" /> Enquire
+                                <ShoppingCart size={18} className="mr-4" /> Add to Cart
                             </Button>
                             <div>
                                 <span className="text-[9px] font-bold uppercase tracking-widest text-[#D2B48C] block mb-4">Availability</span>

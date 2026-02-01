@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -65,8 +65,23 @@ const testimonials = [
   }
 ];
 
+const heroImages = [
+  "/hero-bg.png",
+  "/hero-bg-2.png",
+  "/hero-bg-3.png"
+];
+
 export default function Home() {
   const router = useRouter();
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % heroImages.length);
+    }, 6000); // Faster rotation (6s) to verify 3 images
+    return () => clearInterval(timer);
+  }, []);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -79,22 +94,32 @@ export default function Home() {
       {/* --- 1. THE THRESHOLD HERO --- */}
       <section className="relative min-h-screen flex items-center justify-center">
         <div className="absolute inset-0 z-0 overflow-hidden">
-          <motion.div
-            style={{
-              y: useTransform(scrollYProgress, [0, 0.2], [0, 150]),
-              opacity: useTransform(scrollYProgress, [0, 0.2], [1, 0.1])
-            }}
-            className="absolute inset-0 scale-105"
-          >
-            <Image
-              src="/hero-bg.png"
-              alt="Cinnamon Heartland"
-              fill
-              className="object-cover opacity-50 grayscale-[0.4]"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/40 via-transparent to-[#050505]" />
-          </motion.div>
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={currentHeroIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 2, ease: "easeInOut" }}
+              className="absolute inset-0"
+            >
+              <motion.div
+                style={{
+                  y: useTransform(scrollYProgress, [0, 0.2], [0, 150]),
+                }}
+                className="absolute inset-0 scale-105"
+              >
+                <Image
+                  src={heroImages[currentHeroIndex]}
+                  alt="Cinnamon Heartland"
+                  fill
+                  className="object-cover opacity-50 grayscale-[0.4]"
+                  priority
+                />
+              </motion.div>
+            </motion.div>
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/40 via-transparent to-[#050505] z-10" />
         </div>
 
         <div className="container relative z-10 px-4 text-center pt-48 pb-32">

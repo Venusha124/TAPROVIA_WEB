@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Leaf, Globe, Award, ShieldCheck, MapPin, ArrowRight, Eye, Target, CheckCircle2, Star, MoveRight } from "lucide-react";
+import { Leaf, Globe, Award, ShieldCheck, MapPin, ArrowRight, Eye, Target, CheckCircle2, Star, MoveRight, X, Quote } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const timelineEvents = [
@@ -34,39 +35,47 @@ const timelineEvents = [
     }
 ];
 
-const virtues = [
+const teamMembers = [
     {
-        icon: <Leaf className="w-6 h-6" />,
-        title: "Biotic Purity",
-        description: "Absolute refusal of Cassia. Every quill is DNA-verified for the highest eugenol and lowest coumarin content.",
-        color: "bg-[#D2B48C]"
+        name: "Shamalka Edirisinghe",
+        role: "Founder",
+        image: "/hero-bg.png",
+        delay: 0,
+        thoughts: "We are not just selling a spice; we are guarding a heritage. Every quill that leaves our shores carries the story of three generations of soil, sun, and silence. My vision is to see Ceylon Cinnamon reclaim its throne as the 'True Gold' of the ancient world."
     },
     {
-        icon: <Award className="w-6 h-6" />,
-        title: "Sovereign Grade",
-        description: "Custom harvesting for Alba and C5 Special grades, reserved for those who demand the pinnacle of spices.",
-        color: "bg-[#A1824A]"
+        name: "Wihelm Yohan Randy",
+        role: "Chief Executive Officer",
+        image: "/hero-bg.png",
+        delay: 0.2,
+        thoughts: "The global market demands transparency, but the luxury market demands soul. At TAPROVIA, we bridge this gap by marrying cutting-edge supply chain traceability with the artisanal reverence this product deserves. We define the standard."
     },
     {
-        icon: <ShieldCheck className="w-6 h-6" />,
-        title: "Ethical Custodians",
-        description: "Direct-to-farm trade ensuring our artisans receive 3x the market rate, sustaining the craft and the community.",
-        color: "bg-white/10"
+        name: "Vihandu Edirisinghe",
+        role: "Marketing & Social Media Coordinator",
+        image: "/hero-bg.png",
+        delay: 0.4,
+        thoughts: "In a noisy digital world, authenticity is the only currency. Our story doesn't need embellishment—it just needs to be told. I capture the raw, unfiltered beauty of the highlands to show the world the hands behind the harvest."
     },
     {
-        icon: <Globe className="w-6 h-6" />,
-        title: "Global Benchmark",
-        description: "Exceeding international export regulations (ISO 22000, FDA) to deliver a truly world-class luxury spice.",
-        color: "bg-[#D2B48C]/20"
+        name: "Venusha Weerasinghe",
+        role: "IT Consultant",
+        image: "/hero-bg.png",
+        delay: 0.6,
+        thoughts: "Technology in agriculture isn't about replacing the artisan; it's about empowering them. By digitizing our inventory and export logistics, we ensure that the freshness of the harvest is preserved from the estate to the global port."
+    },
+    {
+        name: "Thilina Weerasinghe",
+        role: "IT Supervisor",
+        image: "/hero-bg.png",
+        delay: 0.8,
+        thoughts: "Precision is our protocol. From the temperature of the drying rooms to the security of our data, every system I oversee is designed to protect the integrity of the sovereign grade. Excellence is a series of executed details."
     }
 ];
 
 export default function AboutPage() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end end"]
-    });
+    const [selectedMember, setSelectedMember] = useState<typeof teamMembers[0] | null>(null);
 
     return (
         <div ref={containerRef} className="relative bg-[#050505] text-[#F3EFE9] min-h-screen font-sans selection:bg-[#D2B48C] selection:text-black overflow-x-hidden">
@@ -181,34 +190,44 @@ export default function AboutPage() {
                         <h2 className="text-6xl md:text-9xl font-serif font-light text-white leading-none tracking-tighter">Vision & <span className="italic text-white/20">Heritage.</span></h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-32 items-center mb-60">
-                        <motion.div
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1.5 }}
-                            className="relative aspect-[4/5] rounded-[5rem] overflow-hidden group border border-white/5 shadow-3xl"
-                        >
-                            <Image src="/hero-bg.png" alt="Founder" fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[3s]" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                            <div className="absolute bottom-20 left-20">
-                                <span className="text-[#D2B48C] font-bold text-[10px] tracking-[0.6em] uppercase mb-6 block">Founder</span>
-                                <h3 className="text-5xl lg:text-6xl font-serif text-white uppercase font-light">Shamalka Edirisinghe</h3>
-                            </div>
-                        </motion.div>
+                    <div className="flex flex-wrap justify-center gap-10 lg:gap-16 mb-60 max-w-7xl mx-auto">
+                        {teamMembers.map((member, index) => (
+                            <motion.div
+                                key={member.name}
+                                initial={{ opacity: 0, y: 50 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1.2, delay: member.delay }}
+                                className="relative w-full md:w-[calc(50%-2rem)] lg:w-[calc(30%-2rem)] aspect-[4/5] rounded-[4rem] overflow-hidden group border border-white/10 shadow-3xl bg-[#080808] cursor-pointer"
+                                onClick={() => setSelectedMember(member)}
+                            >
+                                <Image
+                                    src={member.image}
+                                    alt={member.name}
+                                    fill
+                                    className="object-cover grayscale active:grayscale-0 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[2s] ease-out opacity-60 group-hover:opacity-100"
+                                />
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1.5, delay: 0.3 }}
-                            className="relative aspect-[4/5] rounded-[5rem] overflow-hidden group border border-white/5 md:mt-40 shadow-3xl"
-                        >
-                            <Image src="/hero-bg.png" alt="CEO" fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[3s]" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                            <div className="absolute bottom-20 left-20">
-                                <span className="text-[#D2B48C] font-bold text-[10px] tracking-[0.6em] uppercase mb-6 block">Chief Executive Officer</span>
-                                <h3 className="text-5xl lg:text-6xl font-serif text-white uppercase font-light">Yohan Randy</h3>
-                            </div>
-                        </motion.div>
+                                {/* Gradient Overlay */}
+                                <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90" />
+
+                                {/* Content */}
+                                <div className="absolute bottom-0 inset-x-0 p-10 flex flex-col justify-end text-center">
+                                    <div className="overflow-hidden">
+                                        <span className="inline-block text-[#D2B48C] font-bold text-[9px] tracking-[0.4em] uppercase mb-4 border border-[#D2B48C]/30 px-4 py-2 rounded-full bg-black/40 backdrop-blur-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                                            {member.role}
+                                        </span>
+                                    </div>
+                                    <h3 className="text-3xl lg:text-4xl font-serif text-white uppercase font-light leading-none tracking-tight group-hover:text-[#D2B48C] transition-colors duration-500">
+                                        {member.name.split(" ").map((n, i) => (
+                                            <span key={i} className="block">{n}</span>
+                                        ))}
+                                    </h3>
+                                    <div className="h-0 group-hover:h-8 transition-all duration-500 overflow-hidden flex justify-center items-end opacity-0 group-hover:opacity-100">
+                                        <span className="text-[9px] uppercase tracking-[0.3em] text-white/50">Click to view vision</span>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
                     </div>
 
                     <div className="max-w-5xl mx-auto text-center">
@@ -238,12 +257,20 @@ export default function AboutPage() {
                         <p className="text-2xl text-white/40 font-light mb-20 max-w-2xl mx-auto leading-relaxed italic border-x border-white/5 px-12">
                             Join our inner circle of distributors and chefs who accept only the primordial grade of Ceylon Cinnamon.
                         </p>
-                        <Button className="bg-[#D2B48C] hover:bg-white text-black font-bold h-24 px-20 rounded-full text-[11px] uppercase tracking-[0.5em] shadow-3xl transition-all hover:scale-105 group">
-                            Connect with Exports Desk <MoveRight className="ml-4 group-hover:translate-x-2 transition-transform" />
-                        </Button>
+                        <Link href="/contact">
+                            <Button className="bg-[#D2B48C] hover:bg-white text-black font-bold h-24 px-20 rounded-full text-[11px] uppercase tracking-[0.5em] shadow-3xl transition-all hover:scale-105 group">
+                                Connect with Exports Desk <MoveRight className="ml-4 group-hover:translate-x-2 transition-transform" />
+                            </Button>
+                        </Link>
                     </motion.div>
                 </div>
             </section>
+
+            <AnimatePresence>
+                {selectedMember && (
+                    <TeamModal member={selectedMember} onClose={() => setSelectedMember(null)} />
+                )}
+            </AnimatePresence>
         </div>
     );
 }
@@ -280,3 +307,58 @@ function TimelineBlock({ event, index }: { event: typeof timelineEvents[0], inde
         </motion.div>
     );
 }
+
+function TeamModal({ member, onClose }: { member: typeof teamMembers[0], onClose: () => void }) {
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-12 overflow-y-auto"
+        >
+            <div className="absolute inset-0 bg-black/95 backdrop-blur-3xl" onClick={onClose} />
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 50 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 50 }}
+                className="relative w-full max-w-4xl bg-[#0A0A0A] rounded-[4rem] border border-white/10 overflow-hidden shadow-3xl my-auto flex flex-col md:flex-row"
+            >
+                <button
+                    onClick={onClose}
+                    className="absolute top-8 right-8 w-12 h-12 rounded-full bg-black/50 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all transform hover:rotate-90 z-20"
+                >
+                    <X size={20} />
+                </button>
+
+                <div className="relative w-full md:w-1/2 aspect-square md:aspect-auto">
+                    <Image src={member.image} alt={member.name} fill className="object-cover grayscale" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#0A0A0A]" />
+                </div>
+
+                <div className="p-12 md:p-20 md:w-1/2 flex flex-col justify-center text-left relative">
+                    <Quote className="absolute top-12 right-12 text-[#D2B48C]/10 w-40 h-40 -rotate-12" />
+
+                    <span className="text-[#D2B48C] font-bold tracking-[0.4em] uppercase text-[10px] mb-6 block border border-[#D2B48C]/20 px-4 py-2 rounded-full w-fit">
+                        {member.role}
+                    </span>
+
+                    <h2 className="text-4xl md:text-5xl font-serif text-white mb-12 leading-none uppercase tracking-wide">
+                        {member.name}
+                    </h2>
+
+                    <div className="relative z-10">
+                        <p className="text-xl md:text-2xl text-white/60 font-serif font-light leading-relaxed italic border-l-2 border-[#D2B48C] pl-8">
+                            "{member.thoughts}"
+                        </p>
+                    </div>
+
+                    <div className="mt-16 pt-8 border-t border-white/5">
+                        <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/30">Connect</span>
+                        {/* Placeholder for social links if needed */}
+                    </div>
+                </div>
+            </motion.div>
+        </motion.div>
+    );
+}
+

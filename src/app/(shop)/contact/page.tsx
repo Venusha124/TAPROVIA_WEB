@@ -44,7 +44,7 @@ export default function ContactPage() {
                                 Desk {status}
                             </div>
                         </div>
-                        <h1 className="text-6xl md:text-[10rem] font-serif font-light leading-none mb-12 tracking-tighter">
+                        <h1 className="text-6xl md:text-[10rem] font-serif font-light leading-none mb-12 tracking-tighter text-white">
                             Direct <span className="italic text-white/20">Access.</span>
                         </h1>
                         <p className="text-white/40 max-w-2xl mx-auto text-xl font-light leading-relaxed italic border-x border-white/5 px-12">
@@ -54,28 +54,21 @@ export default function ContactPage() {
                 </div>
             </section>
 
-            {/* --- 2. BESPOKE PROTOCOLS --- */}
-            <section className="py-32 border-b border-white/5 bg-[#080808]">
+            {/* --- 2. QUICK INFO GRID --- */}
+            <section className="py-20 bg-[#080808] border-y border-white/5">
                 <div className="container px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <ProtocolCard
-                            Icon={Zap}
-                            title="Global Wholesale"
-                            desc="Optimized logistics for luxury distributors and bulk acquisitions of premium export grades."
-                            action="View Logistics"
-                        />
-                        <ProtocolCard
-                            Icon={Diamond}
-                            title="Private Reserve"
-                            desc="Bespoke access for elite collectors to reserve the limited Alba Peak harvests before global release."
-                            action="Request Access"
-                        />
-                        <ProtocolCard
-                            Icon={ShieldCheck}
-                            title="Compliance Registry"
-                            desc="Direct verification of ISO 22000, FDA and Organic certifications for institutional audits."
-                            action="Verify Protocol"
-                        />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {[
+                            { label: "Response time", value: "Within 24–48 hrs" },
+                            { label: "Best for", value: "Bulk / Export" },
+                            { label: "Support", value: "Order guidance" },
+                            { label: "Shipping", value: "Worldwide options" }
+                        ].map((info, i) => (
+                            <div key={i} className="bg-white/[0.02] backdrop-blur-3xl p-8 rounded-[2rem] border border-white/5 hover:bg-white/[0.04] transition-all group">
+                                <span className="text-white/20 text-[10px] font-bold uppercase tracking-wider block mb-2 group-hover:text-[#D2B48C]/50 transition-colors">{info.label}</span>
+                                <h3 className="text-white font-serif font-light text-xl group-hover:text-[#D2B48C] transition-colors italic">{info.value}</h3>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -114,69 +107,132 @@ export default function ContactPage() {
                                 </div>
                             </div>
 
-                            <div className="pt-20 border-t border-white/5">
-                                <div className="p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:rotate-45 transition-transform duration-700">
-                                        <Clock size={80} />
+                            <div className="pt-20 border-t border-white/5 space-y-12">
+                                {/* Business Hours Card */}
+                                <div className="p-10 rounded-[2.5rem] bg-white/[0.02] text-[#F3EFE9] border border-white/5 relative overflow-hidden group">
+                                    <h3 className="text-white font-serif text-2xl mb-8 italic">Business Hours</h3>
+                                    <div className="space-y-4 font-sans text-sm font-light">
+                                        <div className="flex justify-between items-center border-b border-white/5 pb-4">
+                                            <span className="text-white/40">Mon–Fri</span>
+                                            <span className="text-white font-medium">9:00 AM – 6:00 PM</span>
+                                        </div>
+                                        <div className="flex justify-between items-center border-b border-white/5 pb-4">
+                                            <span className="text-white/40">Saturday</span>
+                                            <span className="text-white font-medium">10:00 AM – 2:00 PM</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-white/40">Sunday</span>
+                                            <span className="text-[#D2B48C] font-bold">Closed</span>
+                                        </div>
                                     </div>
-                                    <h3 className="text-white font-serif text-2xl mb-4 italic">Clock Synchrony</h3>
-                                    <p className="text-white/30 text-sm font-light leading-relaxed">
-                                        Operating on IST (GMT+5:30). Desk active 08:00 — 18:00 Mon-Fri. Global SOS active 24/7 for logistics priority.
-                                    </p>
+                                </div>
+
+                                {/* Location Preview Card */}
+                                <div className="p-4 rounded-[3rem] bg-white/[0.02] border border-white/5 relative group">
+                                    <div className="flex justify-between items-center px-10 py-10">
+                                        <div>
+                                            <span className="text-[#D2B48C] text-[10px] font-bold uppercase tracking-[0.4em] block mb-2 transition-colors">Find us</span>
+                                            <h3 className="text-white font-serif text-3xl font-light italic">Location <span className="text-white/20">Preview</span></h3>
+                                        </div>
+                                        <button className="h-14 px-8 rounded-full border border-white/10 text-white/40 text-[10px] font-bold uppercase tracking-widest hover:border-[#D2B48C] hover:text-[#D2B48C] transition-all">
+                                            Open Maps
+                                        </button>
+                                    </div>
+                                    <div className="relative aspect-[4/3] w-full rounded-[2.5rem] overflow-hidden border border-white/5 bg-black">
+                                        <iframe
+                                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.798511707696!2d79.85959141477286!3d6.914677495003666!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2596dc70a2fef%3A0x6b8014526c85775c!2sColombo!5e0!3m2!1sen!2slk!4v1680000000000!5m2!1sen!2slk"
+                                            width="100%"
+                                            height="100%"
+                                            style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) brightness(0.9) contrast(1.2)' }}
+                                            allowFullScreen
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* RIGHT: THE INQUIRY VAULT */}
+                        {/* RIGHT: THE SEND A MESSAGE FORM */}
                         <div className="lg:col-span-7">
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.98 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                className="bg-white/[0.02] backdrop-blur-3xl p-10 md:p-20 rounded-[4rem] border border-white/5 shadow-3xl relative overflow-hidden group"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                className="bg-white/[0.02] backdrop-blur-3xl p-10 md:p-16 rounded-[4rem] border border-white/5 shadow-3xl relative overflow-hidden group"
                             >
                                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D2B48C]/30 to-transparent" />
 
-                                <div className="flex items-center gap-6 mb-16">
-                                    <MessageSquare size={20} className="text-[#D2B48C]" />
-                                    <h2 className="text-2xl md:text-3xl font-serif text-white italic">Protocol Inquiry</h2>
+                                <h2 className="text-4xl md:text-6xl font-serif font-light mb-6 text-white italic">Send a <span className="text-white/20">Message</span></h2>
+                                <p className="text-white/40 text-sm mb-12 max-w-lg leading-relaxed font-light italic border-l border-[#D2B48C]/30 pl-8">
+                                    "Share a quick note about your request. If it's a booking service, include your preferred date and location."
+                                </p>
+
+                                <div className="space-y-12">
+                                    {/* Message Type Pills */}
+                                    <div className="space-y-6">
+                                        <label className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/20">Message classification</label>
+                                        <div className="flex flex-wrap gap-4">
+                                            {["Partnership", "Export", "Bulk", "Packaging", "Booking"].map((type) => (
+                                                <button
+                                                    key={type}
+                                                    type="button"
+                                                    className="px-8 py-4 rounded-full border border-white/5 bg-white/5 text-[10px] font-bold uppercase tracking-widest text-white/40 hover:border-[#D2B48C] hover:text-[#D2B48C] transition-all"
+                                                >
+                                                    {type}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <form className="space-y-10">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <input type="text" placeholder="Your Name" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
+                                            <input type="email" placeholder="Your Email" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
+                                            <input type="tel" placeholder="Phone (optional)" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
+                                            <input type="text" placeholder="Country (optional)" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
+                                        </div>
+
+                                        <input type="text" placeholder="Subject (e.g., Partnership / Export Inquiry / Booking)" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <select className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white/60 focus:outline-none focus:border-[#D2B48C] transition-all appearance-none cursor-pointer">
+                                                <option className="bg-[#050505] text-white">Preferred contact: Email</option>
+                                                <option className="bg-[#050505] text-white">Preferred contact: Phone</option>
+                                                <option className="bg-[#050505] text-white">Preferred contact: WhatsApp</option>
+                                            </select>
+                                            <select className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white/60 focus:outline-none focus:border-[#D2B48C] transition-all appearance-none cursor-pointer">
+                                                <option className="bg-[#050505] text-white">Timeframe: Anytime</option>
+                                                <option className="bg-[#050505] text-white">Timeframe: Morning</option>
+                                                <option className="bg-[#050505] text-white">Timeframe: Evening</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="relative">
+                                            <textarea rows={6} placeholder="Your Message" className="w-full bg-white/[0.03] border border-white/5 rounded-[2.5rem] p-10 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all resize-none placeholder:text-white/20 italic font-serif" ></textarea>
+                                        </div>
+
+                                        <div className="flex items-center justify-between pt-4 border-t border-white/5 border-dashed">
+                                            <label className="flex items-center gap-4 cursor-pointer group">
+                                                <input type="checkbox" className="w-5 h-5 rounded border-white/10 bg-black text-[#D2B48C] focus:ring-[#D2B48C]" />
+                                                <span className="text-[10px] font-bold uppercase tracking-widest text-white/20 group-hover:text-white transition-colors">I agree to be contacted about my request.</span>
+                                            </label>
+                                            <span className="text-[10px] text-white/20 font-bold tabular-nums">0 / 800</span>
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-6">
+                                            <Button className="bg-[#D2B48C] hover:bg-white text-black px-16 h-20 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] transition-all shadow-2xl">
+                                                Send Message
+                                            </Button>
+                                            <Button variant="outline" className="border-white/10 text-white/40 hover:bg-white/5 hover:text-white px-16 h-20 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] transition-all">
+                                                Copy Email
+                                            </Button>
+                                        </div>
+
+                                        <p className="text-[10px] text-white/20 font-light italic pt-4">
+                                            Tip: For bulk/export, include quantity, destination country, and preferred packing (bags/jars).
+                                        </p>
+                                    </form>
                                 </div>
-
-                                <form className="space-y-12">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                                        <div className="space-y-4">
-                                            <label className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/20 ml-2">Appellation</label>
-                                            <input type="text" className="w-full bg-transparent border-b border-white/10 py-5 text-lg font-light text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/5 uppercase tracking-wider" placeholder="Full Name" />
-                                        </div>
-                                        <div className="space-y-4">
-                                            <label className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/20 ml-2">Registry Email</label>
-                                            <input type="email" className="w-full bg-transparent border-b border-white/10 py-5 text-lg font-light text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/5 uppercase tracking-wider" placeholder="email@protocol.com" />
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-4">
-                                        <label className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/20 ml-2">Inquiry Classification</label>
-                                        <select className="w-full bg-transparent border-b border-white/10 py-5 text-lg font-light text-white focus:outline-none focus:border-[#D2B48C] transition-all appearance-none cursor-pointer uppercase tracking-wider">
-                                            <option className="bg-[#050505]">Wholesale Acquisition</option>
-                                            <option className="bg-[#050505]">Private Reserve Request</option>
-                                            <option className="bg-[#050505]">Logistics Analytics</option>
-                                            <option className="bg-[#050505]">Press Chronicles</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="space-y-4">
-                                        <label className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/20 ml-2">Narrative</label>
-                                        <textarea rows={4} className="w-full bg-transparent border-b border-white/10 py-5 text-lg font-light text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/5 resize-none italic font-serif" placeholder="Elaborate on your requirements..." ></textarea>
-                                    </div>
-
-                                    <div className="pt-8">
-                                        <Button className="w-full h-24 bg-[#D2B48C] text-black hover:bg-white text-[11px] font-bold uppercase tracking-[0.4em] rounded-full transition-all group overflow-hidden relative shadow-3xl">
-                                            <span className="relative z-10 flex items-center justify-center gap-4">
-                                                Transmit Inquiry <Send size={16} />
-                                            </span>
-                                            <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                                        </Button>
-                                    </div>
-                                </form>
                             </motion.div>
                         </div>
                     </div>

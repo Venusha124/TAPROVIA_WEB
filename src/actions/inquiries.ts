@@ -53,3 +53,18 @@ export async function createInquiry(formData: FormData) {
 
     return { success: true };
 }
+
+// --- TOGGLE INQUIRY STATUS ---
+export async function markInquiryActioned(id: string, actioned: boolean) {
+    const { error } = await supabase
+        .from("inquiries")
+        .update({ action_taken: actioned })
+        .eq("id", id);
+
+    if (error) {
+        return { error: error.message };
+    }
+
+    revalidatePath("/admin/inquiries");
+    return { success: true };
+}

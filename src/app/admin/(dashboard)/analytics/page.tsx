@@ -1,32 +1,42 @@
 import React from "react";
 import { getAnalyticsSummary } from "@/actions/analytics";
-import { Zap, Map, MousePointer, Monitor } from "lucide-react";
+import { Zap, Map, MousePointer, Monitor, Calendar as CalendarIcon } from "lucide-react";
+import { AnalyticsPeriodFilter } from "@/components/admin/analytics-period-filter";
 
-export default async function AnalyticsPage() {
-    const { activeUsers, topCountries, topPages } = await getAnalyticsSummary();
+export default async function AnalyticsPage(props: { searchParams: Promise<{ period?: string }> }) {
+    const searchParams = await props.searchParams;
+    const { period } = searchParams;
+    const { activeUsers, topCountries, topPages, isHistorical } = await getAnalyticsSummary(period);
 
     return (
         <div className="space-y-12">
             {/* Header */}
-            <div>
-                <h1 className="text-3xl font-serif text-white font-light mb-2">Web Analytics</h1>
-                <p className="text-white/40 text-sm">Real-time traffic and audience insights.</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-serif text-white font-light mb-2">Web Analytics</h1>
+                    <p className="text-white/40 text-sm">Real-time traffic and audience insights.</p>
+                </div>
+                <AnalyticsPeriodFilter />
             </div>
 
             {/* Metrics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                {/* Active Users */}
+                {/* Active Users / Total Visits */}
                 <div className="bg-[#050505] border border-white/5 rounded-2xl p-8 flex items-center gap-6">
                     <div className="p-4 rounded-full bg-green-500/10 text-green-400">
-                        <Zap size={32} />
+                        {isHistorical ? <CalendarIcon size={32} /> : <Zap size={32} />}
                     </div>
                     <div>
-                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-1">Active Users (15m)</p>
+                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-1">
+                            {isHistorical ? "Total Unique Visitors" : "Active Users (15m)"}
+                        </p>
                         <h2 className="text-4xl font-serif text-white">{activeUsers}</h2>
                         <div className="flex items-center gap-2 mt-2">
-                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                            <span className="text-[10px] text-white/30 uppercase tracking-widest">Live Now</span>
+                            {!isHistorical && <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>}
+                            <span className="text-[10px] text-white/30 uppercase tracking-widest">
+                                {isHistorical ? "In selected range" : "Live Now"}
+                            </span>
                         </div>
                     </div>
                 </div>

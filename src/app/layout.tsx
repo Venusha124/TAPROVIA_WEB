@@ -15,8 +15,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TAPROVIA | Premium Ceylon Goods",
-  description: "Curated collection of premium goods from Sri Lanka.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://taprovia.com'),
+  title: {
+    default: "TAPROVIA | Premium Ceylon Goods",
+    template: "%s | TAPROVIA",
+  },
+  description: "Curated collection of premium goods from Sri Lanka. Discover authentic Ceylon tea, spices, and crafts.",
+  keywords: ["Ceylon Tea", "Sri Lanka Spices", "Premium Crafts", "Taprovia", "Authentic Sri Lankan Products"],
+  openGraph: {
+    title: "TAPROVIA | Premium Ceylon Goods",
+    description: "Curated collection of premium goods from Sri Lanka.",
+    url: 'https://taprovia.com',
+    siteName: 'TAPROVIA',
+    locale: 'en_US',
+    type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  verification: {
+    google: "fS0m8025dWUjtcaPsHbPNNqRMEXrAgRXaJKoFX-ab9g",
+  },
 };
 
 export default function RootLayout({

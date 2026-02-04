@@ -14,8 +14,7 @@ import {
     Menu,
     X,
     Search,
-    Inbox, // Added Inbox
-    Bell,
+    Inbox,
     Ticket,
     Mail,
     PanelLeft,
@@ -24,6 +23,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAdmin } from "@/actions/auth";
+import { AdminNotificationBell } from "@/components/admin-notification-bell";
+
 // Note: We are now using Server Actions and Middleware (or page-level checks) for auth.
 // But for client-side layout, we assume if you are here, the middleware/server check passed.
 // However, to be safe, we can check for the cookie on the client or just render.
@@ -66,6 +67,8 @@ export default function AdminDashboardLayout({
 
     return (
         <div className="h-screen overflow-hidden bg-[#09090b] text-[#F3EFE9] font-sans selection:bg-[#D2B48C] selection:text-black flex">
+            {/* Global Listeners handled by Bell now */}
+
             {/* --- SIDEBAR --- */}
             <aside
                 className={cn(
@@ -153,10 +156,7 @@ export default function AdminDashboardLayout({
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <button className="p-2 text-white/40 hover:text-white hover:bg-white/5 rounded-full relative">
-                            <Bell size={20} />
-                            <span className="absolute top-2 right-2 w-2 h-2 bg-[#D2B48C] rounded-full" />
-                        </button>
+                        <AdminNotificationBell />
                         <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#D2B48C] to-[#8B4513] border border-white/10" />
                     </div>
                 </header>

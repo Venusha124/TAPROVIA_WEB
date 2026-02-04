@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Clock, ArrowUpRight, Send, Globe, MessageSquare, ShieldCheck, Zap, Diamond } from "lucide-react";
 import { cn } from "@/lib/utils";
-
+import { submitInquiry } from "@/actions/contact";
+import { toast } from "sonner";
 
 export default function ContactPage() {
     const [status, setStatus] = useState<"LIVE" | "STANDBY">("STANDBY");
+    const [isPending, startTransition] = useTransition();
+    const [activeClassification, setActiveClassification] = useState("Partnership");
 
     useEffect(() => {
         const updateStatus = () => {
@@ -22,6 +25,19 @@ export default function ContactPage() {
         const interval = setInterval(updateStatus, 60000);
         return () => clearInterval(interval);
     }, []);
+
+    const handleClientSubmit = (formData: FormData) => {
+        startTransition(async () => {
+            const result = await submitInquiry(null, formData);
+            if (result?.error) {
+                toast.error(result.error);
+            } else {
+                toast.success(result?.success || "Message sent!");
+                // Optional: Reset form logic if needed, but native form reset happens on some submissions or can be forced.
+                // For now we just show success.
+            }
+        });
+    };
 
     return (
         <div className="flex flex-col min-h-screen bg-[#050505] text-[#F3EFE9] selection:bg-[#D2B48C] selection:text-black overflow-x-hidden">
@@ -176,7 +192,13 @@ export default function ContactPage() {
                                                 <button
                                                     key={type}
                                                     type="button"
-                                                    className="px-8 py-4 rounded-full border border-white/5 bg-white/5 text-[10px] font-bold uppercase tracking-widest text-white/40 hover:border-[#D2B48C] hover:text-[#D2B48C] transition-all"
+                                                    onClick={() => setActiveClassification(type)}
+                                                    className={cn(
+                                                        "px-8 py-4 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all",
+                                                        activeClassification === type
+                                                            ? "bg-[#D2B48C] text-black border-[#D2B48C]"
+                                                            : "bg-white/5 border-white/5 text-white/40 hover:border-[#D2B48C] hover:text-[#D2B48C]"
+                                                    )}
                                                 >
                                                     {type}
                                                 </button>
@@ -184,31 +206,33 @@ export default function ContactPage() {
                                         </div>
                                     </div>
 
-                                    <form className="space-y-10">
+                                    <form action={handleClientSubmit} className="space-y-10">
+                                        <input type="hidden" name="classification" value={activeClassification} />
+
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <input type="text" placeholder="Your Name" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
-                                            <input type="email" placeholder="Your Email" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
-                                            <input type="tel" placeholder="Phone (optional)" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
-                                            <input type="text" placeholder="Country (optional)" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
+                                            <input name="full_name" type="text" placeholder="Your Name" required className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
+                                            <input name="email" type="email" placeholder="Your Email" required className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
+                                            <input name="phone" type="tel" placeholder="Phone (optional)" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
+                                            <input name="country" type="text" placeholder="Country (optional)" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
                                         </div>
 
-                                        <input type="text" placeholder="Subject (e.g., Partnership / Export Inquiry / Booking)" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
+                                        <input name="subject" type="text" placeholder="Subject (e.g., Partnership / Export Inquiry / Booking)" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all placeholder:text-white/20" />
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <select className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white/60 focus:outline-none focus:border-[#D2B48C] transition-all appearance-none cursor-pointer">
-                                                <option className="bg-[#050505] text-white">Preferred contact: Email</option>
-                                                <option className="bg-[#050505] text-white">Preferred contact: Phone</option>
-                                                <option className="bg-[#050505] text-white">Preferred contact: WhatsApp</option>
+                                            <select name="preferred_contact" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white/60 focus:outline-none focus:border-[#D2B48C] transition-all appearance-none cursor-pointer">
+                                                <option value="Email" className="bg-[#050505] text-white">Preferred contact: Email</option>
+                                                <option value="Phone" className="bg-[#050505] text-white">Preferred contact: Phone</option>
+                                                <option value="WhatsApp" className="bg-[#050505] text-white">Preferred contact: WhatsApp</option>
                                             </select>
-                                            <select className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white/60 focus:outline-none focus:border-[#D2B48C] transition-all appearance-none cursor-pointer">
-                                                <option className="bg-[#050505] text-white">Timeframe: Anytime</option>
-                                                <option className="bg-[#050505] text-white">Timeframe: Morning</option>
-                                                <option className="bg-[#050505] text-white">Timeframe: Evening</option>
+                                            <select name="timeframe" className="w-full bg-white/[0.03] border border-white/5 rounded-full px-8 py-6 text-sm text-white/60 focus:outline-none focus:border-[#D2B48C] transition-all appearance-none cursor-pointer">
+                                                <option value="Anytime" className="bg-[#050505] text-white">Timeframe: Anytime</option>
+                                                <option value="Morning" className="bg-[#050505] text-white">Timeframe: Morning</option>
+                                                <option value="Evening" className="bg-[#050505] text-white">Timeframe: Evening</option>
                                             </select>
                                         </div>
 
                                         <div className="relative">
-                                            <textarea rows={6} placeholder="Your Message" className="w-full bg-white/[0.03] border border-white/5 rounded-[2.5rem] p-10 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all resize-none placeholder:text-white/20 italic font-serif" ></textarea>
+                                            <textarea name="narrative" required rows={6} placeholder="Your Message" className="w-full bg-white/[0.03] border border-white/5 rounded-[2.5rem] p-10 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all resize-none placeholder:text-white/20 italic font-serif" ></textarea>
                                         </div>
 
                                         <div className="flex items-center justify-between pt-4 border-t border-white/5 border-dashed">
@@ -220,10 +244,13 @@ export default function ContactPage() {
                                         </div>
 
                                         <div className="flex flex-wrap gap-6">
-                                            <Button className="bg-[#D2B48C] hover:bg-white text-black px-16 h-20 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] transition-all shadow-2xl">
-                                                Send Message
+                                            <Button
+                                                disabled={isPending}
+                                                className="bg-[#D2B48C] hover:bg-white text-black px-16 h-20 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] transition-all shadow-2xl"
+                                            >
+                                                {isPending ? "Sending..." : "Send Message"}
                                             </Button>
-                                            <Button variant="outline" className="border-white/10 text-white/40 hover:bg-white/5 hover:text-white px-16 h-20 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] transition-all">
+                                            <Button type="button" variant="outline" className="border-white/10 text-white/40 hover:bg-white/5 hover:text-white px-16 h-20 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] transition-all">
                                                 Copy Email
                                             </Button>
                                         </div>

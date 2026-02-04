@@ -2,6 +2,7 @@
 
 import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
+import { generateNewsletterHtml } from "@/lib/email-template";
 
 // --- COUPONS ---
 
@@ -92,4 +93,146 @@ export async function deleteSubscriber(id: string) {
   if (error) return { error: error.message };
   revalidatePath("/admin/newsletter");
   return { success: true };
+}
+
+export async function subscribeToNewsletter(formData: FormData) {
+  const email = formData.get("email") as string;
+
+  // Basic validation
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { error: "Please provide a valid email address." };
+  }
+
+  // Check if already subscribed
+  const { data: existing } = await supabase
+    .from("newsletter_subscribers")
+    .select("id")
+    .eq("email", email)
+    .single();
+
+  if (existing) {
+    return { error: "This email is already subscribed to our newsletter." };
+  }
+
+  const { error } = await supabase.from("newsletter_subscribers").insert([
+    { email }
+  ]);
+
+  if (error) {
+    console.error("Newsletter subscription error:", error);
+    return { error: "Failed to subscribe. Please try again later." };
+  }
+
+  return { success: true };
+}
+
+// --- CAMPAIGNS ---
+
+export async function getNewsletters() {
+  const { data, error } = await supabase
+    .from("newsletters")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    if (error.code === 'PGRST205') {
+      // Table might not exist yet if migration hasn't run
+      return [];
+    }
+    console.error("Error fetching newsletters:", error);
+    return [];
+  }
+  return data;
+}
+
+export async function createNewsletter(formData: FormData) {
+  const subject = formData.get("subject") as string;
+  const content = formData.get("content") as string;
+  const imageFile = formData.get("image") as File;
+  let imageUrl = null;
+
+  // Handle Image Upload
+  if (imageFile && imageFile.size > 0) {
+    const fileName = `${Date.now()}-${imageFile.name}`;
+    const { data: uploadData, error: uploadError } = await supabase
+      .storage
+      .from("marketing")
+      .upload(fileName, imageFile);
+
+    if (uploadError) {
+      console.error("Image upload failed details:", uploadError);
+      return { error: `Failed to upload image: ${uploadError.message}` };
+    }
+
+    // Get Public URL
+    const { data: publicUrlData } = supabase
+      .storage
+      .from("marketing")
+      .getPublicUrl(fileName);
+
+    imageUrl = publicUrlData.publicUrl;
+  }
+
+  const { error } = await supabase.from("newsletters").insert([
+    { subject, content, image_url: imageUrl }
+  ]);
+
+  if (error) return { error: error.message };
+  revalidatePath("/admin/newsletter");
+  return { success: true };
+}
+
+export async function sendNewsletter(id: string) {
+  // 1. Get the newsletter
+  const { data: newsletter, error: fetchError } = await supabase
+    .from("newsletters")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !newsletter) return { error: "Newsletter not found." };
+  if (newsletter.status === 'sent') return { error: "Newsletter already sent." };
+
+  // 2. Get all subscribers
+  const { data: subscribers } = await supabase
+    .from("newsletter_subscribers")
+    .select("email")
+    .eq("is_active", true);
+
+  if (!subscribers || subscribers.length === 0) {
+    return { error: "No active subscribers to send to." };
+  }
+
+  // 3. Generate Email HTML
+  const emailHtml = generateNewsletterHtml({
+    subject: newsletter.subject,
+    content: newsletter.content,
+    imageUrl: newsletter.image_url
+  });
+
+  // 4. Simulate Sending (Integration point for Resend/SendGrid)
+  console.log(`Starting send for campaign: "${newsletter.subject}"`);
+  // console.log("--- EMAIL CONTENT PREVIEW ---");
+  // console.log(emailHtml);
+  // console.log("-----------------------------");
+
+  for (const sub of subscribers) {
+    // In a real app, you would call: await resend.emails.send(...)
+    console.log(`[SIMULATION] Sending email to ${sub.email} with template...`);
+  }
+  console.log(`Finished sending to ${subscribers.length} subscribers.`);
+
+  // 5. Update status
+  const { error: updateError } = await supabase
+    .from("newsletters")
+    .update({
+      status: 'sent',
+      sent_at: new Date().toISOString()
+    })
+    .eq("id", id);
+
+  if (updateError) return { error: "Failed to update status." };
+
+  revalidatePath("/admin/newsletter");
+  return { success: true, count: subscribers.length };
 }

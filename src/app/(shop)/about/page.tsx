@@ -45,7 +45,7 @@ const teamMembers = [
     },
     {
         name: "Wihelm Yohan Randy",
-        role: "Chief Executive Officer",
+        role: "Founder",
         image: "/hero-bg.png",
         delay: 0.2,
         thoughts: "The global market demands transparency, but the luxury market demands soul. At TAPROVIA, we bridge this gap by marrying cutting-edge supply chain traceability with the artisanal reverence this product deserves. We define the standard."
@@ -64,13 +64,6 @@ const teamMembers = [
         delay: 0.6,
         thoughts: "Technology in agriculture isn't about replacing the artisan; it's about empowering them. By digitizing our inventory and export logistics, we ensure that the freshness of the harvest is preserved from the estate to the global port."
     },
-    {
-        name: "Thilina Weerasinghe",
-        role: "IT Supervisor",
-        image: "/hero-bg.png",
-        delay: 0.8,
-        thoughts: "Precision is our protocol. From the temperature of the drying rooms to the security of our data, every system I oversee is designed to protect the integrity of the sovereign grade. Excellence is a series of executed details."
-    }
 ];
 
 export default function AboutPage() {

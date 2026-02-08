@@ -24,7 +24,7 @@ export function Header() {
     const headerBorder = useTransform(
         scrollY,
         [0, 100],
-        ["rgba(255,255,255,0.05)", "rgba(210,180,140,0.1)"] // Goldish hint on scroll
+        ["rgba(255,255,255,0.05)", "rgba(210,180,140,0.1)"]
     );
 
     return (

@@ -44,7 +44,7 @@ const products = [
         badge: "Highest Grade",
         origin: "Southern Sri Lanka",
         grade: "Alba",
-        image: "/products/cinnamon_powder_spoon.png",
+        image: "/products/alba-sticks-hero.png",
         category: "Sticks",
         description: "The most prized grade of Ceylon cinnamon, known for its slender diameter and exceptional sweetness.",
         rating: 5.0,
@@ -74,7 +74,7 @@ const products = [
         badge: "Kitchen Essential",
         origin: "Ratnapura",
         grade: "Extra Fine",
-        image: "/products/cinnamon_powder_bowl.png",
+        image: "/products/cinnamon-powder-hero.png",
         category: "Powders",
         description: "Finely ground premium quills, delivering the authentic warmth and sweetness of Ceylon in a versatile form.",
         rating: 4.8,
@@ -89,7 +89,7 @@ const products = [
         badge: "Artisanal Classic",
         origin: "Galle District",
         grade: "Custom Lengths",
-        image: "/products/cinnamon_powder_spoon.png",
+        image: "/products/alba-sticks-hero.png",
         category: "Sticks",
         description: "Uniformly hand-filled quills that preserve the full aromatic profile of the inner bark.",
         rating: 4.9,
@@ -104,7 +104,7 @@ const products = [
         badge: "Global Standard",
         origin: "Multi-Region",
         grade: "Export Ready",
-        image: "/products/cinnamon_powder_bowl.png",
+        image: "/products/cinnamon-powder-hero.png",
         category: "Bulk & Exports",
         description: "Optimized for global distribution, maintaining potency and flavor for industrial and retail partners.",
         rating: 4.7,
@@ -134,7 +134,7 @@ const products = [
         badge: "Sovereign Gift",
         origin: "Matara Estate",
         grade: "Alba Special",
-        image: "/products/cinnamon_powder_spoon.png",
+        image: "/products/alba-sticks-hero.png",
         category: "Sticks",
         description: "A ceremonial selection of our finest Alba quills, presented in a handcrafted mahogany chest for the ultimate connoisseur.",
         rating: 5.0,
@@ -149,7 +149,7 @@ const products = [
         badge: "Rustic Infusion",
         origin: "Ratnapura Wilds",
         grade: "H2 Standard",
-        image: "/products/cinnamon_powder_bowl.png",
+        image: "/products/cinnamon-chips-hero.png",
         category: "Bulk & Exports",
         description: "Sun-dried unpeeled bark chips rich in essential oils, perfectly suited for heavy infusions, mulled wines, and distillation bases.",
         rating: 4.6,
@@ -394,7 +394,7 @@ export default function ProductsPage() {
 
                         <motion.div
                             layoutId={`gallery-${selectedProduct.id}`}
-                            className="relative w-full max-w-7xl aspect-[16/9] bg-[#0A0A0A] rounded-[4rem] overflow-hidden border border-white/10 flex flex-col md:flex-row shadow-[0_50px_100px_rgba(0,0,0,0.8)]"
+                            className="relative w-full max-w-7xl min-h-[70vh] h-auto bg-[#0A0A0A] rounded-[4rem] overflow-hidden border border-white/10 flex flex-col md:flex-row shadow-[0_50px_100px_rgba(0,0,0,0.8)]"
                         >
                             {/* Left: Cinematic Image with Zoom */}
                             <div className="w-full md:w-1/2 relative overflow-hidden group">
@@ -410,14 +410,7 @@ export default function ProductsPage() {
                                     />
                                 </motion.div>
                                 <div className="absolute inset-x-0 bottom-0 p-12 bg-gradient-to-t from-black via-black/40 to-transparent">
-                                    <div className="flex items-center gap-2 mb-4">
-                                        {[...Array(5)].map((_, i) => (
-                                            <Star key={i} size={14} className={cn("fill-[#D2B48C] text-[#D2B48C]", i >= Math.floor(selectedProduct.rating) && "opacity-20")} />
-                                        ))}
-                                        <span className="text-xs font-bold text-white ml-2">{selectedProduct.rating} / 5.0</span>
-                                        <span className="text-white/20 text-xs ml-2">({selectedProduct.reviews} reviews)</span>
-                                    </div>
-                                    <div className="flex flex-wrap gap-4">
+                                    <div className="flex flex-wrap gap-4 mt-6">
                                         {selectedProduct.features.map((feat, i) => (
                                             <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
                                                 <CheckCircle2 size={12} className="text-[#D2B48C]" />
@@ -429,7 +422,7 @@ export default function ProductsPage() {
                             </div>
 
                             {/* Right: The Data Vault */}
-                            <div className="w-full md:w-1/2 p-16 md:p-24 flex flex-col justify-center relative">
+                            <div className="w-full md:w-1/2 p-16 md:p-24 flex flex-col relative">
                                 <button
                                     onClick={() => setSelectedProduct(null)}
                                     className="absolute top-12 right-12 w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-[#D2B48C] transition-all"
@@ -456,13 +449,13 @@ export default function ProductsPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col gap-4">
+                                <div className="mt-16">
                                     <Button
                                         onClick={() => router.push('/contact')}
-                                        className="w-full bg-[#D2B48C] hover:bg-white text-black font-bold h-24 rounded-full text-[10px] uppercase tracking-[0.4em] transition-all group shadow-xl"
+                                        className="w-full bg-[#D2B48C] hover:bg-white text-black font-bold h-24 rounded-full text-[12px] uppercase tracking-[0.4em] transition-all group shadow-xl"
                                     >
-                                        <MessageCircle size={18} className="mr-4 group-hover:-translate-y-1 transition-transform" />
-                                        Enquire
+                                        <MessageCircle size={20} className="mr-4 group-hover:-translate-y-1 transition-transform" />
+                                        Enquire Now
                                     </Button>
                                 </div>
                             </div>
@@ -601,10 +594,6 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                     <span className="px-6 py-2 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-[10px] font-bold uppercase tracking-widest text-white">
                         {product.badge}
                     </span>
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#D2B48C]/10 backdrop-blur-md border border-[#D2B48C]/30 self-start">
-                        <Star size={10} className="fill-[#D2B48C] text-[#D2B48C]" />
-                        <span className="text-[9px] font-bold text-[#D2B48C] tracking-widest">{product.rating}</span>
-                    </div>
                 </div>
 
                 {/* Interaction Overlay */}
@@ -623,9 +612,8 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                     </button>
                 </div>
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
-
-                <div className="absolute bottom-12 left-12 right-12">
+                {/* Content Labels */}
+                <div className="absolute inset-x-12 bottom-12 z-10">
                     <div className="flex items-center gap-4 mb-4">
                         <span className="w-8 h-px bg-[#D2B48C]/50" />
                         <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#D2B48C]">
@@ -635,29 +623,28 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                     <h3 className="text-4xl md:text-5xl font-serif font-light text-white mb-6 transform group-hover:translate-x-4 transition-transform duration-700">
                         {product.name}
                     </h3>
+                </div>
 
-                    <div className="flex flex-col gap-4 py-6 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-all duration-700 delay-100 translate-y-4 group-hover:translate-y-0">
-                        <div className="flex items-center justify-between">
-                            <span className="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em]">Sovereign Reserve</span>
-                            <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-bold text-white uppercase tracking-widest">Examine Detail</span>
-                                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/50">
-                                    <MoveRight size={14} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <Button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                router.push('/contact');
-                            }}
-                            className="w-full bg-[#D2B48C] hover:bg-white text-black font-bold h-14 rounded-full text-[9px] uppercase tracking-[0.3em] transition-all group"
-                        >
-                            <MessageCircle size={14} className="mr-2 group-hover:-translate-y-0.5 transition-transform" />
-                            Enquire Now
-                        </Button>
-                    </div>
+                {/* Centered Hover Actions Overlay */}
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-6 z-20">
+                    <Button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            router.push('/contact');
+                        }}
+                        className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 px-10 text-[10px] font-bold uppercase tracking-[0.4em] transform translate-y-4 group-hover:translate-y-0 transition-all duration-500"
+                    >
+                        <MessageCircle size={16} className="mr-3" /> Enquire Now
+                    </Button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onSelect();
+                        }}
+                        className="flex items-center gap-3 text-white/70 hover:text-white text-[9px] font-bold uppercase tracking-[0.4em] transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75"
+                    >
+                        <Info size={16} /> Examine Detail
+                    </button>
                 </div>
             </div>
         </motion.div>

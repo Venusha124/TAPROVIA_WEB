@@ -12,6 +12,7 @@ interface Order {
     customer: {
         full_name: string;
         email: string;
+        phone?: string;
     } | null;
     total_price: number;
     status: string;
@@ -116,7 +117,12 @@ export function OrdersTable({ initialOrders }: { initialOrders: any[] }) {
                                         </td>
                                         <td className="p-6 text-white text-sm">
                                             {order.customer?.full_name || "Guest"}
-                                            <div className="text-[10px] text-white/40 mt-1">{order.customer?.email}</div>
+                                            <div className="flex flex-col gap-0.5 mt-1">
+                                                <span className="text-[10px] text-white/40">{order.customer?.email}</span>
+                                                {order.customer?.phone && (
+                                                    <span className="text-[10px] text-white/40">{order.customer.phone}</span>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="p-6 text-[#D2B48C] font-serif italic text-lg">
                                             {formatCurrency(order.total_price)}

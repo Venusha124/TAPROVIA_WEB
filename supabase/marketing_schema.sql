@@ -39,3 +39,30 @@ create policy "Admins can view subscribers." on public.newsletter_subscribers fo
 create policy "Public can subscribe." on public.newsletter_subscribers for insert with check (true);
 create policy "Admins can update subscribers." on public.newsletter_subscribers for update using (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));
 -- Allow users to unsubscribe themselves? Handling via email token is safer. For now admin usage.
+
+-- 8. NEWSLETTERS (Campaigns)
+create table public.newsletters (
+  id uuid default uuid_generate_v4() primary key,
+  subject text not null,
+  content text not null,
+  image_url text, -- For campaign cover image
+  status text not null default 'draft' check (status in ('draft', 'sent')),
+  sent_at timestamp with time zone,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- RLS for Newsletters
+alter table public.newsletters enable row level security;
+create policy "Admins can view newsletters." on public.newsletters for select using (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));
+create policy "Admins can insert newsletters." on public.newsletters for insert with check (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));
+create policy "Admins can update newsletters." on public.newsletters for update using (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));
+create policy "Admins can delete newsletters." on public.newsletters for delete using (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));
+
+-- STORAGE: Create a bucket for newsletter images if it doesn't exist
+insert into storage.buckets (id, name, public) values ('marketing', 'marketing', true) on conflict do nothing;
+
+-- Storage Policy for Marketing Bucket
+create policy "Marketing Images are public" on storage.objects for select using ( bucket_id = 'marketing' );
+create policy "Admins can upload Marketing Images" on storage.objects for insert with check ( bucket_id = 'marketing' and (select role from public.profiles where id = auth.uid()) = 'admin' );
+
+

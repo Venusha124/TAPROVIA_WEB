@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Facebook, Instagram, Linkedin, Twitter, ArrowUpRight } from "lucide-react"
+import { NewsletterForm } from "@/components/marketing/newsletter-form"
 
 export function Footer() {
     return (
@@ -54,16 +55,7 @@ export function Footer() {
                     <div className="lg:col-span-3">
                         <h4 className="mb-10 text-[10px] font-bold uppercase tracking-[0.5em] text-[#D2B48C]">Subscribe to our newsletter</h4>
                         <p className="text-white/30 text-xs font-light mb-8 leading-relaxed">Join our registry for exclusive access to reserve grades and seasonal field reports.</p>
-                        <div className="relative group">
-                            <input
-                                type="email"
-                                placeholder="Email Address"
-                                className="w-full bg-transparent border-b border-white/10 py-4 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-[#D2B48C] transition-colors"
-                            />
-                            <button className="absolute right-0 top-1/2 -translate-y-1/2 text-white/40 group-hover:text-[#D2B48C] transition-all">
-                                <ArrowUpRight size={20} />
-                            </button>
-                        </div>
+                        <NewsletterForm />
                     </div>
                 </div>
 

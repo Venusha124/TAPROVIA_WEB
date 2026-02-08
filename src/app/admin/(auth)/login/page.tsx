@@ -33,7 +33,7 @@ export default function AdminLoginPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white/[0.03] border border-white/5 p-8 md:p-10 rounded-[2rem] backdrop-blur-xl shadow-2xl"
         >
-            <h2 className="text-2xl font-serif text-white mb-6 text-center">Identity Verification (Custom)</h2>
+            <h2 className="text-2xl font-serif text-white mb-6 text-center">Identity Verification</h2>
 
             {error && (
                 <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-xs text-center">

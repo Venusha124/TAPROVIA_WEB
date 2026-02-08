@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, ShoppingBag, ChevronRight, X, Minus, Plus, ArrowRight, Trash2, MapPin, Info } from "lucide-react";
+import { ShoppingCart, ShoppingBag, ChevronRight, X, Minus, Plus, ArrowRight, Trash2, MapPin, Info, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HeritageMap } from "@/components/layout/heritage-map";
 
@@ -26,11 +26,11 @@ const prologueSteps = [
         image: "/explore/artisan.png"
     },
     {
-        id: "purity",
-        title: "The Alchemical Purity",
-        subtitle: "CHAPTER III",
-        description: "Beyond the harvest lies the vault. Through precise steam distillation, we extract the essence—a liquid gold that transcends mere spice.",
-        image: "/explore/alchemy.png"
+        id: "timing",
+        title: "The Dawn Rhythm",
+        subtitle: "CHAPTER II",
+        description: "The bark is most elastic at the break of dawn. Our artisans begin their work before the sun touches the hills, capturing the sap at its peak vitality.",
+        image: "/explore/artisan.png"
     }
 ];
 
@@ -42,7 +42,7 @@ const products = [
         grade: "ALBA",
         description: "The most prized grade of Ceylon cinnamon, known for its slender diameter and exceptional sweetness.",
         origin: "Southern Sri Lanka",
-        image: "/products/cinnamon_powder_spoon.png",
+        image: "/products/alba-sticks-hero.png",
         features: ["Ultra-Thin Quills", "Hand-Peeled", "Golden Hue"]
     },
     {
@@ -60,7 +60,7 @@ const products = [
         grade: "EXTRA FINE",
         description: "Finely ground premium quills, delivering the authentic warmth and sweetness of Ceylon in a versatile form.",
         origin: "Ratnapura",
-        image: "/products/cinnamon_powder_bowl.png",
+        image: "/products/cinnamon-powder-hero.png",
         features: ["Micro-milled", "No Additives", "Coumarin-free"]
     },
     {
@@ -69,7 +69,7 @@ const products = [
         grade: "CUSTOM",
         description: "Uniformly hand-filled quills that preserve the full aromatic profile of the inner bark.",
         origin: "Galle District",
-        image: "/products/cinnamon_powder_spoon.png",
+        image: "/products/alba-sticks-hero.png",
         features: ["Slow-Dried", "Hand-Filled", "Rich Aroma"]
     },
     {
@@ -78,7 +78,7 @@ const products = [
         grade: "EXPORT READY",
         description: "Optimized for global distribution, maintaining potency and flavor for industrial and retail partners.",
         origin: "Multi-Region",
-        image: "/products/cinnamon_powder_bowl.png",
+        image: "/products/cinnamon-powder-hero.png",
         features: ["Standardized Quality", "Sealed for Export", "Bulk Availability"]
     },
     {
@@ -148,7 +148,7 @@ export default function ExplorePage() {
                     <div className="container px-4">
                         <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[10px] mb-8 block">Stage II</span>
                         <h2 className="text-6xl md:text-[8rem] font-serif font-light text-white leading-none tracking-tighter">
-                            The <span className="italic text-white/30">Archive.</span>
+                            The <span className="italic text-[#D2B48C]">Archive.</span>
                         </h2>
                     </div>
                 </section>
@@ -183,7 +183,7 @@ export default function ExplorePage() {
                     <div className="container px-4">
                         <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[10px] mb-8 block">Stage III</span>
                         <h2 className="text-6xl md:text-[8rem] font-serif font-light text-white leading-none tracking-tighter">
-                            Global <span className="italic text-white/30">Reach.</span>
+                            Global <span className="italic text-[#D2B48C]">Reach.</span>
                         </h2>
                     </div>
                 </section>
@@ -479,6 +479,7 @@ function PrologueCarousel() {
 }
 
 function ProductCard({ product, onSelect, onAddToCart }: { product: typeof products[0], onSelect: () => void, onAddToCart?: () => void }) {
+    const router = useRouter();
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -520,9 +521,6 @@ function ProductCard({ product, onSelect, onAddToCart }: { product: typeof produ
                     <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-full px-5 py-2 text-[8px] font-bold uppercase tracking-[0.2em] text-white/90">
                         {product.id === "alba" ? "HIGHEST GRADE" : product.id === "quills" ? "AROMATIC ESSENCE" : "PREMIUM RESERVE"}
                     </div>
-                    <div className="bg-[#D2B48C]/20 border border-[#D2B48C]/30 rounded-full w-10 h-10 flex items-center justify-center text-[#D2B48C] text-[10px] font-bold">
-                        ★ 5.0
-                    </div>
                 </div>
 
                 {/* Bottom Content */}
@@ -551,13 +549,13 @@ function ProductCard({ product, onSelect, onAddToCart }: { product: typeof produ
 function QualityProcessModal({ onClose }: { onClose: () => void }) {
     const qualitySteps = [
         {
-            title: "Global Compliance",
-            desc: "ISO 22000 & SLSI certified export documentation and phytosanitary guarantees for all major continents.",
+            title: "The Global Standard",
+            desc: "To be the global standard for Ceylon Cinnamon, recognized not only for the purity of our product but for the uncompromising integrity of our entire supply chain.",
             icon: "01"
         },
         {
-            title: "Bespoke Packaging",
-            desc: "Private label solutions with premium materials that preserve the essential oil integrity during transit.",
+            title: "Quality Protocol",
+            desc: "Comprehensive global export documentation and phytosanitary guarantees for all major continents.",
             icon: "02"
         },
         {
@@ -644,6 +642,7 @@ function OriginMarker({ x, y, label, delay }: { x: string, y: string, label: str
 }
 
 function ProductModal({ product, onClose, onAddToCart }: { product: typeof products[0], onClose: () => void, onAddToCart?: () => void }) {
+    const router = useRouter();
     return (
         <motion.div
             initial={{ opacity: 0 }}

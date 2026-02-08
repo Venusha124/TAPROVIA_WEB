@@ -61,7 +61,7 @@ export default function ContactPage() {
                             </div>
                         </div>
                         <h1 className="text-6xl md:text-[10rem] font-serif font-light leading-none mb-12 tracking-tighter text-white">
-                            Direct <span className="italic text-white/20">Access.</span>
+                            Direct <span className="italic text-[#D2B48C]">Access.</span>
                         </h1>
                         <p className="text-white/40 max-w-2xl mx-auto text-xl font-light leading-relaxed italic border-x border-white/5 px-12">
                             "Connecting the source to the connoisseur. Our Concierge Desk is primed for your global acquisition requirements."

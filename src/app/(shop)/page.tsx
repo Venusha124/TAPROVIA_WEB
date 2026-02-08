@@ -21,7 +21,10 @@ import {
   Compass,
   Play,
   MoveRight,
-  Sparkles
+  Sparkles,
+  X,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -34,9 +37,9 @@ const features = [
     image: "/explore/origin.png"
   },
   {
-    icon: <ShieldCheck className="w-6 h-6" />,
-    title: "Certified Purity",
-    desc: "Exceeding ISO 22000 and FDA standards for absolute safety and chemical-free assurance.",
+    icon: <Globe className="w-6 h-6" />,
+    title: "Geographic Provenance",
+    desc: "Exclusively cultivated within the specific micro-climates of Matara, capturing the soul of the Southern Highlands.",
     image: "/explore/alchemy.png"
   },
   {
@@ -74,6 +77,27 @@ const heroImages = [
 export default function Home() {
   const router = useRouter();
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [selectedCollection, setSelectedCollection] = useState<{ title: string, images: string[], currentIndex: number } | null>(null);
+
+  const nextCollectionImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedCollection) {
+      setSelectedCollection({
+        ...selectedCollection,
+        currentIndex: (selectedCollection.currentIndex + 1) % selectedCollection.images.length
+      });
+    }
+  };
+
+  const prevCollectionImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedCollection) {
+      setSelectedCollection({
+        ...selectedCollection,
+        currentIndex: (selectedCollection.currentIndex - 1 + selectedCollection.images.length) % selectedCollection.images.length
+      });
+    }
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -135,7 +159,7 @@ export default function Home() {
             </span>
             <h1 className="text-[clamp(3.5rem,10vw,11rem)] font-serif font-light leading-[0.75] mb-10 md:mb-16 tracking-tighter">
               The Pure <br />
-              <span className="italic text-white/20">Primal</span> Spice.
+              <span className="italic text-[#D2B48C]">Primal</span> Spice.
             </h1>
             <p className="text-[clamp(1.1rem,2vw,1.5rem)] text-white/40 max-w-4xl mx-auto font-light leading-relaxed mb-12 italic font-serif px-4">
               Experience the world's most guarded artisanal secret, sustainably harvested from the sovereign highlands of Sri Lanka.
@@ -173,7 +197,7 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row gap-16 md:gap-32 items-end mb-24 md:mb-40">
             <div className="flex-1">
               <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">The Narrative</span>
-              <h2 className="text-[clamp(3rem,8vw,10rem)] font-serif font-light leading-none tracking-tighter">Behind the <br /><span className="italic text-white/20">Inner Bark.</span></h2>
+              <h2 className="text-[clamp(3rem,8vw,10rem)] font-serif font-light leading-none tracking-tighter">Behind the <br /><span className="italic text-[#D2B48C]">Inner Bark.</span></h2>
             </div>
             <p className="max-w-xl text-white/30 text-2xl font-light leading-relaxed italic border-l border-[#D2B48C]/30 pl-12 font-serif">
               Every quill tells a story of geological perfection and generational intuition. Step into the heartland where alchemy meets nature.
@@ -215,7 +239,7 @@ export default function Home() {
       <section className="py-24 md:py-60 bg-[#080808] relative border-y border-white/5">
         <div className="container px-4 text-center mb-24 md:mb-48">
           <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">The TAPROVIA Delta</span>
-          <h2 className="text-[clamp(3rem,8vw,9rem)] font-serif font-light tracking-tighter">Why We Are <span className="italic text-white/20">Singular.</span></h2>
+          <h2 className="text-[clamp(3rem,8vw,9rem)] font-serif font-light tracking-tighter">Why We Are <span className="italic text-[#D2B48C]">Singular.</span></h2>
         </div>
 
         <div className="container px-4">
@@ -249,7 +273,7 @@ export default function Home() {
       <section className="py-24 md:py-60 bg-[#050505]">
         <div className="container px-4">
           <div className="flex flex-col md:flex-row justify-between items-center mb-24 md:mb-40 border-b border-white/5 pb-24">
-            <h2 className="text-[clamp(3rem,8vw,9rem)] font-serif font-light mb-12 md:mb-0 tracking-tighter">The Sovereign <br /><span className="italic text-white/20">Collection.</span></h2>
+            <h2 className="text-[clamp(3rem,8vw,9rem)] font-serif font-light mb-12 md:mb-0 tracking-tighter">The Sovereign <br /><span className="italic text-[#D2B48C]">Collection.</span></h2>
             <Link href="/products" className="group flex items-center gap-12">
               <span className="text-[11px] font-bold uppercase tracking-[0.6em] text-white/20 group-hover:text-[#D2B48C] transition-all">Observe All Grades</span>
               <div className="w-24 h-24 rounded-full border border-white/5 flex items-center justify-center group-hover:bg-[#D2B48C] group-hover:border-[#D2B48C] transition-all group-hover:rotate-12">
@@ -259,10 +283,116 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 rounded-[6rem] overflow-hidden border border-white/10 shadow-3xl">
-            <CollectionCard title="Rare Quills" grade="Alba Peak" image="/explore/quills.png" />
-            <CollectionCard title="Liquid Gold" grade="Pure Bark Oil" image="/explore/alchemy.png" />
+            <CollectionCard
+              title="Rare Quills"
+              grade="Alba Peak"
+              image="/explore/quills.png"
+              onSelect={() => setSelectedCollection({
+                title: "Rare Quills",
+                images: ["/explore/quills.png", "/explore/quills-macro.png", "/explore/quills-bundle.png"],
+                currentIndex: 0
+              })}
+            />
+            <CollectionCard
+              title="Liquid Gold"
+              grade="Pure Bark Oil"
+              image="/explore/alchemy.png"
+              onSelect={() => setSelectedCollection({
+                title: "Liquid Gold",
+                images: ["/explore/alchemy.png", "/explore/oil-lifestyle.png", "/explore/oil-pour.png"],
+                currentIndex: 0
+              })}
+            />
           </div>
         </div>
+
+        <AnimatePresence>
+          {selectedCollection && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-20 bg-black/95 backdrop-blur-2xl"
+              onClick={() => setSelectedCollection(null)}
+            >
+              <div className="relative max-w-7xl w-full flex items-center justify-center gap-4 md:gap-12">
+                {/* Previous Button */}
+                <button
+                  onClick={prevCollectionImage}
+                  className="hidden md:flex w-20 h-20 rounded-full bg-white/5 border border-white/10 items-center justify-center text-white/30 hover:text-white hover:bg-[#D2B48C] hover:text-black transition-all group shrink-0"
+                >
+                  <ChevronLeft size={40} className="group-hover:-translate-x-1 transition-transform" />
+                </button>
+
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                  className="relative flex-1 aspect-square md:aspect-video rounded-[3rem] md:rounded-[5rem] overflow-hidden border border-white/10 shadow-3xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={selectedCollection.currentIndex}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.5, ease: "easeInOut" }}
+                      className="absolute inset-0"
+                    >
+                      <Image
+                        src={selectedCollection.images[selectedCollection.currentIndex]}
+                        alt={selectedCollection.title}
+                        fill
+                        className="object-cover"
+                        priority
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
+
+                  <div className="absolute bottom-0 inset-x-0 p-12 md:p-20 flex justify-between items-end">
+                    <div className="max-w-2xl">
+                      <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-6 block">Sovereign Collection</span>
+                      <h3 className="text-4xl md:text-8xl font-serif text-white tracking-tighter leading-none">{selectedCollection.title}</h3>
+                    </div>
+                    <div className="flex gap-4 md:hidden">
+                      <button onClick={prevCollectionImage} className="w-12 h-12 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white">
+                        <ChevronLeft size={20} />
+                      </button>
+                      <button onClick={nextCollectionImage} className="w-12 h-12 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white">
+                        <ChevronRight size={20} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setSelectedCollection(null)}
+                    className="absolute top-12 right-12 w-16 h-16 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:bg-[#D2B48C] hover:text-black transition-all transform hover:rotate-90 z-20"
+                  >
+                    <X size={32} />
+                  </button>
+
+                  <div className="absolute top-12 left-12 bg-black/40 backdrop-blur-md border border-white/10 px-8 py-4 rounded-full">
+                    <span className="text-[#D2B48C] font-bold text-xs tracking-[0.4em] tabular-nums">
+                      {selectedCollection.currentIndex + 1} <span className="text-white/20 mx-2">/</span> {selectedCollection.images.length}
+                    </span>
+                  </div>
+                </motion.div>
+
+                {/* Next Button */}
+                <button
+                  onClick={nextCollectionImage}
+                  className="hidden md:flex w-20 h-20 rounded-full bg-white/5 border border-white/10 items-center justify-center text-white/30 hover:text-white hover:bg-[#D2B48C] hover:text-black transition-all group shrink-0"
+                >
+                  <ChevronRight size={40} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
 
       {/* --- TESTIMONIALS: THE VERDICT --- */}
@@ -270,7 +400,7 @@ export default function Home() {
         <div className="container px-4">
           <div className="mb-12 md:mb-20 text-center">
             <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">The Verdict</span>
-            <h2 className="text-[clamp(3rem,6vw,6rem)] font-serif font-light tracking-tighter">Voices of <span className="italic text-white/20">Authority.</span></h2>
+            <h2 className="text-[clamp(3rem,6vw,6rem)] font-serif font-light tracking-tighter">Voices of <span className="italic text-[#D2B48C]">Authority.</span></h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-24 border-t border-white/5 pt-12">
@@ -326,10 +456,12 @@ export default function Home() {
   );
 }
 
-function CollectionCard({ title, grade, image }: { title: string, grade: string, image: string }) {
-  const router = useRouter();
+function CollectionCard({ title, grade, image, onSelect }: { title: string, grade: string, image: string, onSelect: () => void }) {
   return (
-    <div className="relative aspect-square group cursor-pointer bg-black overflow-hidden">
+    <div
+      className="relative aspect-square group cursor-pointer bg-black overflow-hidden"
+      onClick={onSelect}
+    >
       <Image src={image} alt={title} fill className="object-cover group-hover:scale-110 transition-all duration-[3s]" />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-20 flex flex-col justify-end">
         <span className="text-[#D2B48C] font-bold text-[10px] tracking-[0.8em] uppercase mb-6 opacity-0 group-hover:opacity-100 translate-y-6 group-hover:translate-y-0 transition-all duration-1000">{grade}</span>

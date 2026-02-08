@@ -39,17 +39,30 @@ export async function recordVisit(path: string) {
     }
 }
 
-export async function getAnalyticsSummary() {
-    // 1. Get Live Users (Last 15 minutes) - Approximate by unique visitor_id
-    const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+export async function getAnalyticsSummary(period: string = "24h") {
+    // Determine time window
+    let startTime = new Date();
+    const endTime = new Date().toISOString();
+    let isHistorical = period !== "24h";
 
-    // Note: This is an aggregation. Ideally, we use Supabase RPC or advanced queries.
-    // For simplicity, we fetch recent records and process in JS (ok for small traffic).
+    switch (period) {
+        case "7d":
+            startTime.setDate(startTime.getDate() - 7);
+            break;
+        case "30d":
+            startTime.setDate(startTime.getDate() - 30);
+            break;
+        case "24h":
+        default:
+            startTime.setHours(startTime.getHours() - 24);
+            break;
+    }
 
     const { data: recentTraffic, error } = await supabase
         .from("web_traffic")
         .select("visitor_id, country, page_path, created_at")
-        .gte("created_at", fifteenMinutesAgo);
+        .gte("created_at", startTime.toISOString())
+        .lte("created_at", endTime);
 
     if (error) {
         // Table might not exist yet
@@ -82,5 +95,5 @@ export async function getAnalyticsSummary() {
         .slice(0, 5)
         .map(([path, count]) => ({ path, count }));
 
-    return { activeUsers, topCountries, topPages };
+    return { activeUsers, topCountries, topPages, isHistorical };
 }

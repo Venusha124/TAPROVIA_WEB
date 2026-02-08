@@ -7,7 +7,7 @@ export async function getOrders() {
         .from("orders")
         .select(`
             *,
-            customer:customers(full_name, email)
+            customer:customers(full_name, email, phone)
         `)
         .order("created_at", { ascending: false });
 

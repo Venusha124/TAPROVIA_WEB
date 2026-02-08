@@ -44,8 +44,8 @@ const teamMembers = [
         thoughts: "We are not just selling a spice; we are guarding a heritage. Every quill that leaves our shores carries the story of four generations of soil, sun, and silence. My vision is to see Ceylon Cinnamon reclaim its throne as the 'True Gold' of the ancient world."
     },
     {
-        name: "Wilhelm Yohan Randy",
-        role: "Founder",
+        name: "Wihelm Yohan Randy",
+        role: "Chief Executive Officer",
         image: "/hero-bg.png",
         delay: 0.2,
         thoughts: "The global market demands transparency, but the luxury market demands soul. At TAPROVIA, we bridge this gap by marrying cutting-edge supply chain traceability with the artisanal reverence this product deserves. We define the standard."
@@ -64,13 +64,6 @@ const teamMembers = [
         delay: 0.6,
         thoughts: "Technology in agriculture isn't about replacing the artisan; it's about empowering them. By digitizing our inventory and export logistics, we ensure that the freshness of the harvest is preserved from the estate to the global port."
     },
-    {
-        name: "Thilina Weerasinghe",
-        role: "IT Supervisor",
-        image: "/hero-bg.png",
-        delay: 0.8,
-        thoughts: "Precision is our protocol. From the temperature of the drying rooms to the security of our data, every system I oversee is designed to protect the integrity of the sovereign grade. Excellence is a series of executed details."
-    }
 ];
 
 export default function AboutPage() {

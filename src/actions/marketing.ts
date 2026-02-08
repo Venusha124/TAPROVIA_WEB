@@ -145,6 +145,13 @@ export async function getNewsletters() {
   return data;
 }
 
+export async function deleteNewsletter(id: string) {
+  const { error } = await supabase.from("newsletters").delete().eq("id", id);
+  if (error) return { error: error.message };
+  revalidatePath("/admin/newsletter");
+  return { success: true };
+}
+
 export async function createNewsletter(formData: FormData) {
   const subject = formData.get("subject") as string;
   const content = formData.get("content") as string;

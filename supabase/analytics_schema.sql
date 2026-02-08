@@ -1,4 +1,5 @@
 -- Analytics Schema
+create extension if not exists "uuid-ossp";
 
 create table public.web_traffic (
   id uuid default uuid_generate_v4() primary key,

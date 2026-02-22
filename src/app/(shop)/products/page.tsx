@@ -36,6 +36,7 @@ import {
     ShoppingBag
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { RotatingBackground } from "@/components/layout/RotatingBackground";
 
 const products = [
     {
@@ -265,40 +266,16 @@ export default function ProductsPage() {
 
             {/* --- 2. THE SOVEREIGN GALLERY (ASYMMETRICAL) --- */}
             <div className="relative z-20 bg-[#050505]">
-                {/* Gallery Hero */}
-                <section className="relative py-60 overflow-hidden border-t border-white/5">
-                    <div className="container px-4 text-center">
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="max-w-4xl mx-auto"
-                        >
-                            <div className="flex justify-center gap-6 mb-12">
-                                <span className="w-12 h-px bg-[#D2B48C]/30 my-auto" />
-                                <span className="text-[#D2B48C] font-bold tracking-[0.5em] uppercase text-[10px]">The Archive</span>
-                                <span className="w-12 h-px bg-[#D2B48C]/30 my-auto" />
-                            </div>
-                            <h2 className="text-7xl md:text-[10rem] font-serif font-light leading-none mb-12 tracking-tighter">
-                                The <span className="italic text-white/40">Gallery.</span>
-                            </h2>
-                            <p className="text-xl md:text-2xl text-white/30 font-light max-w-2xl mx-auto leading-relaxed italic border-x border-white/5 px-12">
-                                "Observations of geological perfection, curated for the refined palate."
-                            </p>
-                        </motion.div>
-                    </div>
-                </section>
-
                 {/* Filter Bar (Sticky) */}
                 <section className="sticky top-0 z-[60] py-8 border-y border-white/5 backdrop-blur-3xl bg-black/60">
                     <div className="container px-4">
-                        <div className="flex flex-wrap justify-center gap-4">
+                        <div className="flex flex-wrap justify-center gap-2 md:gap-4">
                             {categories.map((cat) => (
                                 <button
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
                                     className={cn(
-                                        "relative px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] transition-all",
+                                        "relative px-4 md:px-8 py-2 md:py-3 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] transition-all",
                                         activeCategory === cat ? "text-black bg-[#D2B48C]" : "text-white/30 hover:text-white"
                                     )}
                                 >
@@ -342,12 +319,12 @@ export default function ProductsPage() {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
-                            className="max-w-5xl mx-auto p-24 rounded-[5rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl relative overflow-hidden group"
+                            className="max-w-5xl mx-auto p-12 md:p-24 rounded-[3rem] md:rounded-[5rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl relative overflow-hidden group"
                         >
                             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#D2B48C]/30 to-transparent" />
 
                             <span className="text-[#D2B48C] font-bold tracking-[0.5em] uppercase text-[10px] mb-8 block">Sensory Analysis</span>
-                            <h2 className="text-5xl md:text-7xl font-serif font-light mb-12 italic">The Sommelier's Note.</h2>
+                            <h2 className="text-4xl md:text-7xl font-serif font-light mb-8 md:mb-12 italic">The Sommelier's Note.</h2>
                             <p className="text-xl text-white/40 font-light mb-16 max-w-2xl mx-auto leading-relaxed">
                                 "Defined by a delicate sweetness and a complex, warm aroma. The 'True Cinnamon' signature features hints of citrus, clove, and a lingering floral finish."
                             </p>
@@ -394,10 +371,18 @@ export default function ProductsPage() {
 
                         <motion.div
                             layoutId={`gallery-${selectedProduct.id}`}
-                            className="relative w-full max-w-7xl min-h-[70vh] h-auto bg-[#0A0A0A] rounded-[4rem] overflow-hidden border border-white/10 flex flex-col md:flex-row shadow-[0_50px_100px_rgba(0,0,0,0.8)]"
+                            className="relative w-full max-w-5xl h-full md:h-auto md:max-h-[90vh] bg-[#0A0A0A] rounded-[2rem] md:rounded-[4rem] overflow-hidden border border-white/10 flex flex-col md:flex-row shadow-3xl"
                         >
-                            {/* Left: Cinematic Image with Zoom */}
-                            <div className="w-full md:w-1/2 relative overflow-hidden group">
+                            {/* Close Button Mobile */}
+                            <button
+                                onClick={() => setSelectedProduct(null)}
+                                className="absolute top-6 right-6 z-[60] w-12 h-12 rounded-full border border-white/10 bg-black/60 backdrop-blur-xl flex items-center justify-center text-white/40 md:hidden"
+                            >
+                                <X size={20} />
+                            </button>
+
+                            {/* Image Section (Top on mobile, Left on desktop) */}
+                            <div className="w-full md:w-1/2 relative aspect-square md:aspect-auto h-auto md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-white/5 group">
                                 <motion.div
                                     layoutId={`image-${selectedProduct.id}`}
                                     className="w-full h-full"
@@ -409,52 +394,73 @@ export default function ProductsPage() {
                                         className="object-cover group-hover:scale-110 transition-transform duration-[3s]"
                                     />
                                 </motion.div>
-                                <div className="absolute inset-x-0 bottom-0 p-12 bg-gradient-to-t from-black via-black/40 to-transparent">
-                                    <div className="flex flex-wrap gap-4 mt-6">
+                                <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black via-black/40 to-transparent">
+                                    <div className="flex flex-wrap gap-3">
                                         {selectedProduct.features.map((feat, i) => (
-                                            <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-                                                <CheckCircle2 size={12} className="text-[#D2B48C]" />
-                                                <span className="text-[10px] font-bold text-white uppercase tracking-widest">{feat}</span>
+                                            <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                                                <CheckCircle2 size={10} className="text-[#D2B48C]" />
+                                                <span className="text-[9px] font-bold text-white uppercase tracking-widest">{feat}</span>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Right: The Data Vault */}
-                            <div className="w-full md:w-1/2 p-16 md:p-24 flex flex-col relative">
+                            {/* Content Section (Scrollable) */}
+                            <div className="w-full md:w-1/2 p-8 md:p-16 lg:p-20 flex flex-col relative overflow-y-auto max-h-[60vh] md:max-h-none">
                                 <button
                                     onClick={() => setSelectedProduct(null)}
-                                    className="absolute top-12 right-12 w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-[#D2B48C] transition-all"
+                                    className="absolute top-6 right-6 md:top-12 md:right-12 z-[100] w-12 h-12 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all transform hover:rotate-90 shadow-2xl"
                                 >
-                                    <ArrowRight className="rotate-180" size={24} />
+                                    <X size={20} />
                                 </button>
 
                                 <motion.span
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    className="text-[#D2B48C] font-bold tracking-[0.5em] uppercase text-[10px] mb-8 block"
+                                    className="text-[#D2B48C] font-bold tracking-[0.5em] uppercase text-[10px] mb-6 block"
                                 >
                                     {selectedProduct.badge} • {selectedProduct.category}
                                 </motion.span>
-                                <h2 className="text-6xl md:text-8xl font-serif font-light text-white mb-10">{selectedProduct.name}</h2>
-                                <p className="text-xl text-white/30 font-light leading-relaxed mb-12 italic border-l-2 border-[#D2B48C]/20 pl-8">
+                                <h2 className="text-4xl md:text-5xl font-serif font-light text-white mb-8">{selectedProduct.name}</h2>
+
+                                {/* Mobile Image Reveal (Inside Vault) */}
+                                <div className="md:hidden relative aspect-square rounded-3xl overflow-hidden mb-12 border border-white/5">
+                                    <Image src={selectedProduct.image} alt={selectedProduct.name} fill className="object-cover" />
+                                </div>
+
+                                <p className="text-lg text-white/30 font-light leading-relaxed mb-10 italic border-l-2 border-[#D2B48C]/20 pl-6">
                                     "{selectedProduct.description}"
                                 </p>
 
-                                <div className="grid grid-cols-1 gap-12 mb-16 border-t border-white/5 pt-12">
+                                <div className="grid grid-cols-2 gap-8 mb-12 border-t border-white/5 pt-10">
                                     <div>
-                                        <span className="block text-[10px] font-bold text-white/20 uppercase tracking-widest mb-4">Availability</span>
-                                        <span className="text-2xl font-serif text-white uppercase">Sovereign Direct</span>
+                                        <span className="block text-[9px] font-bold text-white/20 uppercase tracking-widest mb-3">Geographic Origin</span>
+                                        <span className="text-lg font-serif text-white uppercase tracking-tight">{selectedProduct.origin}</span>
+                                    </div>
+                                    <div>
+                                        <span className="block text-[9px] font-bold text-white/20 uppercase tracking-widest mb-3">Grade Specification</span>
+                                        <span className="text-lg font-serif text-white uppercase tracking-tight">{selectedProduct.grade}</span>
+                                    </div>
+                                    <div>
+                                        <span className="block text-[9px] font-bold text-white/20 uppercase tracking-widest mb-3">Availability</span>
+                                        <span className="text-lg font-serif text-white uppercase tracking-tight">Direct Supply</span>
+                                    </div>
+                                    <div>
+                                        <span className="block text-[9px] font-bold text-white/20 uppercase tracking-widest mb-3">Sovereign Rating</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg font-serif text-white uppercase tracking-tight">{selectedProduct.rating}</span>
+                                            <span className="text-white/20 text-[9px] font-bold uppercase tracking-widest">/ 5.0</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="mt-16">
+                                <div className="mt-auto">
                                     <Button
-                                        onClick={() => router.push('/contact')}
-                                        className="w-full bg-[#D2B48C] hover:bg-white text-black font-bold h-24 rounded-full text-[12px] uppercase tracking-[0.4em] transition-all group shadow-xl"
+                                        onClick={() => router.push(`/contact?product=${encodeURIComponent(selectedProduct.name)}`)}
+                                        className="w-full bg-[#D2B48C] hover:bg-white text-black font-bold h-16 rounded-full text-[11px] uppercase tracking-[0.3em] transition-all group shadow-lg"
                                     >
-                                        <MessageCircle size={20} className="mr-4 group-hover:-translate-y-1 transition-transform" />
+                                        <MessageCircle size={18} className="mr-4 group-hover:-translate-y-1 transition-transform" />
                                         Enquire Now
                                     </Button>
                                 </div>
@@ -484,25 +490,12 @@ function PrologueCarousel() {
     return (
         <section className="relative h-screen w-full overflow-hidden bg-black flex items-center justify-center">
             {/* Background Transition */}
-            <AnimatePresence mode="popLayout">
-                <motion.div
-                    key={currentIndex}
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1.5, ease: "easeInOut" }}
-                    className="absolute inset-0 z-0"
-                >
-                    <Image
-                        src={prologueSteps[currentIndex].image}
-                        alt={prologueSteps[currentIndex].title}
-                        fill
-                        className="object-cover opacity-60 grayscale-[0.3]"
-                        priority
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
-                </motion.div>
-            </AnimatePresence>
+            <RotatingBackground
+                images={["/explore/plantation.png", "/explore/artisan.png", "/explore/alchemy.png"]}
+                opacity={0.6}
+                showGradient={true}
+                activeIndex={currentIndex}
+            />
 
             <div className="container relative z-10 px-4">
                 <div className="max-w-5xl mx-auto text-center">
@@ -579,7 +572,7 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
             className="relative group cursor-pointer"
             onClick={onSelect}
         >
-            <div className="relative aspect-[3/4] rounded-[4rem] overflow-hidden bg-white/5 border border-white/5 shadow-3xl">
+            <div className="relative aspect-[3/4] rounded-[2.5rem] md:rounded-[4rem] overflow-hidden bg-white/5 border border-white/5 shadow-3xl">
                 <motion.div layoutId={`image-${product.id}`} className="w-full h-full">
                     <Image
                         src={product.image}
@@ -596,8 +589,8 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                     </span>
                 </div>
 
-                {/* Interaction Overlay */}
-                <div className="absolute top-12 right-12 flex gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                {/* Interaction Overlay (Visible on Desktop Hover) */}
+                <div className="absolute top-10 right-10 hidden md:flex gap-3 z-30 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
                     <button
                         onClick={(e) => onToggleFavorite(e, product.id)}
                         className={cn(
@@ -612,27 +605,29 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                     </button>
                 </div>
 
-                {/* Content Labels */}
-                <div className="absolute inset-x-12 bottom-12 z-10">
-                    <div className="flex items-center gap-4 mb-4">
+                {/* Content Labels (Bottom Aligned for both Mobile and Desktop) */}
+                <div className="absolute inset-x-8 md:inset-x-12 bottom-12 z-10 pointer-events-none">
+                    <div className="flex items-center gap-4 mb-2 md:mb-4">
                         <span className="w-8 h-px bg-[#D2B48C]/50" />
                         <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#D2B48C]">
                             {product.grade}
                         </span>
                     </div>
-                    <h3 className="text-4xl md:text-5xl font-serif font-light text-white mb-6 transform group-hover:translate-x-4 transition-transform duration-700">
-                        {product.name}
+                    {/* Cinematic Title styling */}
+                    <h3 className="text-4xl md:text-5xl font-serif font-light text-white leading-[1.1] md:leading-normal transition-transform duration-700 md:group-hover:translate-x-4">
+                        {product.name.split(' ').slice(0, -1).join(' ')} <br className="md:hidden" />
+                        <span className="italic text-white/40">{product.name.split(' ').slice(-1)}</span>
                     </h3>
                 </div>
 
-                {/* Centered Hover Actions Overlay */}
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-6 z-20">
+                {/* Centered Actions Overlay (Visible on Desktop Hover) */}
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 hidden md:flex flex-col items-center justify-center gap-6 z-20 px-8">
                     <Button
                         onClick={(e) => {
                             e.stopPropagation();
-                            router.push('/contact');
+                            router.push(`/contact?product=${encodeURIComponent(product.name)}`);
                         }}
-                        className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 px-10 text-[10px] font-bold uppercase tracking-[0.4em] transform translate-y-4 group-hover:translate-y-0 transition-all duration-500"
+                        className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 px-10 text-[10px] font-bold uppercase tracking-[0.4em] shadow-2xl w-auto translate-y-4 group-hover:translate-y-0 transition-all duration-500"
                     >
                         <MessageCircle size={16} className="mr-3" /> Enquire Now
                     </Button>
@@ -641,9 +636,9 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                             e.stopPropagation();
                             onSelect();
                         }}
-                        className="flex items-center gap-3 text-white/70 hover:text-white text-[9px] font-bold uppercase tracking-[0.4em] transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75"
+                        className="flex items-center justify-center gap-3 text-white/80 hover:text-white text-[9px] font-bold uppercase tracking-[0.4em] translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 w-full"
                     >
-                        <Info size={16} /> Examine Detail
+                        <Info size={16} /> <span className="pt-0.5">Examine Detail</span>
                     </button>
                 </div>
             </div>
@@ -668,7 +663,7 @@ function TestimonialsSection() {
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.2 }}
-                            className="bg-black/40 backdrop-blur-3xl p-16 rounded-[4rem] border border-white/5 relative z-10 hover:bg-white/[0.03] transition-colors group"
+                            className="bg-black/40 backdrop-blur-3xl p-10 md:p-16 rounded-[3rem] md:rounded-[4rem] border border-white/5 relative z-10 hover:bg-white/[0.03] transition-colors group"
                         >
                             <Quote className="text-[#D2B48C] mb-12 opacity-30 group-hover:opacity-100 transition-opacity" size={40} />
                             <p className="text-2xl text-white/50 font-light leading-relaxed mb-16 italic">
@@ -694,7 +689,7 @@ function TestimonialsSection() {
 function TrustAndTransparency() {
     const router = useRouter();
     return (
-        <section className="py-40 bg-black text-[#F3EFE9] border-y border-white/5 relative overflow-hidden mt-40 rounded-[4rem] mx-4">
+        <section className="py-24 md:py-40 bg-black text-[#F3EFE9] border-y border-white/5 relative overflow-hidden mt-20 md:mt-40 rounded-[2rem] md:rounded-[4rem] mx-4">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-[0.2]">
                 <div className="absolute inset-0 bg-[url('/explore/plantation.png')] bg-cover bg-fixed grayscale pointer-events-none" />
@@ -705,12 +700,15 @@ function TrustAndTransparency() {
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-24 gap-12">
                     <div>
                         <span className="text-[#D2B48C] font-bold tracking-[0.5em] uppercase text-[10px] mb-8 block">Our Commitment</span>
-                        <h2 className="text-6xl md:text-8xl font-serif font-light mb-8 tracking-tighter text-white">Trust & <br />Transparency</h2>
-                        <p className="text-xl md:text-2xl font-light text-white/50 max-w-2xl leading-relaxed italic border-l-2 border-[#D2B48C]/50 pl-8">
+                        <h2 className="text-5xl md:text-8xl font-serif font-light mb-8 tracking-tighter text-white">Trust & <br />Transparency</h2>
+                        <p className="text-lg md:text-2xl font-light text-white/50 max-w-2xl leading-relaxed italic border-l-2 border-[#D2B48C]/50 pl-6 md:pl-8">
                             Clear product information, careful handling, and premium export readiness.
                         </p>
                     </div>
-                    <Button onClick={() => router.push('/contact')} className="bg-[#D2B48C] hover:bg-white text-black font-bold h-20 px-12 rounded-full text-[11px] uppercase tracking-[0.3em] transition-all shadow-[0_0_30px_rgba(210,180,140,0.2)]">
+                    <Button
+                        onClick={() => router.push('/contact')}
+                        className="bg-[#D2B48C] hover:bg-white text-black font-bold h-20 px-8 md:px-12 rounded-full text-[10px] md:text-[11px] uppercase tracking-[0.3em] transition-all shadow-[0_0_30px_rgba(210,180,140,0.2)] w-full md:w-auto"
+                    >
                         Ask for Specifications
                     </Button>
                 </div>

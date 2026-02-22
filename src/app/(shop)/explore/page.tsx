@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, ShoppingBag, ChevronRight, X, Minus, Plus, ArrowRight, Trash2, MapPin, Info, MessageCircle } from "lucide-react";
+import { ShoppingCart, ShoppingBag, ChevronRight, X, Minus, Plus, ArrowRight, Trash2, MapPin, Info, MessageCircle, Heart, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HeritageMap } from "@/components/layout/heritage-map";
+import { useCart } from "@/providers/cart-provider";
+import { RotatingBackground } from "@/components/layout/RotatingBackground";
 
 // Story Chapters
 const prologueSteps = [
@@ -93,9 +95,11 @@ const products = [
 ];
 
 export default function ExplorePage() {
+    const { addToCart } = useCart();
     const router = useRouter();
     const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
     const [isQualityModalOpen, setIsQualityModalOpen] = useState(false);
+    const backgrounds = ["/explore/plantation.png", "/explore/artisan.png", "/explore/alchemy.png"];
 
     return (
         <div className="bg-[#050505] text-[#F3EFE9] selection:bg-[#D2B48C] selection:text-black font-sans overflow-x-hidden">
@@ -103,14 +107,13 @@ export default function ExplorePage() {
             {/* Cinematic Hero Reveal */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pinstripe.png')] opacity-[0.03] z-10 pointer-events-none" />
-                <motion.div
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{ opacity: 0.4, scale: 1 }}
-                    transition={{ duration: 2 }}
-                    className="absolute inset-0 z-0"
-                >
-                    <Image src="/hero-bg.png" alt="Sovereign Background" fill className="object-contain grayscale" />
-                </motion.div>
+
+                <RotatingBackground
+                    images={backgrounds}
+                    opacity={0.4}
+                    showGradient={false}
+                />
+
                 <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-[1]" />
 
                 <div className="container relative z-20 text-center px-4">
@@ -121,7 +124,7 @@ export default function ExplorePage() {
                     >
                         <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">TAPROVIA PRESENTS</span>
                         <h1 className="text-7xl md:text-[12rem] font-serif font-light leading-none mb-12 tracking-tighter">
-                            The <span className="italic text-white/40">Explorer.</span>
+                            The <span className="italic text-white/40 hover:text-[#D2B48C] transition-colors duration-500 cursor-default">Explorer.</span>
                         </h1>
                         <p className="text-xl md:text-2xl text-white/30 font-light max-w-2xl mx-auto leading-relaxed italic border-x border-white/5 px-12">
                             "A cinematic descent into the geological and artisanal perfection of Ceylon."
@@ -139,12 +142,10 @@ export default function ExplorePage() {
                 </motion.div>
             </section>
 
-            {/* Stage 1: The Sovereign Prologue (Carousel) */}
-            <PrologueCarousel />
 
             {/* Stage 2: The Sovereign Archive (Grid Layout) */}
             <div className="relative bg-[#050505] z-30 border-t border-white/5">
-                <section className="py-40 text-center">
+                <section className="py-24 md:py-40 text-center">
                     <div className="container px-4">
                         <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[10px] mb-8 block">Stage II</span>
                         <h2 className="text-6xl md:text-[8rem] font-serif font-light text-white leading-none tracking-tighter">
@@ -153,7 +154,7 @@ export default function ExplorePage() {
                     </div>
                 </section>
 
-                <div className="container px-4 pb-60">
+                <div className="container px-4 pb-32 md:pb-60">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                         {products.map((product) => (
                             <ProductCard
@@ -161,14 +162,7 @@ export default function ExplorePage() {
                                 product={product}
                                 onSelect={() => setSelectedProduct(product)}
                                 onAddToCart={() => {
-                                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                                    const existingItem = cart.find((item: any) => item.id === product.id);
-                                    if (existingItem) {
-                                        existingItem.quantity += 1;
-                                    } else {
-                                        cart.push({ ...product, quantity: 1 });
-                                    }
-                                    localStorage.setItem('cart', JSON.stringify(cart));
+                                    addToCart(product);
                                     router.push('/cart');
                                 }}
                             />
@@ -179,7 +173,7 @@ export default function ExplorePage() {
 
             {/* Stage 3: The Sovereign Supply (Bulk Orders) */}
             <div className="relative bg-[#050505] z-30 border-t border-white/5">
-                <section className="py-20 text-center">
+                <section className="py-12 md:py-20 text-center">
                     <div className="container px-4">
                         <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[10px] mb-8 block">Stage III</span>
                         <h2 className="text-6xl md:text-[8rem] font-serif font-light text-white leading-none tracking-tighter">
@@ -195,7 +189,7 @@ export default function ExplorePage() {
                         viewport={{ once: true }}
                         className="bg-[#0A0A0A] border border-[#D2B48C]/20 rounded-[3rem] p-12 md:p-24 text-white relative overflow-hidden group shadow-3xl"
                     >
-                        <section className="relative w-full h-full flex flex-col justify-center items-center text-center py-32 px-4">
+                        <section className="relative w-full h-full flex flex-col justify-center items-center text-center py-20 md:py-32 px-4">
                             {/* Cinematic Background Glows */}
                             <div className="absolute inset-0 bg-gradient-to-b from-[#D2B48C]/5 via-transparent to-black/40" />
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#D2B48C]/5 rounded-full blur-[100px] pointer-events-none" />
@@ -238,17 +232,17 @@ export default function ExplorePage() {
             </div >
 
             {/* ORIGIN INTELLIGENCE SECTION */}
-            <section className="py-40 border-t border-white/5 bg-[#050505] relative z-20">
+            <section className="py-24 md:py-40 border-t border-white/5 bg-[#050505] relative z-20">
                 <div className="container px-4">
-                    <div className="max-w-4xl border-l border-[#D2B48C]/30 pl-12 mb-20">
+                    <div className="max-w-4xl border-l border-[#D2B48C]/30 pl-8 md:pl-12 mb-16 md:mb-20">
                         <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">Geographic Provenance</span>
-                        <h2 className="text-5xl md:text-8xl font-serif font-light mb-12 tracking-tighter">The Heartland <br /><span className="italic text-white/20">of Purity.</span></h2>
-                        <p className="text-xl text-white/40 font-light italic font-serif leading-relaxed">
+                        <h2 className="text-4xl md:text-8xl font-serif font-light mb-8 md:mb-12 tracking-tighter">The Heartland <br /><span className="italic text-white/20">of Purity.</span></h2>
+                        <p className="text-lg md:text-xl text-white/40 font-light italic font-serif leading-relaxed">
                             TAPROVIA cinnamon is cultivated exclusively within the humid micro-climates of the Southern Highlands, where the soil is enriched by centuries of organic sediment.
                         </p>
                     </div>
 
-                    <div className="relative w-full aspect-[2/1] bg-[#080808] rounded-[3rem] border border-white/5 overflow-hidden group">
+                    <div className="relative w-full aspect-[4/3] md:aspect-[2/1] bg-[#080808] rounded-[2rem] md:rounded-[3rem] border border-white/5 overflow-hidden group">
                         {/* Grid Background */}
                         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
 
@@ -305,9 +299,9 @@ export default function ExplorePage() {
             </section>
 
             {/* CTA SECTION */}
-            < section className="py-60 relative z-20 overflow-hidden border-t border-white/5 bg-[#050505]" >
+            < section className="py-40 md:py-60 relative z-20 overflow-hidden border-t border-white/5 bg-[#050505]" >
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-[#D2B48C]/30 to-transparent" />
-                <div className="container px-4 text-center">
+                <div className="container px-6 md:px-4 text-center">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
@@ -318,10 +312,12 @@ export default function ExplorePage() {
                         </h2>
                         <Button
                             onClick={() => router.push('/products')}
-                            className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-24 px-20 text-[11px] font-bold uppercase tracking-[0.5em] transition-all hover:scale-105 shadow-3xl active:scale-95 group"
+                            className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-20 md:h-24 px-8 md:px-20 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.3em] md:tracking-[0.5em] transition-all hover:scale-105 shadow-3xl active:scale-95 group w-full md:w-auto overflow-hidden"
                         >
-                            Browse the Collection
-                            <MoveRight className="ml-6 group-hover:translate-x-2 transition-transform" size={20} />
+                            <span className="flex items-center justify-center gap-2 md:gap-4">
+                                Browse the Collection
+                                <MoveRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-2 transition-transform" />
+                            </span>
                         </Button>
                     </motion.div>
                 </div>
@@ -338,14 +334,7 @@ export default function ExplorePage() {
                             product={selectedProduct}
                             onClose={() => setSelectedProduct(null)}
                             onAddToCart={() => {
-                                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                                const existingItem = cart.find((item: any) => item.id === selectedProduct.id);
-                                if (existingItem) {
-                                    existingItem.quantity += 1;
-                                } else {
-                                    cart.push({ ...selectedProduct, quantity: 1 });
-                                }
-                                localStorage.setItem('cart', JSON.stringify(cart));
+                                addToCart(selectedProduct);
                                 setSelectedProduct(null);
                                 router.push('/cart');
                             }}
@@ -404,25 +393,12 @@ function PrologueCarousel() {
     return (
         <section className="relative h-screen w-full overflow-hidden bg-black flex items-center justify-center border-t border-white/5">
             {/* Background Transition */}
-            <AnimatePresence mode="popLayout">
-                <motion.div
-                    key={currentIndex}
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1.5, ease: "easeInOut" }}
-                    className="absolute inset-0 z-0"
-                >
-                    <Image
-                        src={prologueSteps[currentIndex].image}
-                        alt={prologueSteps[currentIndex].title}
-                        fill
-                        className="object-cover opacity-60 grayscale-[0.3]"
-                        priority
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
-                </motion.div>
-            </AnimatePresence>
+            <RotatingBackground
+                images={["/explore/plantation.png", "/explore/artisan.png", "/explore/alchemy.png"]}
+                opacity={0.6}
+                showGradient={true}
+                activeIndex={currentIndex}
+            />
 
             <div className="container relative z-10 px-4">
                 <div className="max-w-5xl mx-auto text-center">
@@ -485,40 +461,59 @@ function ProductCard({ product, onSelect, onAddToCart }: { product: typeof produ
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="group relative aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/5 bg-[#0A0A0A]"
+            className="group relative aspect-[3/4] rounded-[2.5rem] md:rounded-[4rem] overflow-hidden border border-white/5 bg-[#0A0A0A] cursor-pointer shadow-3xl"
+            onClick={onSelect}
         >
             {/* Background Image */}
             <Image
                 src={product.image}
                 alt={product.name}
                 fill
-                className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[2s] ease-out"
+                className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[2s] ease-out"
             />
 
-            {/* Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80" />
+            {/* Cinematic Overlay */}
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/20 to-transparent" />
 
-            {/* Hover Actions Overlay */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-4 z-20">
-                <Button
-                    onClick={() => onAddToCart?.()}
-                    className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-14 px-8 text-[10px] font-bold uppercase tracking-[0.2em] transform translate-y-4 group-hover:translate-y-0 transition-all duration-500"
+            {/* Interaction Overlay (Visible on Desktop Hover) */}
+            <div className="absolute top-10 right-10 hidden md:flex gap-3 z-30 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                    className="w-12 h-12 rounded-full backdrop-blur-md border border-white/10 flex items-center justify-center bg-black/40 text-white hover:border-[#D2B48C] transition-all"
                 >
-                    <ShoppingCart size={14} className="mr-2" /> Add to Cart
+                    <Heart size={18} />
+                </button>
+            </div>
+
+            {/* Centered Actions Overlay (Visible on Desktop Hover) */}
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 hidden md:flex flex-col items-center justify-center gap-6 z-20 px-8">
+                <Button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onAddToCart?.();
+                    }}
+                    className="bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 px-10 text-[10px] font-bold uppercase tracking-[0.4em] shadow-2xl w-auto translate-y-4 group-hover:translate-y-0 transition-all duration-500"
+                >
+                    <ShoppingCart size={16} className="mr-3" /> Add to Cart
                 </Button>
                 <button
-                    onClick={onSelect}
-                    className="flex items-center gap-2 text-white/70 hover:text-white text-[9px] font-bold uppercase tracking-[0.3em] transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onSelect();
+                    }}
+                    className="flex items-center justify-center gap-3 text-white/80 hover:text-white text-[9px] font-bold uppercase tracking-[0.4em] translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 w-full"
                 >
-                    <Info size={14} /> View Details
+                    <Info size={16} /> <span className="pt-0.5">Examine Detail</span>
                 </button>
             </div>
 
             {/* Content Labels */}
-            <div className="absolute inset-0 p-10 flex flex-col z-10">
+            <div className="absolute inset-0 p-10 flex flex-col z-10 pointer-events-none">
                 {/* Top Badges */}
                 <div className="flex flex-col gap-3 items-start">
-                    <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-full px-5 py-2 text-[8px] font-bold uppercase tracking-[0.2em] text-white/90">
+                    <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-full px-6 py-2 text-[8px] font-bold uppercase tracking-[0.2em] text-white/90">
                         {product.id === "alba" ? "HIGHEST GRADE" : product.id === "quills" ? "AROMATIC ESSENCE" : "PREMIUM RESERVE"}
                     </div>
                 </div>
@@ -529,12 +524,9 @@ function ProductCard({ product, onSelect, onAddToCart }: { product: typeof produ
                         <div className="w-8 h-px bg-[#D2B48C]" />
                         <span className="text-[#D2B48C] text-[9px] font-bold uppercase tracking-[0.4em]">{product.grade}</span>
                     </div>
-                    <h3 className="text-4xl md:text-5xl font-serif font-light text-white leading-tight tracking-tighter italic">
-                        {product.name.split(' ').map((word, i) => (
-                            <React.Fragment key={i}>
-                                {word} {i === 1 && <br />}
-                            </React.Fragment>
-                        ))}
+                    <h3 className="text-4xl md:text-5xl font-serif font-light text-white leading-[1.1] md:leading-normal transition-transform duration-700 md:group-hover:translate-x-4">
+                        {product.name.split(' ').slice(0, -1).join(' ')} <br className="md:hidden" />
+                        <span className="italic text-white/40">{product.name.split(' ').slice(-1)}</span>
                     </h3>
                 </div>
             </div>
@@ -579,10 +571,10 @@ function QualityProcessModal({ onClose }: { onClose: () => void }) {
                 exit={{ scale: 0.9, opacity: 0 }}
                 className="relative w-full max-w-5xl bg-[#0A0A0A] rounded-[4rem] border border-[#D2B48C]/10 overflow-hidden shadow-3xl"
             >
-                <div className="p-16 md:p-24">
-                    <div className="mb-16">
+                <div className="p-10 md:p-16 lg:p-24">
+                    <div className="mb-12 md:mb-16">
                         <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[10px] mb-8 block">The Sovereign Standard</span>
-                        <h2 className="text-5xl md:text-7xl font-serif text-white italic tracking-tighter">Bulk & Export <br /><span className="text-white/30">Process.</span></h2>
+                        <h2 className="text-4xl md:text-7xl font-serif text-white italic tracking-tighter">Bulk & Export <br /><span className="text-white/30">Process.</span></h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -655,40 +647,66 @@ function ProductModal({ product, onClose, onAddToCart }: { product: typeof produ
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="relative w-full max-w-4xl bg-[#0A0A0A] rounded-[4rem] border border-white/10 overflow-hidden shadow-3xl"
+                className="relative w-full max-w-5xl h-full md:h-auto md:max-h-[90vh] bg-[#0A0A0A] rounded-[2rem] md:rounded-[4rem] border border-white/10 overflow-hidden shadow-3xl flex flex-col md:flex-row"
             >
-                <div className="p-16 md:p-24 flex flex-col md:grid md:grid-cols-2 gap-16">
-                    <div>
-                        <span className="text-[#D2B48C] font-bold tracking-[0.5em] uppercase text-[10px] mb-8 block">{product.grade} SPECIFICATION</span>
-                        <h2 className="text-5xl font-serif text-white mb-8">{product.name}</h2>
-                        <div className="space-y-6">
-                            {product.features.map((feature, i) => (
-                                <div key={i} className="flex items-center gap-4 text-white/40 border-b border-white/5 pb-4">
-                                    <ChevronRight size={14} className="text-[#D2B48C]" />
-                                    <span className="text-[10px] font-bold uppercase tracking-widest">{feature}</span>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="mt-12 flex flex-col gap-6">
-                            <Button
-                                onClick={onAddToCart}
-                                className="w-full bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 text-[11px] font-bold uppercase tracking-[0.3em] transition-all"
-                            >
-                                <ShoppingCart size={18} className="mr-4" /> Add to Cart
-                            </Button>
-                            <div>
-                                <span className="text-[9px] font-bold uppercase tracking-widest text-[#D2B48C] block mb-4">Availability</span>
-                                <span className="text-xl font-serif text-white italic">Direct Sovereign Supply</span>
+                {/* Image Section (Top on mobile, Left on desktop) */}
+                <div className="w-full md:w-1/2 relative aspect-square md:aspect-auto h-auto md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-white/5">
+                    <Image src={product.image} alt={product.name} fill className="object-cover" />
+                </div>
+
+                {/* Content Section (Scrollable) */}
+                <div className="w-full md:w-1/2 p-8 md:p-16 lg:p-20 flex flex-col relative overflow-y-auto max-h-[60vh] md:max-h-none">
+                    <div className="mb-8">
+                        <span className="text-[#D2B48C] font-bold tracking-[0.5em] uppercase text-[10px] mb-6 block">{product.grade} SPECIFICATION</span>
+                        <h2 className="text-4xl md:text-5xl font-serif text-white">{product.name}</h2>
+                    </div>
+
+                    {/* Features Scrollable Area */}
+                    <div className="space-y-6 mb-12">
+                        {product.features.map((feature, i) => (
+                            <div key={i} className="flex items-center gap-4 text-white/40 border-b border-white/5 pb-4">
+                                <ChevronRight size={14} className="text-[#D2B48C]" />
+                                <span className="text-[10px] font-bold uppercase tracking-widest">{feature}</span>
                             </div>
+                        ))}
+                    </div>
+
+                    {/* Specifications Grid */}
+                    <div className="grid grid-cols-2 gap-8 mb-12 border-t border-white/5 pt-10">
+                        <div>
+                            <span className="block text-[9px] font-bold text-white/20 uppercase tracking-widest mb-3">Geographic Origin</span>
+                            <span className="text-lg font-serif text-white uppercase tracking-tight">{product.origin}</span>
+                        </div>
+                        <div>
+                            <span className="block text-[9px] font-bold text-white/20 uppercase tracking-widest mb-3">Grade Specification</span>
+                            <span className="text-lg font-serif text-white uppercase tracking-tight">{product.grade}</span>
+                        </div>
+                        <div>
+                            <span className="block text-[9px] font-bold text-white/20 uppercase tracking-widest mb-3">Availability</span>
+                            <span className="text-lg font-serif text-white uppercase tracking-tight">Direct Supply</span>
                         </div>
                     </div>
-                    <div className="relative aspect-square rounded-[2rem] overflow-hidden border border-white/5">
-                        <Image src={product.image} alt={product.name} fill className="object-cover" />
+
+                    {/* Action Buttons */}
+                    <div className="mt-auto space-y-4">
+                        <Button
+                            onClick={onAddToCart}
+                            className="w-full bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 text-[11px] font-bold uppercase tracking-[0.3em] transition-all shadow-lg"
+                        >
+                            <ShoppingCart size={18} className="mr-4" /> Add to Cart
+                        </Button>
+                        <Button
+                            onClick={() => router.push(`/contact?product=${encodeURIComponent(product.name)}`)}
+                            variant="outline"
+                            className="w-full border-white/10 text-white hover:bg-white/5 bg-transparent rounded-full h-16 text-[11px] font-bold uppercase tracking-[0.3em] transition-all"
+                        >
+                            <MessageCircle size={18} className="mr-4" /> Enquire Now
+                        </Button>
                     </div>
                 </div>
                 <button
                     onClick={onClose}
-                    className="absolute top-12 right-12 w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-all transform hover:rotate-90"
+                    className="absolute top-6 right-6 md:top-12 md:right-12 z-[100] w-12 h-12 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all transform hover:rotate-90 shadow-2xl"
                 >
                     <X size={20} />
                 </button>

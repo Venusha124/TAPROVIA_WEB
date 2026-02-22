@@ -1,17 +1,22 @@
 "use client";
 
 import React, { useState, useEffect, useTransition } from "react";
-import { motion } from "framer-motion";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Clock, ArrowUpRight, Send, Globe, MessageSquare, ShieldCheck, Zap, Diamond } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { submitInquiry } from "@/actions/contact";
 import { toast } from "sonner";
+import { RotatingBackground } from "@/components/layout/RotatingBackground";
 
 export default function ContactPage() {
     const [status, setStatus] = useState<"LIVE" | "STANDBY">("STANDBY");
     const [isPending, startTransition] = useTransition();
     const [activeClassification, setActiveClassification] = useState("Partnership");
+
+    // Background Assets
+    const backgrounds = ["/hero-bg.png", "/hero-bg-2.png", "/hero-bg-3.png"];
 
     useEffect(() => {
         const updateStatus = () => {
@@ -22,8 +27,8 @@ export default function ContactPage() {
             setStatus(hours >= 8 && hours < 18 ? "LIVE" : "STANDBY");
         };
         updateStatus();
-        const interval = setInterval(updateStatus, 60000);
-        return () => clearInterval(interval);
+        const intervalStatus = setInterval(updateStatus, 60000);
+        return () => clearInterval(intervalStatus);
     }, []);
 
     const handleClientSubmit = (formData: FormData) => {
@@ -43,8 +48,16 @@ export default function ContactPage() {
         <div className="flex flex-col min-h-screen bg-[#050505] text-[#F3EFE9] selection:bg-[#D2B48C] selection:text-black overflow-x-hidden">
 
             {/* --- 1. THE CONCIERGE HERO --- */}
-            <section className="relative pt-64 pb-24 text-center border-b border-white/5 bg-[radial-gradient(circle_at_top,rgba(210,180,140,0.05),transparent)]">
-                <div className="container px-4">
+            <section className="relative pt-32 md:pt-64 pb-12 md:pb-24 text-center border-b border-white/5 overflow-hidden">
+                {/* Background Image & Overlay */}
+                <RotatingBackground
+                    images={backgrounds}
+                    opacity={0.3}
+                    showGradient={true}
+                    showOverlay={true}
+                />
+
+                <div className="container px-4 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -61,9 +74,9 @@ export default function ContactPage() {
                             </div>
                         </div>
                         <h1 className="text-6xl md:text-[10rem] font-serif font-light leading-none mb-12 tracking-tighter text-white">
-                            Direct <span className="italic text-[#D2B48C]">Access.</span>
+                            Direct <span className="italic text-white/20 hover:text-[#D2B48C] transition-colors duration-500 cursor-default">Access.</span>
                         </h1>
-                        <p className="text-white/40 max-w-2xl mx-auto text-xl font-light leading-relaxed italic border-x border-white/5 px-12">
+                        <p className="text-white/40 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed italic border-x border-white/5 px-6 md:px-12">
                             "Connecting the source to the connoisseur. Our Concierge Desk is primed for your global acquisition requirements."
                         </p>
                     </motion.div>
@@ -71,26 +84,35 @@ export default function ContactPage() {
             </section>
 
             {/* --- 2. QUICK INFO GRID --- */}
-            <section className="py-20 bg-[#080808] border-y border-white/5">
+            <section className="py-12 md:py-20 bg-[#080808] border-y border-white/5">
                 <div className="container px-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[
-                            { label: "Response time", value: "Within 24–48 hrs" },
-                            { label: "Best for", value: "Bulk / Export" },
-                            { label: "Support", value: "Order guidance" },
-                            { label: "Shipping", value: "Worldwide options" }
+                            { label: "Response time", value: "Within 24–48 hrs", detail: "Prioritized handling for international inquiries." },
+                            { label: "Best for", value: "Bulk / Export", detail: "Wholesale volumes and global distribution protocols." },
+                            { label: "Support", value: "Order guidance", detail: "Expert assistance for bespoke requirements." },
+                            { label: "Shipping", value: "Worldwide options", detail: "Secured air and sea freight to 48+ nations." }
                         ].map((info, i) => (
-                            <div key={i} className="bg-white/[0.02] backdrop-blur-3xl p-8 rounded-[2rem] border border-white/5 hover:bg-white/[0.04] transition-all group">
+                            <motion.div
+                                key={i}
+                                whileHover={{ y: -5, scale: 1.02 }}
+                                className="bg-white/[0.02] backdrop-blur-3xl p-8 rounded-[2rem] border border-white/5 hover:border-[#D2B48C]/30 transition-all group cursor-default"
+                            >
                                 <span className="text-white/20 text-[10px] font-bold uppercase tracking-wider block mb-2 group-hover:text-[#D2B48C]/50 transition-colors">{info.label}</span>
-                                <h3 className="text-white font-serif font-light text-xl group-hover:text-[#D2B48C] transition-colors italic">{info.value}</h3>
-                            </div>
+                                <h3 className="text-white font-serif font-light text-xl group-hover:text-[#D2B48C] transition-colors italic mb-4">{info.value}</h3>
+                                <div className="h-auto opacity-100 lg:h-0 lg:opacity-0 lg:group-hover:h-auto lg:group-hover:opacity-100 transition-all duration-500 overflow-hidden">
+                                    <p className="text-white/40 text-[10px] font-light leading-relaxed italic border-t border-white/5 pt-4">
+                                        {info.detail}
+                                    </p>
+                                </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
             {/* --- 3. THE HUB GRID --- */}
-            <section className="py-32 relative">
+            <section className="py-24 md:py-32 relative">
                 <div className="container px-4">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-24">
 
@@ -125,7 +147,7 @@ export default function ContactPage() {
 
                             <div className="pt-20 border-t border-white/5 space-y-12">
                                 {/* Business Hours Card */}
-                                <div className="p-10 rounded-[2.5rem] bg-white/[0.02] text-[#F3EFE9] border border-white/5 relative overflow-hidden group">
+                                <div className="p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/[0.02] text-[#F3EFE9] border border-white/5 relative overflow-hidden group">
                                     <h3 className="text-white font-serif text-2xl mb-8 italic">Business Hours</h3>
                                     <div className="space-y-4 font-sans text-sm font-light">
                                         <div className="flex justify-between items-center border-b border-white/5 pb-4">
@@ -144,8 +166,8 @@ export default function ContactPage() {
                                 </div>
 
                                 {/* Location Preview Card */}
-                                <div className="p-4 rounded-[3rem] bg-white/[0.02] border border-white/5 relative group">
-                                    <div className="flex justify-between items-center px-10 py-10">
+                                <div className="p-4 rounded-[2rem] md:rounded-[3rem] bg-white/[0.02] border border-white/5 relative group">
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-6 sm:px-10 py-8 sm:py-10 gap-6 sm:gap-0">
                                         <div>
                                             <span className="text-[#D2B48C] text-[10px] font-bold uppercase tracking-[0.4em] block mb-2 transition-colors">Find us</span>
                                             <h3 className="text-white font-serif text-3xl font-light italic">Location <span className="text-white/20">Preview</span></h3>
@@ -174,12 +196,12 @@ export default function ContactPage() {
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                className="bg-white/[0.02] backdrop-blur-3xl p-10 md:p-16 rounded-[4rem] border border-white/5 shadow-3xl relative overflow-hidden group"
+                                className="bg-white/[0.02] backdrop-blur-3xl p-8 md:p-16 rounded-[3rem] md:rounded-[4rem] border border-white/5 shadow-3xl relative overflow-hidden group"
                             >
                                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D2B48C]/30 to-transparent" />
 
-                                <h2 className="text-4xl md:text-6xl font-serif font-light mb-6 text-white italic">Send a <span className="text-white/20">Message</span></h2>
-                                <p className="text-white/40 text-sm mb-12 max-w-lg leading-relaxed font-light italic border-l border-[#D2B48C]/30 pl-8">
+                                <h2 className="text-4xl md:text-6xl font-serif font-light mb-6 text-white italic">Send a <span className="text-white/20 hover:text-[#D2B48C] transition-colors duration-500 cursor-default">Message</span></h2>
+                                <p className="text-white/40 text-sm mb-12 max-w-lg leading-relaxed font-light italic border-l border-[#D2B48C]/30 pl-6 md:pl-8">
                                     "Share a quick note about your request. If it's a booking service, include your preferred date and location."
                                 </p>
 
@@ -232,10 +254,10 @@ export default function ContactPage() {
                                         </div>
 
                                         <div className="relative">
-                                            <textarea name="narrative" required rows={6} placeholder="Your Message" className="w-full bg-white/[0.03] border border-white/5 rounded-[2.5rem] p-10 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all resize-none placeholder:text-white/20 italic font-serif" ></textarea>
+                                            <textarea name="narrative" required rows={6} placeholder="Your Message" className="w-full bg-white/[0.03] border border-white/5 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 text-sm text-white focus:outline-none focus:border-[#D2B48C] transition-all resize-none placeholder:text-white/20 italic font-serif" ></textarea>
                                         </div>
 
-                                        <div className="flex items-center justify-between pt-4 border-t border-white/5 border-dashed">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-4 border-t border-white/5 border-dashed gap-6 sm:gap-0">
                                             <label className="flex items-center gap-4 cursor-pointer group">
                                                 <input type="checkbox" className="w-5 h-5 rounded border-white/10 bg-black text-[#D2B48C] focus:ring-[#D2B48C]" />
                                                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/20 group-hover:text-white transition-colors">I agree to be contacted about my request.</span>
@@ -271,9 +293,9 @@ export default function ContactPage() {
 
 function ContactInfoItem({ Icon, title, detail }: { Icon: any, title: string, detail: string }) {
     return (
-        <div className="flex items-start gap-8 group">
-            <div className="w-16 h-16 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-white/40 group-hover:bg-[#D2B48C] group-hover:text-black transition-all duration-700 group-hover:rotate-12">
-                <Icon className="w-6 h-6" />
+        <div className="flex items-start gap-6 md:gap-8 group">
+            <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-white/40 group-hover:bg-[#D2B48C] group-hover:text-black transition-all duration-700 group-hover:rotate-12 flex-shrink-0">
+                <Icon className="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <div>
                 <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/40 mb-2">{title}</h3>

@@ -7,22 +7,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle2, Truck, CreditCard, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/providers/cart-provider";
 
 export default function CheckoutPage() {
+    const { items, clearCart } = useCart();
     const router = useRouter();
-    const [items, setItems] = useState<any[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [formStep, setFormStep] = useState(1); // 1: Info, 2: Payment, 3: Confirm
     const [isOrderConfirmed, setIsOrderConfirmed] = useState(false);
 
     useEffect(() => {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        // Ensure valid prices
-        const validatedCart = cart.map((item: any) => ({
-            ...item,
-            price: typeof item.price === 'string' ? parseFloat(item.price.replace(/[^0-9.]/g, '')) : Number(item.price) || 0
-        }));
-        setItems(validatedCart);
         setIsLoaded(true);
     }, []);
 
@@ -34,7 +28,7 @@ export default function CheckoutPage() {
     if (!isLoaded) return <div className="bg-[#050505] min-h-screen" />;
 
     return (
-        <main className="bg-[#050505] min-h-screen text-[#F3EFE9] pt-32 pb-60 overflow-x-hidden selection:bg-[#D2B48C] selection:text-black">
+        <main className="bg-[#050505] min-h-screen text-[#F3EFE9] pt-24 md:pt-32 pb-32 md:pb-60 overflow-x-hidden selection:bg-[#D2B48C] selection:text-black">
             <div className="container px-4">
 
                 {/* Header */}
@@ -57,14 +51,14 @@ export default function CheckoutPage() {
                     {/* Left: Form */}
                     <div className="lg:col-span-7 space-y-12">
                         {/* Shipping Info */}
-                        <div className="bg-[#0A0A0A] border border-white/5 rounded-[3rem] p-10 md:p-16">
+                        <div className="bg-[#0A0A0A] border border-white/5 rounded-[2rem] md:rounded-[3rem] p-8 md:p-16">
                             <div className="flex items-center gap-4 mb-10">
                                 <Truck className="text-[#D2B48C]" size={24} />
                                 <h2 className="text-2xl font-serif text-white">Shipping Details</h2>
                             </div>
 
                             <form className="space-y-8">
-                                <div className="grid grid-cols-2 gap-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                                     <div className="space-y-4">
                                         <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">First Name</label>
                                         <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all" placeholder="Shamalka" />
@@ -82,7 +76,7 @@ export default function CheckoutPage() {
                                     <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Street Address</label>
                                     <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all" placeholder="123 Matara Road" />
                                 </div>
-                                <div className="grid grid-cols-2 gap-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                                     <div className="space-y-4">
                                         <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">City</label>
                                         <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all" placeholder="Galle" />
@@ -96,7 +90,7 @@ export default function CheckoutPage() {
                         </div>
 
                         {/* Payment Info */}
-                        <div className="bg-[#0A0A0A] border border-white/5 rounded-[3rem] p-10 md:p-16 opacity-50 relative pointer-events-none">
+                        <div className="bg-[#0A0A0A] border border-white/5 rounded-[2rem] md:rounded-[3rem] p-8 md:p-16 opacity-50 relative pointer-events-none">
                             <div className="absolute inset-0 z-10" /> {/* Overlay to indicate disabled/next step */}
                             <div className="flex items-center gap-4 mb-10">
                                 <CreditCard className="text-white/40" size={24} />
@@ -109,7 +103,7 @@ export default function CheckoutPage() {
                     {/* Right: Summary */}
                     <div className="lg:col-span-5">
                         <div className="sticky top-32">
-                            <div className="bg-[#0A0A0A] border border-[#D2B48C]/20 rounded-[3rem] p-10 md:p-12 overflow-hidden relative">
+                            <div className="bg-[#0A0A0A] border border-[#D2B48C]/20 rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 overflow-hidden relative">
                                 <h2 className="text-2xl font-serif text-white mb-8">Order Summary</h2>
 
                                 <div className="max-h-60 overflow-y-auto custom-scrollbar mb-8 space-y-6">
@@ -150,7 +144,7 @@ export default function CheckoutPage() {
                                 <Button
                                     onClick={() => {
                                         setIsOrderConfirmed(true);
-                                        localStorage.removeItem('cart');
+                                        clearCart();
                                     }}
                                     className="w-full bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 text-[11px] font-bold uppercase tracking-[0.3em] transition-all shadow-xl group"
                                 >
@@ -173,7 +167,7 @@ export default function CheckoutPage() {
                         <motion.div
                             initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
-                            className="bg-[#0A0A0A] border border-[#D2B48C]/20 rounded-[3rem] p-12 md:p-20 text-center max-w-2xl relative overflow-hidden shadow-2xl"
+                            className="bg-[#0A0A0A] border border-[#D2B48C]/20 rounded-[2rem] md:rounded-[3rem] p-8 md:p-20 text-center max-w-2xl relative overflow-hidden shadow-2xl"
                         >
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D2B48C] to-transparent" />
 

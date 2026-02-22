@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { AnalyticsTracker } from "@/components/analytics-tracker";
+import { CartProvider } from "@/providers/cart-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,9 +54,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-[#050505] text-[#F3EFE9]`}
       >
-        {children}
-        <AnalyticsTracker />
-        <Toaster position="top-center" />
+        <CartProvider>
+          {children}
+          <AnalyticsTracker />
+          <Toaster position="top-center" />
+        </CartProvider>
       </body>
     </html>
   );

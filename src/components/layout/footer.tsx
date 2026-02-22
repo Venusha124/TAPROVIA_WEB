@@ -18,6 +18,7 @@ export function Footer() {
                                 TAPRO<span className="text-[#D2B48C] italic">VIA</span>
                             </span>
                         </Link>
+
                         <p className="text-white/40 text-lg font-light leading-relaxed max-w-sm italic">
                             "Cultivating the benchmark of Ceylon excellence since 1924. A legacy of purity, delivered globally."
                         </p>

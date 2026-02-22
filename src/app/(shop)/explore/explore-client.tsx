@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, ShoppingBag, ChevronRight, X, Minus, Plus, ArrowRight, Trash2, MapPin, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HeritageMap } from "@/components/layout/heritage-map";
+import { useCart } from "@/providers/cart-provider";
 
 // Story Chapters
 const prologueSteps = [
@@ -55,6 +56,7 @@ interface Product {
 
 export default function ExplorePageClient({ products }: { products: Product[] }) {
     const router = useRouter();
+    const { addToCart } = useCart();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isQualityModalOpen, setIsQualityModalOpen] = useState(false);
     const [activeCategory, setActiveCategory] = useState("All");
@@ -150,14 +152,7 @@ export default function ExplorePageClient({ products }: { products: Product[] })
                                 product={product}
                                 onSelect={() => setSelectedProduct(product)}
                                 onAddToCart={() => {
-                                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                                    const existingItem = cart.find((item: any) => item.id === product.id);
-                                    if (existingItem) {
-                                        existingItem.quantity += 1;
-                                    } else {
-                                        cart.push({ ...product, quantity: 1 });
-                                    }
-                                    localStorage.setItem('cart', JSON.stringify(cart));
+                                    addToCart(product);
                                     router.push('/cart');
                                 }}
                             />
@@ -327,14 +322,7 @@ export default function ExplorePageClient({ products }: { products: Product[] })
                             product={selectedProduct}
                             onClose={() => setSelectedProduct(null)}
                             onAddToCart={() => {
-                                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                                const existingItem = cart.find((item: any) => item.id === selectedProduct.id);
-                                if (existingItem) {
-                                    existingItem.quantity += 1;
-                                } else {
-                                    cart.push({ ...selectedProduct, quantity: 1 });
-                                }
-                                localStorage.setItem('cart', JSON.stringify(cart));
+                                addToCart(selectedProduct);
                                 setSelectedProduct(null);
                                 router.push('/cart');
                             }}

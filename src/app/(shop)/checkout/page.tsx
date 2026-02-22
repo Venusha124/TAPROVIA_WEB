@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle2, Truck, CreditCard, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/providers/cart-provider";
+import { toast } from "sonner";
+import { getCustomerUser } from "@/actions/customer-auth";
+import { createOrder } from "@/actions/orders";
 
 export default function CheckoutPage() {
     const { items, clearCart } = useCart();

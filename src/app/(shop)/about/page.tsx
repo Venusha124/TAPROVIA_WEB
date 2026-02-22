@@ -131,11 +131,10 @@ export default function AboutPage() {
                         </p>
                     </div>
 
-                        <div className="lg:col-span-8 space-y-60">
-                            {timelineEvents.map((event, index) => (
-                                <TimelineBlock key={event.year} event={event} index={index} />
-                            ))}
-                        </div>
+                    <div className="lg:col-span-8 space-y-60">
+                        {timelineEvents.map((event, index) => (
+                            <TimelineBlock key={event.year} event={event} index={index} />
+                        ))}
                     </div>
                 </div>
             </section>
@@ -294,6 +293,7 @@ function TimelineBlock({ event, index }: { event: typeof timelineEvents[0], inde
 
     return (
         <motion.div
+            ref={blockRef}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

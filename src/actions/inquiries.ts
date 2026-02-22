@@ -5,17 +5,22 @@ import { revalidatePath } from "next/cache";
 
 // --- GET INQUIRIES ---
 export async function getInquiries() {
-    const { data, error } = await supabase
-        .from("inquiries")
-        .select("*")
-        .order("created_at", { ascending: false });
+    try {
+        const { data, error } = await supabase
+            .from("inquiries")
+            .select("*")
+            .order("created_at", { ascending: false });
 
-    if (error) {
-        console.error("Error fetching inquiries:", JSON.stringify(error, null, 2));
+        if (error) {
+            console.error("Error fetching inquiries:", JSON.stringify(error, null, 2));
+            return [];
+        }
+
+        return data || [];
+    } catch (e) {
+        console.error("Exception in getInquiries:", e);
         return [];
     }
-
-    return data;
 }
 
 // --- DELETE INQUIRY ---

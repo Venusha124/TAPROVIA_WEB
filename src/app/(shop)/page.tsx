@@ -21,7 +21,10 @@ import {
   Compass,
   Play,
   MoveRight,
-  Sparkles
+  Sparkles,
+  ChevronLeft,
+  ChevronRight,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -448,10 +451,10 @@ export default function Home() {
   );
 }
 
-function CollectionCard({ title, grade, image }: { title: string, grade: string, image: string }) {
+function CollectionCard({ title, grade, image, onSelect }: { title: string, grade: string, image: string, onSelect: () => void }) {
   const router = useRouter();
   return (
-    <div className="relative aspect-square group cursor-pointer bg-black overflow-hidden">
+    <div onClick={onSelect} className="relative aspect-square group cursor-pointer bg-black overflow-hidden">
       <Image src={image} alt={title} fill className="object-cover group-hover:scale-110 transition-all duration-[3s]" />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-10 md:p-20 flex flex-col justify-end">
         <span className="text-[#D2B48C] font-bold text-[10px] tracking-[0.8em] uppercase mb-6 opacity-0 group-hover:opacity-100 translate-y-6 group-hover:translate-y-0 transition-all duration-1000">{grade}</span>

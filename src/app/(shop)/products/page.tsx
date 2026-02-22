@@ -38,14 +38,14 @@ import {
 import { cn } from "@/lib/utils";
 import { RotatingBackground } from "@/components/layout/RotatingBackground";
 
-const products = [
+const fallbackProducts = [
     {
         id: 1,
         name: "Ceylon Alba Sticks",
         badge: "Highest Grade",
         origin: "Southern Sri Lanka",
         grade: "Alba",
-        image: "/products/alba-sticks-hero.png",
+        image: "/products/cinnamon_powder_spoon.png",
         category: "Sticks",
         description: "The most prized grade of Ceylon cinnamon, known for its slender diameter and exceptional sweetness.",
         rating: 5.0,
@@ -75,7 +75,7 @@ const products = [
         badge: "Kitchen Essential",
         origin: "Ratnapura",
         grade: "Extra Fine",
-        image: "/products/cinnamon-powder-hero.png",
+        image: "/products/cinnamon_powder_bowl.png",
         category: "Powders",
         description: "Finely ground premium quills, delivering the authentic warmth and sweetness of Ceylon in a versatile form.",
         rating: 4.8,
@@ -90,7 +90,7 @@ const products = [
         badge: "Artisanal Classic",
         origin: "Galle District",
         grade: "Custom Lengths",
-        image: "/products/alba-sticks-hero.png",
+        image: "/products/cinnamon_powder_spoon.png",
         category: "Sticks",
         description: "Uniformly hand-filled quills that preserve the full aromatic profile of the inner bark.",
         rating: 4.9,
@@ -105,7 +105,7 @@ const products = [
         badge: "Global Standard",
         origin: "Multi-Region",
         grade: "Export Ready",
-        image: "/products/cinnamon-powder-hero.png",
+        image: "/products/cinnamon_powder_bowl.png",
         category: "Bulk & Exports",
         description: "Optimized for global distribution, maintaining potency and flavor for industrial and retail partners.",
         rating: 4.7,
@@ -135,7 +135,7 @@ const products = [
         badge: "Sovereign Gift",
         origin: "Matara Estate",
         grade: "Alba Special",
-        image: "/products/alba-sticks-hero.png",
+        image: "/products/cinnamon_powder_spoon.png",
         category: "Sticks",
         description: "A ceremonial selection of our finest Alba quills, presented in a handcrafted mahogany chest for the ultimate connoisseur.",
         rating: 5.0,
@@ -150,7 +150,7 @@ const products = [
         badge: "Rustic Infusion",
         origin: "Ratnapura Wilds",
         grade: "H2 Standard",
-        image: "/products/cinnamon-chips-hero.png",
+        image: "/products/cinnamon_powder_bowl.png",
         category: "Bulk & Exports",
         description: "Sun-dried unpeeled bark chips rich in essential oils, perfectly suited for heavy infusions, mulled wines, and distillation bases.",
         rating: 4.6,
@@ -184,7 +184,7 @@ const testimonials = [
 
 const categories = ["All", "Sticks", "Oils", "Powders", "Bulk & Exports"];
 
-type Product = (typeof products)[0];
+type Product = any;
 
 const prologueSteps = [
     {
@@ -236,8 +236,34 @@ const trustFeatures = [
 export default function ProductsPage() {
     const router = useRouter();
     const [activeCategory, setActiveCategory] = useState("All");
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-    const [favorites, setFavorites] = useState<number[]>([]);
+    const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+    const [favorites, setFavorites] = useState<any[]>([]);
+    const [dbProducts, setDbProducts] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const fetched = await getProducts();
+            if (fetched && fetched.length > 0) {
+                const mapped = fetched.map(p => ({
+                    id: p.id,
+                    name: p.title || "Premium Cinnamon",
+                    badge: p.status === 'active' ? 'Available' : 'Premium',
+                    origin: p.origin || "Sri Lanka",
+                    grade: p.grade || "Premium Grade",
+                    image: (p.images && p.images.length > 0) ? p.images[0] : "/products/cinnamon_powder_spoon.png",
+                    category: p.category || "Sticks",
+                    description: p.description || "",
+                    rating: 5.0,
+                    reviews: 24,
+                    scale: 1,
+                    parallax: 0,
+                    features: p.features || []
+                }));
+                setDbProducts(mapped);
+            }
+        };
+        fetchProducts();
+    }, []);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
@@ -245,11 +271,13 @@ export default function ProductsPage() {
         offset: ["start start", "end end"]
     });
 
-    const filteredProducts = activeCategory === "All"
-        ? products
-        : products.filter(p => p.category === activeCategory);
+    const displayProducts = dbProducts.length > 0 ? dbProducts : fallbackProducts;
 
-    const toggleFavorite = (e: React.MouseEvent, id: number) => {
+    const filteredProducts = activeCategory === "All"
+        ? displayProducts
+        : displayProducts.filter(p => p.category === activeCategory);
+
+    const toggleFavorite = (e: React.MouseEvent, id: any) => {
         e.stopPropagation();
         setFavorites(prev =>
             prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]
@@ -552,10 +580,10 @@ function PrologueCarousel() {
 }
 
 function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }: {
-    product: Product,
+    product: any,
     index: number,
     isFavorite: boolean,
-    onToggleFavorite: (e: React.MouseEvent, id: number) => void,
+    onToggleFavorite: (e: React.MouseEvent, id: any) => void,
     onSelect: () => void
 }) {
     const router = useRouter();
@@ -587,6 +615,10 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                     <span className="px-6 py-2 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-[10px] font-bold uppercase tracking-widest text-white">
                         {product.badge}
                     </span>
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#D2B48C]/10 backdrop-blur-md border border-[#D2B48C]/30 self-start">
+                        <Star size={10} className="fill-[#D2B48C] text-[#D2B48C]" />
+                        <span className="text-[9px] font-bold text-[#D2B48C] tracking-widest">{product.rating}</span>
+                    </div>
                 </div>
 
                 {/* Interaction Overlay (Visible on Desktop Hover) */}
@@ -618,7 +650,6 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                         {product.name.split(' ').slice(0, -1).join(' ')} <br className="md:hidden" />
                         <span className="italic text-white/40">{product.name.split(' ').slice(-1)}</span>
                     </h3>
-                </div>
 
                 {/* Centered Actions Overlay (Visible on Desktop Hover) */}
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 hidden md:flex flex-col items-center justify-center gap-6 z-20 px-8">

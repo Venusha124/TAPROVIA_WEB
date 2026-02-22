@@ -21,10 +21,7 @@ import {
   Compass,
   Play,
   MoveRight,
-  Sparkles,
-  X,
-  ChevronLeft,
-  ChevronRight
+  Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -38,9 +35,9 @@ const features = [
     image: "/explore/origin.png"
   },
   {
-    icon: <Globe className="w-6 h-6" />,
-    title: "Geographic Provenance",
-    desc: "Exclusively cultivated within the specific micro-climates of Matara, capturing the soul of the Southern Highlands.",
+    icon: <ShieldCheck className="w-6 h-6" />,
+    title: "Certified Purity",
+    desc: "Exceeding ISO 22000 and FDA standards for absolute safety and chemical-free assurance.",
     image: "/explore/alchemy.png"
   },
   {
@@ -182,7 +179,7 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row gap-16 md:gap-32 items-center lg:items-end mb-24 md:mb-40">
             <div className="flex-1 text-center lg:text-left">
               <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">The Narrative</span>
-              <h2 className="text-[clamp(3rem,8vw,10rem)] font-serif font-light leading-none tracking-tighter">Behind the <br /><span className="italic text-[#D2B48C]">Inner Bark.</span></h2>
+              <h2 className="text-[clamp(3rem,8vw,10rem)] font-serif font-light leading-none tracking-tighter">Behind the <br /><span className="italic text-white/20">Inner Bark.</span></h2>
             </div>
             <p className="max-w-xl text-white/30 text-xl md:text-2xl font-light leading-relaxed italic border-l lg:border-l border-[#D2B48C]/30 pl-8 lg:pl-12 font-serif text-center lg:text-left">
               Every quill tells a story of geological perfection and generational intuition. Step into the heartland where alchemy meets nature.
@@ -224,7 +221,7 @@ export default function Home() {
       <section className="py-24 md:py-60 bg-[#080808] relative border-y border-white/5">
         <div className="container px-4 text-center mb-24 md:mb-48">
           <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">The TAPROVIA Delta</span>
-          <h2 className="text-[clamp(3rem,8vw,9rem)] font-serif font-light tracking-tighter">Why We Are <span className="italic text-[#D2B48C]">Singular.</span></h2>
+          <h2 className="text-[clamp(3rem,8vw,9rem)] font-serif font-light tracking-tighter">Why We Are <span className="italic text-white/20">Singular.</span></h2>
         </div>
 
         <div className="container px-4">
@@ -258,7 +255,7 @@ export default function Home() {
       <section className="py-24 md:py-60 bg-[#050505]">
         <div className="container px-4">
           <div className="flex flex-col md:flex-row justify-between items-center mb-24 md:mb-40 border-b border-white/5 pb-24">
-            <h2 className="text-[clamp(3rem,8vw,9rem)] font-serif font-light mb-12 md:mb-0 tracking-tighter">The Sovereign <br /><span className="italic text-[#D2B48C]">Collection.</span></h2>
+            <h2 className="text-[clamp(3rem,8vw,9rem)] font-serif font-light mb-12 md:mb-0 tracking-tighter">The Sovereign <br /><span className="italic text-white/20">Collection.</span></h2>
             <Link href="/products" className="group flex items-center gap-12">
               <span className="text-[11px] font-bold uppercase tracking-[0.6em] text-white/20 group-hover:text-[#D2B48C] transition-all">Observe All Grades</span>
               <div className="w-24 h-24 rounded-full border border-white/5 flex items-center justify-center group-hover:bg-[#D2B48C] group-hover:border-[#D2B48C] transition-all group-hover:rotate-12">
@@ -392,7 +389,7 @@ export default function Home() {
         <div className="container px-4">
           <div className="mb-12 md:mb-20 text-center">
             <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">The Verdict</span>
-            <h2 className="text-[clamp(3rem,6vw,6rem)] font-serif font-light tracking-tighter">Voices of <span className="italic text-[#D2B48C]">Authority.</span></h2>
+            <h2 className="text-[clamp(3rem,6vw,6rem)] font-serif font-light tracking-tighter">Voices of <span className="italic text-white/20">Authority.</span></h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-24 border-t border-white/5 pt-12">
@@ -451,12 +448,10 @@ export default function Home() {
   );
 }
 
-function CollectionCard({ title, grade, image, onSelect }: { title: string, grade: string, image: string, onSelect: () => void }) {
+function CollectionCard({ title, grade, image }: { title: string, grade: string, image: string }) {
+  const router = useRouter();
   return (
-    <div
-      className="relative aspect-square group cursor-pointer bg-black overflow-hidden"
-      onClick={onSelect}
-    >
+    <div className="relative aspect-square group cursor-pointer bg-black overflow-hidden">
       <Image src={image} alt={title} fill className="object-cover group-hover:scale-110 transition-all duration-[3s]" />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-10 md:p-20 flex flex-col justify-end">
         <span className="text-[#D2B48C] font-bold text-[10px] tracking-[0.8em] uppercase mb-6 opacity-0 group-hover:opacity-100 translate-y-6 group-hover:translate-y-0 transition-all duration-1000">{grade}</span>

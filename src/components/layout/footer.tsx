@@ -1,7 +1,6 @@
 import Link from "next/link"
-import { Facebook, Instagram, Linkedin, Twitter, ArrowUpRight, Music2 as TikTok } from "lucide-react"
+import { Facebook, Instagram, Linkedin, Twitter, ArrowUpRight } from "lucide-react"
 import { NewsletterForm } from "@/components/marketing/newsletter-form"
-import { cn } from "@/lib/utils"
 
 export function Footer() {
     return (
@@ -23,21 +22,9 @@ export function Footer() {
                             "Cultivating the benchmark of Ceylon excellence since 1924. A legacy of purity, delivered globally."
                         </p>
                         <div className="flex space-x-8">
-                            {[
-                                { Icon: Instagram, color: "hover:text-[#E4405F]", href: "#" },
-                                { Icon: Facebook, color: "hover:text-[#1877F2]", href: "#" },
-                                { Icon: Linkedin, color: "hover:text-[#0077B5]", href: "#" },
-                                { Icon: TikTok, color: "hover:text-[#EE1D52]", href: "#" }
-                            ].map((social, i) => (
-                                <a
-                                    key={i}
-                                    href={social.href}
-                                    className={cn(
-                                        "text-white/20 transition-all transform hover:-translate-y-1",
-                                        social.color
-                                    )}
-                                >
-                                    <social.Icon size={20} />
+                            {[Instagram, Twitter, Facebook, Linkedin].map((Icon, i) => (
+                                <a key={i} href="#" className="text-white/20 hover:text-[#D2B48C] transition-all transform hover:-translate-y-1">
+                                    <Icon size={20} />
                                 </a>
                             ))}
                         </div>
@@ -59,6 +46,8 @@ export function Footer() {
                             <ul className="space-y-6 text-[10px] font-bold uppercase tracking-[0.2em]">
                                 <li><Link href="/about" className="text-white/30 hover:text-white transition-colors">About Us</Link></li>
                                 <li><Link href="/contact" className="text-white/30 hover:text-white transition-colors">Contact Us</Link></li>
+                                <li><Link href="/shipping" className="text-white/30 hover:text-white transition-colors">Logistics</Link></li>
+                                <li><Link href="/faq" className="text-white/30 hover:text-white transition-colors">Inquiries</Link></li>
                             </ul>
                         </div>
                     </div>

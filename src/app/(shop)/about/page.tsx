@@ -42,7 +42,7 @@ const teamMembers = [
         role: "Founder",
         image: "/hero-bg.png",
         delay: 0,
-        thoughts: "We are not just selling a spice; we are guarding a heritage. Every quill that leaves our shores carries the story of four generations of soil, sun, and silence. My vision is to see Ceylon Cinnamon reclaim its throne as the 'True Gold' of the ancient world."
+        thoughts: "We are not just selling a spice; we are guarding a heritage. Every quill that leaves our shores carries the story of three generations of soil, sun, and silence. My vision is to see Ceylon Cinnamon reclaim its throne as the 'True Gold' of the ancient world."
     },
     {
         name: "Wilhelm Yohan Randy",
@@ -99,8 +99,8 @@ export default function AboutPage() {
                         <h1 className="text-7xl md:text-[12rem] font-serif font-light leading-[0.8] mb-16 tracking-tighter">
                             The <span className="italic block text-white/20 hover:text-[#D2B48C] transition-colors duration-500 cursor-default">Legacy.</span>
                         </h1>
-                        <p className="text-xl md:text-3xl text-white/40 max-w-3xl mx-auto font-light leading-relaxed mb-10 italic font-serif">
-                            "True heritage isn't preserved in books, it's tasted in the sap, smelled in the air and felt in the soil."
+                        <p className="text-xl md:text-3xl text-white/40 max-w-3xl mx-auto font-light leading-relaxed mb-20 italic font-serif">
+                            "True heritage isn't preserved in books; it's tasted in the sap, smelled in the air, and felt in the soil."
                         </p>
                         <span className="text-[#D2B48C] font-serif italic text-lg md:text-xl block mb-12 md:mb-20 opacity-60">
                             A 4th-Generation Sovereign Legacy.
@@ -131,10 +131,11 @@ export default function AboutPage() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 pt-20">
-                        {timelineEvents.map((event, index) => (
-                            <MilestoneCard key={event.year} event={event} index={index} />
-                        ))}
+                        <div className="lg:col-span-8 space-y-60">
+                            {timelineEvents.map((event, index) => (
+                                <TimelineBlock key={event.year} event={event} index={index} />
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
@@ -162,7 +163,7 @@ export default function AboutPage() {
                             </p>
                         </motion.div>
 
-                        {/* Vision */}
+                        {/* Mission */}
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             whileInView={{ opacity: 1, x: 0 }}
@@ -281,7 +282,16 @@ export default function AboutPage() {
     );
 }
 
-function MilestoneCard({ event, index }: { event: typeof timelineEvents[0], index: number }) {
+function TimelineBlock({ event, index }: { event: typeof timelineEvents[0], index: number }) {
+    const blockRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: blockRef,
+        offset: ["start end", "end start"]
+    });
+
+    const y = useTransform(scrollYProgress, [0, 1], [0, index % 2 === 0 ? -120 : 120]);
+    const springY = useSpring(y, { damping: 25, stiffness: 50 });
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -290,29 +300,19 @@ function MilestoneCard({ event, index }: { event: typeof timelineEvents[0], inde
             transition={{ duration: 1, delay: index * 0.2 }}
             className="group relative flex flex-col bg-[#0A0A0A] border border-white/5 rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-10 overflow-hidden hover:border-[#D2B48C]/30 transition-all duration-700 shadow-3xl"
         >
-            <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden mb-12">
-                <Image
-                    src={event.image}
-                    alt={event.title}
-                    fill
-                    className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[2s] ease-out opacity-60 group-hover:opacity-100"
-                />
-                <div className="absolute top-8 left-8 bg-black/40 backdrop-blur-xl px-6 py-2 rounded-full border border-white/10">
-                    <span className="text-[#D2B48C] font-bold tracking-[0.4em] text-[10px] leading-none">{event.year}</span>
+            <div className={cn("relative aspect-square rounded-[5rem] overflow-hidden border border-white/5 shadow-3xl", index % 2 !== 0 && "md:order-2")}>
+                <Image src={event.image} alt={event.title} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[3s]" />
+                <div className="absolute top-12 left-12 bg-black/40 backdrop-blur-xl px-8 py-3 rounded-full border border-white/10">
+                    <span className="text-[#D2B48C] font-bold tracking-[0.4em] text-xs leading-none">{event.year}</span>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent opacity-80" />
             </div>
-
-            <div className="px-4 pb-10 flex flex-col items-center text-center">
-                <span className="text-[#D2B48C]/50 font-bold tracking-[0.6em] text-[8px] uppercase mb-4 block">Era 0{index + 1}</span>
-                <h3 className="text-3xl font-serif text-white mb-6 italic group-hover:text-[#D2B48C] transition-colors duration-500">{event.title}</h3>
-                <p className="text-white/30 text-sm font-light leading-relaxed italic border-t border-white/5 pt-6 group-hover:text-white/50 transition-colors">
+            <div className={index % 2 !== 0 ? "md:order-1 md:text-right" : ""}>
+                <span className="text-[#D2B48C]/50 font-bold tracking-[0.6em] text-[9px] uppercase mb-8 block">Milestone</span>
+                <h3 className="text-5xl font-serif text-white mb-8 italic">{event.title}</h3>
+                <p className="text-white/40 text-xl font-light leading-relaxed max-w-md mx-auto md:mx-0 border-l border-white/5 pl-8 italic">
                     {event.description}
                 </p>
             </div>
-
-            {/* Subtle glow on hover */}
-            <div className="absolute inset-0 bg-[#D2B48C]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
         </motion.div>
     );
 }

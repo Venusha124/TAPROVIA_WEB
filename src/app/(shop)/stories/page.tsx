@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button";
 import { Calendar, User, ArrowRight, BookOpen, Share2, MoveRight, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { RotatingBackground } from "@/components/layout/RotatingBackground";
 
 const stories = [
     {
@@ -104,22 +105,11 @@ export default function StoriesPage() {
             {/* --- 1. EDITORIAL HERO --- */}
             <section className="relative min-h-screen flex items-center justify-center overflow-hidden border-b border-white/5">
                 {/* Cinematic Background */}
-                <div className="absolute inset-0 z-0">
-                    <motion.div
-                        style={{ y: backgroundY, opacity: backgroundOpacity }}
-                        className="absolute inset-0 scale-110"
-                    >
-                        <Image
-                            src="/stories-hero-bg.png"
-                            alt="The Sovereign Journal Background"
-                            fill
-                            className="object-cover grayscale-[0.2]"
-                            priority
-                        />
-                    </motion.div>
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/60 via-[#050505]/40 to-[#050505] z-10" />
-                    <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#050505] to-transparent z-20" />
-                </div>
+                <RotatingBackground
+                    images={["/stories-hero-bg.png", "/explore/plantation.png", "/explore/artisan.png"]}
+                    opacity={0.4}
+                    showGradient={true}
+                />
 
                 <div className="container relative z-30 px-4">
                     <div className="max-w-6xl mx-auto text-center">
@@ -133,9 +123,9 @@ export default function StoriesPage() {
                             </span>
                             <h1 className="text-[clamp(3rem,10vw,11rem)] font-serif font-light leading-[0.8] mb-16 tracking-tighter">
                                 Essays from <br />
-                                <span className="italic text-white/20">the Heartland.</span>
+                                <span className="italic text-white/20 hover:text-[#D2B48C] transition-colors duration-500 cursor-default">the Heartland.</span>
                             </h1>
-                            <p className="text-[clamp(1.1rem,2vw,1.5rem)] text-white/40 font-light max-w-4xl mx-auto leading-relaxed italic border-x border-white/5 px-12 font-serif">
+                            <p className="text-[clamp(1.1rem,2vw,1.5rem)] text-white/40 font-light max-w-4xl mx-auto leading-relaxed italic border-x border-white/5 px-6 md:px-12 font-serif">
                                 A curated collection of observations, scientific research, and artisanal portraits from the epicenter of the world's finest spice.
                             </p>
                         </motion.div>
@@ -160,7 +150,7 @@ export default function StoriesPage() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                        className="relative rounded-[5rem] overflow-hidden bg-black aspect-[21/10] group cursor-pointer shadow-3xl border border-white/5"
+                        className="relative rounded-[2.5rem] md:rounded-[5rem] overflow-hidden bg-black aspect-[3/4] md:aspect-[21/10] group cursor-pointer shadow-3xl border border-white/5"
                         onClick={() => setSelectedStory(featuredStory)}
                     >
                         <Image
@@ -169,7 +159,7 @@ export default function StoriesPage() {
                             fill
                             className="object-cover opacity-50 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[3s] ease-out"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent p-12 md:p-32 flex flex-col justify-end">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent p-10 md:p-16 lg:p-32 flex flex-col justify-end">
                             <div className="max-w-4xl">
                                 <div className="flex items-center gap-8 mb-12">
                                     <span className="px-6 py-2 rounded-full border border-white/10 backdrop-blur-3xl text-[#D2B48C] text-[10px] font-bold uppercase tracking-[0.4em]">
@@ -210,7 +200,7 @@ export default function StoriesPage() {
                                     index % 2 === 0 ? "lg:col-span-7" : "lg:col-span-5 lg:mt-64"
                                 )}
                             >
-                                <div className="relative aspect-[4/3] rounded-[4rem] overflow-hidden mb-16 shadow-3xl bg-[#080808] border border-white/5 cursor-pointer" onClick={() => setSelectedStory(story)}>
+                                <div className="relative aspect-[4/3] rounded-[2.5rem] md:rounded-[4rem] overflow-hidden mb-12 md:mb-16 shadow-3xl bg-[#080808] border border-white/5 cursor-pointer" onClick={() => setSelectedStory(story)}>
                                     <Image
                                         src={story.image}
                                         alt={story.title}
@@ -253,7 +243,7 @@ export default function StoriesPage() {
                                     {story.title}
                                 </h3>
 
-                                <p className="text-white/40 font-light leading-relaxed mb-12 text-xl border-l border-white/5 pl-10 italic">
+                                <p className="text-white/40 font-light leading-relaxed mb-12 text-lg md:text-xl border-l border-white/5 pl-6 md:pl-10 italic">
                                     {story.excerpt}
                                 </p>
 
@@ -273,27 +263,27 @@ export default function StoriesPage() {
             </section>
 
             {/* --- 4. EDITORIAL CALL --- */}
-            <section className="py-60 relative overflow-hidden bg-[#050505] border-t border-white/5">
+            <section className="py-32 md:py-60 relative overflow-hidden bg-[#050505] border-t border-white/5">
                 <div className="absolute inset-0 bg-[#D2B48C]/[0.02] pointer-events-none" />
                 <div className="container px-4 text-center relative z-10">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.98 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1.5 }}
-                        className="max-w-6xl mx-auto p-24 md:p-40 rounded-[6rem] border border-white/5 bg-black/40 backdrop-blur-3xl shadow-3xl overflow-hidden relative"
+                        className="max-w-6xl mx-auto p-12 md:p-24 lg:p-40 rounded-[3rem] md:rounded-[6rem] border border-white/5 bg-black/40 backdrop-blur-3xl shadow-3xl overflow-hidden relative"
                     >
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-px bg-gradient-to-r from-transparent via-[#D2B48C] to-transparent" />
-                        <h2 className="text-5xl md:text-[8rem] font-serif font-light mb-16 leading-none tracking-tighter italic text-white/20">Capture the <br /> <span className="text-white">whole story.</span></h2>
-                        <p className="text-2xl text-white/40 font-light mb-20 max-w-2xl mx-auto leading-relaxed italic border-x border-white/5 px-12">
+                        <h2 className="text-4xl md:text-[8rem] font-serif font-light mb-12 md:mb-16 leading-none tracking-tighter italic text-white/20">Capture the <br /> <span className="text-white">whole story.</span></h2>
+                        <p className="text-xl md:text-2xl text-white/40 font-light mb-16 md:mb-20 max-w-2xl mx-auto leading-relaxed italic border-x border-white/5 px-6 md:px-12">
                             Subscribe to the Sovereign Journal for monthly deep-dives into the spice trade, sustainability, and artisanal culture.
                         </p>
                         <form className="max-w-2xl mx-auto flex flex-col md:flex-row gap-6">
                             <input
                                 type="email"
                                 placeholder="REGISTRY EMAIL ADDRESS"
-                                className="flex-1 bg-white/[0.02] border border-white/10 rounded-full h-24 px-12 text-[11px] font-bold tracking-[0.5em] focus:outline-none focus:border-[#D2B48C] transition-all"
+                                className="flex-1 bg-white/[0.02] border border-white/10 rounded-full h-20 md:h-24 px-8 md:px-12 text-[10px] md:text-[11px] font-bold tracking-[0.5em] focus:outline-none focus:border-[#D2B48C] transition-all"
                             />
-                            <Button className="bg-[#D2B48C] hover:bg-white text-black font-bold h-24 px-16 rounded-full text-[11px] uppercase tracking-[0.5em] shadow-3xl transition-all group overflow-hidden relative">
+                            <Button className="bg-[#D2B48C] hover:bg-white text-black font-bold h-20 md:h-24 px-8 md:px-16 rounded-full text-[10px] md:text-[11px] uppercase tracking-[0.3em] md:tracking-[0.5em] shadow-3xl transition-all group overflow-hidden relative w-full md:w-auto">
                                 <span className="relative z-10">Subscribe</span>
                                 <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                             </Button>
@@ -344,7 +334,7 @@ function StoryModal({ story, onClose }: { story: typeof stories[0], onClose: () 
                     </div>
                 </div>
 
-                <div className="p-12 md:p-24 overflow-y-auto max-h-[60vh] custom-scrollbar">
+                <div className="p-8 md:p-24 overflow-y-auto max-h-[60vh] custom-scrollbar">
                     <div className="flex items-center gap-8 mb-16 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 border-b border-white/5 pb-8">
                         <span className="flex items-center gap-3">
                             <Calendar size={14} className="text-[#D2B48C]" /> {story.date}

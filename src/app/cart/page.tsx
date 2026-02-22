@@ -7,47 +7,16 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, ChevronRight, X, Minus, Plus, ArrowRight, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/providers/cart-provider";
 
 export default function CartPage() {
+    const { items, updateQuantity, removeItem, clearCart } = useCart();
     const router = useRouter();
-    const [items, setItems] = useState<any[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        // Validate and fix prices to prevent NaN
-        const validatedCart = cart.map((item: any) => ({
-            ...item,
-            price: typeof item.price === 'string' ? parseFloat(item.price.replace(/[^0-9.]/g, '')) : Number(item.price) || 0
-        }));
-        setItems(validatedCart);
         setIsLoaded(true);
     }, []);
-
-    const updateLocalStorage = (newItems: any[]) => {
-        localStorage.setItem('cart', JSON.stringify(newItems));
-        setItems(newItems);
-    };
-
-    const updateQuantity = (id: string, delta: number) => {
-        const newItems = items.map(item => {
-            if (item.id === id) {
-                const newQty = Math.max(1, item.quantity + delta);
-                return { ...item, quantity: newQty };
-            }
-            return item;
-        });
-        updateLocalStorage(newItems);
-    };
-
-    const removeItem = (id: string) => {
-        const newItems = items.filter(item => item.id !== id);
-        updateLocalStorage(newItems);
-    };
-
-    const clearCart = () => {
-        updateLocalStorage([]);
-    };
 
     const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     const shipping = items.length > 0 ? 8.00 : 0;
@@ -59,20 +28,20 @@ export default function CartPage() {
     }
 
     return (
-        <main className="bg-[#050505] min-h-screen text-[#F3EFE9] pt-32 pb-60 overflow-x-hidden selection:bg-[#D2B48C] selection:text-black">
+        <main className="bg-[#050505] min-h-screen text-[#F3EFE9] pt-24 md:pt-32 pb-32 md:pb-60 overflow-x-hidden selection:bg-[#D2B48C] selection:text-black">
             {/* Stage I: Header */}
             <div className="container px-4 mb-20">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-[#0A0A0A] border border-[#D2B48C]/10 rounded-[3rem] p-12 md:p-24 relative overflow-hidden"
+                    className="bg-[#0A0A0A] border border-[#D2B48C]/10 rounded-[2rem] md:rounded-[3rem] p-8 md:p-24 relative overflow-hidden"
                 >
                     <div className="relative z-10">
                         <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">Your Selection</span>
                         <h1 className="text-6xl md:text-[8rem] font-serif font-light leading-none mb-12 tracking-tighter">
                             Your <span className="italic text-white/30">Cart.</span>
                         </h1>
-                        <p className="text-xl text-white/40 font-light italic font-serif leading-relaxed max-w-xl mb-16">
+                        <p className="text-lg md:text-xl text-white/40 font-light italic font-serif leading-relaxed max-w-xl mb-12 md:mb-16">
                             Review your selected TAPROVIA items. Update quantities, remove items, and proceed to checkout when ready.
                         </p>
 
@@ -132,7 +101,7 @@ export default function CartPage() {
                                         key={item.id}
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
-                                        className="bg-[#0A0A0A] border border-white/5 rounded-[2.5rem] p-8 md:p-10 group relative"
+                                        className="bg-[#0A0A0A] border border-white/5 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 group relative"
                                     >
                                         <div className="flex flex-col md:grid md:grid-cols-12 gap-10 items-center">
                                             {/* Item Image */}
@@ -193,9 +162,9 @@ export default function CartPage() {
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="bg-[#0A0A0A] border border-[#D2B48C]/20 rounded-[3rem] p-12 sticky top-32 overflow-hidden"
+                                className="bg-[#0A0A0A] border border-[#D2B48C]/20 rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 sticky top-32 overflow-hidden"
                             >
-                                <h2 className="text-4xl font-serif text-white mb-12 tracking-tight">Order Summary</h2>
+                                <h2 className="text-3xl md:text-4xl font-serif text-white mb-8 md:mb-12 tracking-tight">Order Summary</h2>
 
                                 <div className="space-y-6 mb-12">
                                     <div className="flex justify-between items-center text-sm font-light text-white/40">

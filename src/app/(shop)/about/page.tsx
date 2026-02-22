@@ -7,6 +7,7 @@ import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "fra
 import { Button } from "@/components/ui/button";
 import { Leaf, Globe, Award, ShieldCheck, MapPin, ArrowRight, Eye, Target, CheckCircle2, Star, MoveRight, X, Quote } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { RotatingBackground } from "@/components/layout/RotatingBackground";
 
 const timelineEvents = [
     {
@@ -44,8 +45,8 @@ const teamMembers = [
         thoughts: "We are not just selling a spice; we are guarding a heritage. Every quill that leaves our shores carries the story of three generations of soil, sun, and silence. My vision is to see Ceylon Cinnamon reclaim its throne as the 'True Gold' of the ancient world."
     },
     {
-        name: "Wihelm Yohan Randy",
-        role: "Chief Executive Officer",
+        name: "Wilhelm Yohan Randy",
+        role: "Founder",
         image: "/hero-bg.png",
         delay: 0.2,
         thoughts: "The global market demands transparency, but the luxury market demands soul. At TAPROVIA, we bridge this gap by marrying cutting-edge supply chain traceability with the artisanal reverence this product deserves. We define the standard."
@@ -66,11 +67,11 @@ const teamMembers = [
     },
     {
         name: "Thilina Weerasinghe",
-        role: "IT Supervisor",
+        role: "IT Coordinator",
         image: "/hero-bg.png",
         delay: 0.8,
-        thoughts: "Precision is our protocol. From the temperature of the drying rooms to the security of our data, every system I oversee is designed to protect the integrity of the sovereign grade. Excellence is a series of executed details."
-    }
+        thoughts: "Ensuring seamless digital operations is critical to our global reach. By coordinating our IT infrastructure, we maintain the high standards of efficiency and security required for a world-class export house."
+    },
 ];
 
 export default function AboutPage() {
@@ -82,18 +83,13 @@ export default function AboutPage() {
 
             {/* --- 1. THE GENESIS HERO --- */}
             <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 z-0">
-                    <Image
-                        src="/explore/plantation.png"
-                        alt="Heritage"
-                        fill
-                        className="object-cover opacity-30 grayscale-[0.5] scale-105"
-                        priority
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505]" />
-                </div>
+                <RotatingBackground
+                    images={["/explore/plantation.png", "/explore/artisan.png", "/explore/alchemy.png"]}
+                    opacity={0.3}
+                    showGradient={true}
+                />
 
-                <div className="container relative z-10 px-4 text-center pt-48">
+                <div className="container relative z-10 px-4 text-center pt-32 md:pt-48">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -101,11 +97,14 @@ export default function AboutPage() {
                     >
                         <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-12 block">Est. 1924 | The Benchmark</span>
                         <h1 className="text-7xl md:text-[12rem] font-serif font-light leading-[0.8] mb-16 tracking-tighter">
-                            The <span className="italic block text-white/20">Legacy.</span>
+                            The <span className="italic block text-white/20 hover:text-[#D2B48C] transition-colors duration-500 cursor-default">Legacy.</span>
                         </h1>
                         <p className="text-xl md:text-3xl text-white/40 max-w-3xl mx-auto font-light leading-relaxed mb-20 italic font-serif">
                             "True heritage isn't preserved in books; it's tasted in the sap, smelled in the air, and felt in the soil."
                         </p>
+                        <span className="text-[#D2B48C] font-serif italic text-lg md:text-xl block mb-12 md:mb-20 opacity-60">
+                            A 4th-Generation Sovereign Legacy.
+                        </span>
                         <motion.div
                             animate={{ y: [0, 15, 0] }}
                             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
@@ -118,19 +117,19 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* --- 2. THE LEGACY TIMELINE --- */}
-            <section className="py-60 relative overflow-hidden">
+            {/* --- 2. THE HERITAGE MILESTONES --- */}
+            <section className="py-32 md:py-60 relative overflow-hidden bg-[#080808]/50">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(210,180,140,0.05),transparent)] pointer-events-none" />
                 <div className="container px-4">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-32">
-                        <div className="lg:col-span-4 sticky top-40 h-fit">
-                            <span className="text-[#D2B48C] font-bold tracking-[0.4em] uppercase text-[9px] mb-8 block">Archive: Centuries of Grit</span>
-                            <h2 className="text-6xl md:text-8xl font-serif font-light leading-none mb-10 tracking-tighter">
-                                A Century <br /><span className="italic text-white/20">Refined.</span>
-                            </h2>
-                            <p className="text-white/30 text-xl font-light leading-relaxed border-l border-[#D2B48C]/30 pl-10 italic">
-                                From a single plantation in 1924 to a global vanguard of luxury spices. Our journey is paved with persistence.
-                            </p>
-                        </div>
+                    <div className="text-center mb-20 md:mb-40">
+                        <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">Heritage Archive</span>
+                        <h2 className="text-6xl md:text-9xl font-serif font-light text-white leading-none tracking-tighter mb-12">
+                            Consecutive <br /><span className="italic text-white/20 hover:text-[#D2B48C] transition-colors duration-500 cursor-default">Milestones.</span>
+                        </h2>
+                        <p className="text-white/30 text-lg md:text-xl font-light max-w-2xl mx-auto italic border-x border-white/5 px-6 md:px-12">
+                            A century of mastery, distilled into four definitive eras of artisanal excellence and global leadership.
+                        </p>
+                    </div>
 
                         <div className="lg:col-span-8 space-y-60">
                             {timelineEvents.map((event, index) => (
@@ -142,38 +141,44 @@ export default function AboutPage() {
             </section>
 
             {/* --- 3. MISSION & VISION --- */}
-            <section className="py-40 relative">
-                <div className="container px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5 rounded-[5rem] overflow-hidden shadow-3xl">
-                        {/* Vision */}
+            <section className="py-24 md:py-48 relative">
+                <div className="container px-4 px-6 md:px-12">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5 rounded-[3rem] md:rounded-[5rem] overflow-hidden shadow-3xl">
+                        {/* Mission */}
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            className="p-20 md:p-32 bg-[#050505] group transition-all duration-1000"
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            className="p-12 md:p-20 lg:p-32 bg-[#050505] group transition-all duration-1000 border-b md:border-b-0 md:border-r border-white/5 flex flex-col items-center md:items-start text-center md:text-left"
                         >
-                            <div className="w-24 h-24 rounded-full border border-white/5 flex items-center justify-center mb-16 group-hover:bg-[#D2B48C] group-hover:border-[#D2B48C] transition-all duration-1000 group-hover:rotate-12">
-                                <Eye className="w-10 h-10 text-white group-hover:text-black transition-colors" />
+                            <div className="w-16 h-16 md:w-24 md:h-24 rounded-full border border-white/10 flex items-center justify-center mb-12 md:mb-16 group-hover:bg-[#D2B48C] group-hover:border-[#D2B48C] transition-all duration-1000">
+                                <Target className="w-8 h-8 md:w-10 md:h-10 text-white group-hover:text-black transition-colors" />
                             </div>
-                            <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[9px] mb-8 block">Future State</span>
-                            <h3 className="text-5xl md:text-7xl font-serif text-white mb-10 leading-none font-light">The Global <br /><span className="italic text-white/20">Standard.</span></h3>
-                            <p className="text-white/40 text-xl font-light leading-relaxed italic border-l border-white/5 pl-8">
-                                To be the global standard for Ceylon Cinnamon, recognized not only for the purity of our product but for the uncompromising integrity of our entire supply chain.
+                            <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[9px] mb-8 block">Our Mission</span>
+                            <h3 className="text-5xl md:text-7xl font-serif text-white mb-8 md:mb-10 leading-[1.1] font-light">
+                                Artisan <br />
+                                <span className="italic text-white/10 group-hover:text-white/20 transition-colors">Integrity.</span>
+                            </h3>
+                            <p className="text-white/40 text-lg md:text-xl font-light leading-relaxed italic border-l-0 md:border-l border-white/5 md:pl-8 mt-4">
+                                To preserve ancestral peeling techniques and sustain the livelihoods of Matara's highland farmers while delivering unadulterated purity to the global luxury market.
                             </p>
                         </motion.div>
 
                         {/* Mission */}
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            className="p-20 md:p-32 bg-[#080808] group transition-all duration-1000"
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            className="p-12 md:p-20 lg:p-32 bg-[#050505] group transition-all duration-1000 flex flex-col items-center md:items-start text-center md:text-left"
                         >
-                            <div className="w-24 h-24 rounded-full border border-white/5 flex items-center justify-center mb-16 group-hover:bg-[#D2B48C] group-hover:border-[#D2B48C] transition-all duration-1000 group-hover:-rotate-12">
-                                <Target className="w-10 h-10 text-white group-hover:text-black transition-colors" />
+                            <div className="w-16 h-16 md:w-24 md:h-24 rounded-full border border-white/10 flex items-center justify-center mb-12 md:mb-16 group-hover:bg-[#D2B48C] group-hover:border-[#D2B48C] transition-all duration-1000">
+                                <Eye className="w-8 h-8 md:w-10 md:h-10 text-white group-hover:text-black transition-colors" />
                             </div>
-                            <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[9px] mb-8 block">Our Daily Pulse</span>
-                            <h3 className="text-5xl md:text-7xl font-serif text-white mb-10 leading-none font-light">Uncompromising <br /><span className="italic text-[#D2B48C]">Purity.</span></h3>
-                            <p className="text-white/40 text-xl font-light leading-relaxed italic border-l border-white/5 pl-8">
-                                To export the finest certified Ceylon Cinnamon while empowering small-holder farmers through direct trade, fair pricing, and generational knowledge sharing.
+                            <span className="text-[#D2B48C] font-bold tracking-[0.6em] uppercase text-[9px] mb-8 block">Future State</span>
+                            <h3 className="text-5xl md:text-7xl font-serif text-white mb-8 md:mb-10 leading-[1.1] font-light">
+                                The Global <br />
+                                <span className="italic text-white/10 group-hover:text-white/20 transition-colors">Standard.</span>
+                            </h3>
+                            <p className="text-white/40 text-lg md:text-xl font-light leading-relaxed italic border-l-0 md:border-l border-white/5 md:pl-8 mt-4">
+                                To be the global vanguard for Ceylon Cinnamon, recognized for the absolute purity of our quills and the uncompromising transparency of our entire supply chain.
                             </p>
                         </motion.div>
                     </div>
@@ -181,23 +186,23 @@ export default function AboutPage() {
             </section>
 
             {/* --- 4. LEADERSHIP --- */}
-            <section className="py-60 relative overflow-hidden bg-[#050505]">
+            <section className="py-32 md:py-60 relative overflow-hidden bg-[#050505]">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(210,180,140,0.03),transparent)] pointer-events-none" />
 
                 <div className="container px-4 relative z-10">
-                    <div className="text-center mb-40">
+                    <div className="text-center mb-20 md:mb-40">
                         <span className="text-[#D2B48C] font-bold tracking-[0.8em] uppercase text-[10px] mb-8 block">The Architects</span>
-                        <h2 className="text-6xl md:text-9xl font-serif font-light text-white leading-none tracking-tighter">Vision & <span className="italic text-white/20">Heritage.</span></h2>
+                        <h2 className="text-6xl md:text-9xl font-serif font-light text-white leading-none tracking-tighter">Vision & <span className="italic text-white/20 hover:text-[#D2B48C] transition-colors duration-500 cursor-default">Heritage.</span></h2>
                     </div>
 
-                    <div className="flex flex-wrap justify-center gap-10 lg:gap-16 mb-60 max-w-7xl mx-auto">
+                    <div className="flex flex-wrap justify-center gap-10 lg:gap-16 mb-32 md:mb-60 max-w-7xl mx-auto">
                         {teamMembers.map((member, index) => (
                             <motion.div
                                 key={member.name}
                                 initial={{ opacity: 0, y: 50 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 1.2, delay: member.delay }}
-                                className="relative w-full md:w-[calc(50%-2rem)] lg:w-[calc(30%-2rem)] aspect-[4/5] rounded-[4rem] overflow-hidden group border border-white/10 shadow-3xl bg-[#080808] cursor-pointer"
+                                className="relative w-full md:w-[calc(50%-2rem)] lg:w-[calc(30%-2rem)] aspect-[4/5] rounded-[2.5rem] md:rounded-[4rem] overflow-hidden group border border-white/10 shadow-3xl bg-[#080808] cursor-pointer"
                                 onClick={() => setSelectedMember(member)}
                             >
                                 <Image
@@ -222,7 +227,7 @@ export default function AboutPage() {
                                             <span key={i} className="block">{n}</span>
                                         ))}
                                     </h3>
-                                    <div className="h-0 group-hover:h-8 transition-all duration-500 overflow-hidden flex justify-center items-end opacity-0 group-hover:opacity-100">
+                                    <div className="h-auto lg:h-0 lg:group-hover:h-8 transition-all duration-500 overflow-hidden flex justify-center items-end opacity-100 lg:opacity-0 lg:group-hover:opacity-100 mt-4 lg:mt-0">
                                         <span className="text-[9px] uppercase tracking-[0.3em] text-white/50">Click to view vision</span>
                                     </div>
                                 </div>
@@ -237,29 +242,31 @@ export default function AboutPage() {
                             className="space-y-12 text-white/60 text-2xl md:text-4xl font-light leading-[1.3] font-serif italic"
                         >
                             <p>"We didn't set out to build a company; we set out to restore a legacy. Ceylon Cinnamon is a global treasure that was being lost to industrial shortcuts. TAPROVIA is the sanctuary for those who value time over speed."</p>
-                            <p className="text-lg opacity-40 font-sans font-bold tracking-[0.4em] uppercase">— THE DIRECTORY</p>
+                            <p className="text-lg opacity-40 font-sans font-bold tracking-[0.4em] uppercase">— DIRECTOR BOARD</p>
                         </motion.div>
                     </div>
                 </div>
             </section>
 
             {/* --- 5. THE GLOBAL CALL --- */}
-            <section className="py-60 relative overflow-hidden">
+            <section className="py-32 md:py-60 relative overflow-hidden">
                 <div className="absolute inset-0 bg-[#D2B48C]/[0.02]" />
                 <div className="container px-4 text-center relative z-10">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.98 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        className="max-w-6xl mx-auto p-24 md:p-40 rounded-[6rem] border border-white/5 bg-black/40 backdrop-blur-3xl relative overflow-hidden shadow-3xl"
+                        className="max-w-6xl mx-auto p-12 md:p-24 lg:p-40 rounded-[3rem] md:rounded-[6rem] border border-white/5 bg-black/40 backdrop-blur-3xl relative overflow-hidden shadow-3xl"
                     >
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-px bg-gradient-to-r from-transparent via-[#D2B48C] to-transparent" />
-                        <h2 className="text-5xl md:text-[8rem] font-serif font-light mb-16 leading-none tracking-tighter italic text-white/20">Become the <br /><span className="text-white">Legacy.</span></h2>
-                        <p className="text-2xl text-white/40 font-light mb-20 max-w-2xl mx-auto leading-relaxed italic border-x border-white/5 px-12">
+                        <h2 className="text-4xl md:text-[8rem] font-serif font-light mb-12 md:mb-16 leading-none tracking-tighter italic text-white/20"><span className="hover:text-[#D2B48C] transition-colors duration-500 cursor-default">Become the</span> <br /><span className="text-white">Legacy.</span></h2>
+                        <p className="text-xl md:text-2xl text-white/40 font-light mb-16 md:mb-20 max-w-2xl mx-auto leading-relaxed italic border-x border-white/5 px-6 md:px-12">
                             Join our inner circle of distributors and chefs who accept only the primordial grade of Ceylon Cinnamon.
                         </p>
-                        <Link href="/contact">
-                            <Button className="bg-[#D2B48C] hover:bg-white text-black font-bold h-24 px-20 rounded-full text-[11px] uppercase tracking-[0.5em] shadow-3xl transition-all hover:scale-105 group">
-                                Connect with Exports Desk <MoveRight className="ml-4 group-hover:translate-x-2 transition-transform" />
+                        <Link href="/contact" className="block w-full flex justify-center">
+                            <Button className="bg-[#D2B48C] hover:bg-white text-black font-bold h-20 md:h-24 px-8 md:px-20 rounded-full text-[9px] md:text-[11px] uppercase tracking-[0.3em] md:tracking-[0.5em] shadow-3xl transition-all hover:scale-105 group w-full md:w-auto overflow-hidden">
+                                <span className="flex items-center justify-center gap-2 md:gap-4">
+                                    Connect with Exports Desk <MoveRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-2 transition-transform" />
+                                </span>
                             </Button>
                         </Link>
                     </motion.div>
@@ -287,9 +294,11 @@ function TimelineBlock({ event, index }: { event: typeof timelineEvents[0], inde
 
     return (
         <motion.div
-            ref={blockRef}
-            style={{ y: springY }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-24 items-center"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: index * 0.2 }}
+            className="group relative flex flex-col bg-[#0A0A0A] border border-white/5 rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-10 overflow-hidden hover:border-[#D2B48C]/30 transition-all duration-700 shadow-3xl"
         >
             <div className={cn("relative aspect-square rounded-[5rem] overflow-hidden border border-white/5 shadow-3xl", index % 2 !== 0 && "md:order-2")}>
                 <Image src={event.image} alt={event.title} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[3s]" />

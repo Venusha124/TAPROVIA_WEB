@@ -36,8 +36,9 @@ import {
     ShoppingBag
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getProducts } from "@/actions/products";
 
-const products = [
+const fallbackProducts = [
     {
         id: 1,
         name: "Ceylon Alba Sticks",
@@ -183,7 +184,7 @@ const testimonials = [
 
 const categories = ["All", "Sticks", "Oils", "Powders", "Bulk & Exports"];
 
-type Product = (typeof products)[0];
+type Product = any;
 
 const prologueSteps = [
     {
@@ -235,8 +236,34 @@ const trustFeatures = [
 export default function ProductsPage() {
     const router = useRouter();
     const [activeCategory, setActiveCategory] = useState("All");
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-    const [favorites, setFavorites] = useState<number[]>([]);
+    const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+    const [favorites, setFavorites] = useState<any[]>([]);
+    const [dbProducts, setDbProducts] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const fetched = await getProducts();
+            if (fetched && fetched.length > 0) {
+                const mapped = fetched.map(p => ({
+                    id: p.id,
+                    name: p.title || "Premium Cinnamon",
+                    badge: p.status === 'active' ? 'Available' : 'Premium',
+                    origin: p.origin || "Sri Lanka",
+                    grade: p.grade || "Premium Grade",
+                    image: (p.images && p.images.length > 0) ? p.images[0] : "/products/cinnamon_powder_spoon.png",
+                    category: p.category || "Sticks",
+                    description: p.description || "",
+                    rating: 5.0,
+                    reviews: 24,
+                    scale: 1,
+                    parallax: 0,
+                    features: p.features || []
+                }));
+                setDbProducts(mapped);
+            }
+        };
+        fetchProducts();
+    }, []);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
@@ -244,11 +271,13 @@ export default function ProductsPage() {
         offset: ["start start", "end end"]
     });
 
-    const filteredProducts = activeCategory === "All"
-        ? products
-        : products.filter(p => p.category === activeCategory);
+    const displayProducts = dbProducts.length > 0 ? dbProducts : fallbackProducts;
 
-    const toggleFavorite = (e: React.MouseEvent, id: number) => {
+    const filteredProducts = activeCategory === "All"
+        ? displayProducts
+        : displayProducts.filter(p => p.category === activeCategory);
+
+    const toggleFavorite = (e: React.MouseEvent, id: any) => {
         e.stopPropagation();
         setFavorites(prev =>
             prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]
@@ -418,7 +447,7 @@ export default function ProductsPage() {
                                         <span className="text-white/20 text-xs ml-2">({selectedProduct.reviews} reviews)</span>
                                     </div>
                                     <div className="flex flex-wrap gap-4">
-                                        {selectedProduct.features.map((feat, i) => (
+                                        {selectedProduct.features.map((feat: string, i: number) => (
                                             <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
                                                 <CheckCircle2 size={12} className="text-[#D2B48C]" />
                                                 <span className="text-[10px] font-bold text-white uppercase tracking-widest">{feat}</span>
@@ -566,10 +595,10 @@ function PrologueCarousel() {
 }
 
 function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }: {
-    product: Product,
+    product: any,
     index: number,
     isFavorite: boolean,
-    onToggleFavorite: (e: React.MouseEvent, id: number) => void,
+    onToggleFavorite: (e: React.MouseEvent, id: any) => void,
     onSelect: () => void
 }) {
     const router = useRouter();

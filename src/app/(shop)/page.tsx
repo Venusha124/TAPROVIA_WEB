@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getProducts } from "@/actions/products";
 
 const features = [
   {
@@ -74,8 +75,16 @@ const heroImages = [
 export default function Home() {
   const router = useRouter();
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
+    // Fetch products
+    const fetchProducts = async () => {
+      const fetched = await getProducts();
+      setProducts(fetched || []);
+    };
+    fetchProducts();
+
     const timer = setInterval(() => {
       setCurrentHeroIndex((prev) => (prev + 1) % heroImages.length);
     }, 6000); // Faster rotation (6s) to verify 3 images
@@ -142,7 +151,11 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
-              <Button size="lg" className="bg-[#D2B48C] hover:bg-white text-black font-bold h-16 px-10 rounded-full text-[10px] uppercase tracking-[0.4em] transition-all hover:scale-105 shadow-3xl group relative overflow-hidden">
+              <Button
+                onClick={() => router.push('/explore')}
+                size="lg"
+                className="bg-[#D2B48C] hover:bg-white text-black font-bold h-16 px-10 rounded-full text-[10px] uppercase tracking-[0.4em] transition-all hover:scale-105 shadow-3xl group relative overflow-hidden"
+              >
                 <span className="relative z-10">Explore the Showroom</span>
                 <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               </Button>
@@ -259,8 +272,21 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 rounded-[6rem] overflow-hidden border border-white/10 shadow-3xl">
-            <CollectionCard title="Rare Quills" grade="Alba Peak" image="/explore/quills.png" />
-            <CollectionCard title="Liquid Gold" grade="Pure Bark Oil" image="/explore/alchemy.png" />
+            {products.length > 0 ? (
+              products.slice(0, 2).map((product) => (
+                <CollectionCard
+                  key={product.id}
+                  title={product.title}
+                  grade={product.grade || "Premium Grade"}
+                  image={product.images && product.images.length > 0 ? product.images[0] : "/explore/quills.png"}
+                />
+              ))
+            ) : (
+              <>
+                <CollectionCard title="Rare Quills" grade="Alba Peak" image="/explore/quills.png" />
+                <CollectionCard title="Liquid Gold" grade="Pure Bark Oil" image="/explore/alchemy.png" />
+              </>
+            )}
           </div>
         </div>
       </section>

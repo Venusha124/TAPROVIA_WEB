@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle2, Truck, CreditCard, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { createOrder } from "@/actions/orders";
+import { toast } from "sonner";
 
 export default function CheckoutPage() {
     const router = useRouter();
@@ -14,6 +16,59 @@ export default function CheckoutPage() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [formStep, setFormStep] = useState(1); // 1: Info, 2: Payment, 3: Confirm
     const [isOrderConfirmed, setIsOrderConfirmed] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        address: "",
+        city: "",
+        postalCode: ""
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handlePlaceOrder = async () => {
+        if (!formData.firstName || !formData.email || !formData.address) {
+            toast.error("Please fill in all required shipping fields.");
+            return;
+        }
+
+        setIsLoading(true);
+
+        const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        const shipping = items.length > 0 ? 8.00 : 0;
+        const tax = subtotal * 0.05;
+        const total = subtotal + shipping + tax;
+
+        const orderData = {
+            customer: formData,
+            items: items.map(item => ({
+                id: item.id,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            total
+        };
+
+        try {
+            const result = await createOrder(orderData);
+
+            if (result.success) {
+                setIsOrderConfirmed(true);
+                localStorage.removeItem('cart');
+            } else {
+                toast.error("Failed to place order: " + result.error);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred.");
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -67,29 +122,71 @@ export default function CheckoutPage() {
                                 <div className="grid grid-cols-2 gap-8">
                                     <div className="space-y-4">
                                         <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">First Name</label>
-                                        <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all" placeholder="Shamalka" />
+                                        <input
+                                            type="text"
+                                            name="firstName"
+                                            value={formData.firstName}
+                                            onChange={handleInputChange}
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all"
+                                            placeholder="Shamalka"
+                                        />
                                     </div>
                                     <div className="space-y-4">
                                         <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Last Name</label>
-                                        <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all" placeholder="Edirisinghe" />
+                                        <input
+                                            type="text"
+                                            name="lastName"
+                                            value={formData.lastName}
+                                            onChange={handleInputChange}
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all"
+                                            placeholder="Edirisinghe"
+                                        />
                                     </div>
                                 </div>
                                 <div className="space-y-4">
                                     <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Email Address</label>
-                                    <input type="email" className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all" placeholder="hello@taprovia.com" />
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all"
+                                        placeholder="hello@taprovia.com"
+                                    />
                                 </div>
                                 <div className="space-y-4">
                                     <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Street Address</label>
-                                    <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all" placeholder="123 Matara Road" />
+                                    <input
+                                        type="text"
+                                        name="address"
+                                        value={formData.address}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all"
+                                        placeholder="123 Matara Road"
+                                    />
                                 </div>
                                 <div className="grid grid-cols-2 gap-8">
                                     <div className="space-y-4">
                                         <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">City</label>
-                                        <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all" placeholder="Galle" />
+                                        <input
+                                            type="text"
+                                            name="city"
+                                            value={formData.city}
+                                            onChange={handleInputChange}
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all"
+                                            placeholder="Galle"
+                                        />
                                     </div>
                                     <div className="space-y-4">
                                         <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Postal Code</label>
-                                        <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all" placeholder="80000" />
+                                        <input
+                                            type="text"
+                                            name="postalCode"
+                                            value={formData.postalCode}
+                                            onChange={handleInputChange}
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all"
+                                            placeholder="80000"
+                                        />
                                     </div>
                                 </div>
                             </form>
@@ -148,11 +245,9 @@ export default function CheckoutPage() {
                                 </div>
 
                                 <Button
-                                    onClick={() => {
-                                        setIsOrderConfirmed(true);
-                                        localStorage.removeItem('cart');
-                                    }}
-                                    className="w-full bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 text-[11px] font-bold uppercase tracking-[0.3em] transition-all shadow-xl group"
+                                    onClick={handlePlaceOrder}
+                                    disabled={isLoading}
+                                    className="w-full bg-[#D2B48C] text-black hover:bg-white rounded-full h-16 text-[11px] font-bold uppercase tracking-[0.3em] transition-all shadow-xl group disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     Confirm Order <ShieldCheck size={16} className="ml-4 text-black/50 group-hover:text-black" />
                                 </Button>

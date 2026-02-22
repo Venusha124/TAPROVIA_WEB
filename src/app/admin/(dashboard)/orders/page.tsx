@@ -2,6 +2,8 @@ import React from "react";
 import { getOrders } from "@/actions/orders";
 import { OrdersTable } from "@/components/admin/orders-table";
 
+export const dynamic = "force-dynamic";
+
 export default async function OrdersPage() {
     const orders = await getOrders();
 

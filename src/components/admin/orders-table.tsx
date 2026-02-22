@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { formatDate, formatCurrency } from "@/lib/utils";
-import { Search, Filter, CheckCircle, Clock, Package } from "lucide-react";
+import { Search, Filter, CheckCircle, Clock, Package, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { OrderDetailsDialog } from "@/components/admin/order-details-dialog";
 
 interface Order {
     id: string;
@@ -17,6 +18,7 @@ interface Order {
     total_price: number;
     status: string;
     payment_status: string;
+    items?: any[];
 }
 
 const TABS = ["All", "Pending", "Fulfillment", "Shipped", "Completed", "Cancelled"];
@@ -24,6 +26,10 @@ const TABS = ["All", "Pending", "Fulfillment", "Shipped", "Completed", "Cancelle
 export function OrdersTable({ initialOrders }: { initialOrders: any[] }) {
     const [activeTab, setActiveTab] = useState("All");
     const [searchQuery, setSearchQuery] = useState("");
+    const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const selectedOrder = initialOrders.find(o => o.id === selectedOrderId);
 
     const filteredOrders = initialOrders.filter((order) => {
         const matchesTab = activeTab === "All" || order.status === activeTab;
@@ -96,14 +102,18 @@ export function OrdersTable({ initialOrders }: { initialOrders: any[] }) {
                                 <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Customer</th>
                                 <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Total</th>
                                 <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Payment</th>
-                                <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40 text-right">Status</th>
+                                <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40 text-center">Status</th>
+                                <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
                             {filteredOrders.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="p-12 text-center text-white/20 text-sm">
-                                        No orders found in this category.
+                                    <td colSpan={7} className="p-12 text-center text-white/20 text-sm">
+                                        <div className="flex flex-col items-center gap-4">
+                                            <Package size={32} className="opacity-50" />
+                                            <span>No orders found. New orders will appear here.</span>
+                                        </div>
                                     </td>
                                 </tr>
                             ) : (
@@ -137,10 +147,21 @@ export function OrdersTable({ initialOrders }: { initialOrders: any[] }) {
                                                 {order.payment_status}
                                             </div>
                                         </td>
-                                        <td className="p-6 text-right">
+                                        <td className="p-6 text-center">
                                             <span className={cn("px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border", getStatusColor(order.status))}>
                                                 {order.status}
                                             </span>
+                                        </td>
+                                        <td className="p-6 text-right">
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedOrderId(order.id);
+                                                    setIsDialogOpen(true);
+                                                }}
+                                                className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white transition-colors"
+                                            >
+                                                <Eye size={18} />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
@@ -149,6 +170,12 @@ export function OrdersTable({ initialOrders }: { initialOrders: any[] }) {
                     </table>
                 </div>
             </div>
+
+            <OrderDetailsDialog
+                order={selectedOrder}
+                open={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+            />
         </div>
     );
 }

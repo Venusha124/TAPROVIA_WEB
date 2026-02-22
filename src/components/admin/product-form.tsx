@@ -36,7 +36,7 @@ export default function ProductForm({ initialData, isEdit = false }: ProductForm
                 setError(result.error);
                 setLoading(false);
             } else {
-                // Success redirect handled in server action, but fail-safe here
+                router.push("/admin/products");
                 router.refresh();
             }
         } catch (err: any) {
@@ -144,6 +144,60 @@ export default function ProductForm({ initialData, isEdit = false }: ProductForm
                             />
                         </div>
                     </div>
+
+
+
+                    {/* Product Details (Category, Grade, Origin, Features) */}
+                    <div className="bg-[#050505] border border-white/5 rounded-2xl p-6 space-y-4">
+                        <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2">Explore Details</h3>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] text-white/40 uppercase tracking-widest pl-1">Category</label>
+                            <select
+                                name="category"
+                                defaultValue={initialData?.category || "Sticks"}
+                                className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#D2B48C]/30 appearance-none cursor-pointer"
+                            >
+                                <option value="Sticks" className="bg-[#09090b]">Sticks</option>
+                                <option value="Oils" className="bg-[#09090b]">Oils</option>
+                                <option value="Powders" className="bg-[#09090b]">Powders</option>
+                                <option value="Bulk & Exports" className="bg-[#09090b]">Bulk & Exports</option>
+                            </select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-[10px] text-white/40 uppercase tracking-widest pl-1">Grade</label>
+                                <input
+                                    type="text"
+                                    name="grade"
+                                    defaultValue={initialData?.grade}
+                                    className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-3 text-white placeholder:text-white/10 focus:outline-none focus:border-[#D2B48C]/30 transition-colors"
+                                    placeholder="ALBA"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] text-white/40 uppercase tracking-widest pl-1">Origin</label>
+                                <input
+                                    type="text"
+                                    name="origin"
+                                    defaultValue={initialData?.origin}
+                                    className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-3 text-white placeholder:text-white/10 focus:outline-none focus:border-[#D2B48C]/30 transition-colors"
+                                    placeholder="Southern Sri Lanka"
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[10px] text-white/40 uppercase tracking-widest pl-1">Features (Comma separated)</label>
+                            <input
+                                type="text"
+                                name="features"
+                                defaultValue={initialData?.features?.join(", ")}
+                                className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-3 text-white placeholder:text-white/10 focus:outline-none focus:border-[#D2B48C]/30 transition-colors"
+                                placeholder="Ultra-Thin Quills, Hand-Peeled, Golden Hue"
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 {/* Sidebar */}
@@ -221,6 +275,6 @@ export default function ProductForm({ initialData, isEdit = false }: ProductForm
                     </div>
                 </div>
             </div>
-        </form>
+        </form >
     );
 }

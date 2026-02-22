@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle2, Truck, CreditCard, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createOrder } from "@/actions/orders";
+import { getCustomerUser } from "@/actions/customer-auth";
 import { toast } from "sonner";
 
 export default function CheckoutPage() {
@@ -21,6 +22,7 @@ export default function CheckoutPage() {
         firstName: "",
         lastName: "",
         email: "",
+        phone: "",
         address: "",
         city: "",
         postalCode: ""
@@ -79,6 +81,44 @@ export default function CheckoutPage() {
         }));
         setItems(validatedCart);
         setIsLoaded(true);
+
+        const fetchUser = async () => {
+            const user = await getCustomerUser();
+            if (user) {
+                let street = "";
+                let city = "";
+                let postalCode = "";
+                if (user.address) {
+                    let addr: any = user.address;
+                    if (typeof addr === 'string') {
+                        try { addr = JSON.parse(addr); } catch (e) { }
+                    }
+                    if (typeof addr === 'string') {
+                        try { addr = JSON.parse(addr); } catch (e) { }
+                    }
+
+                    if (typeof addr === 'object' && addr !== null) {
+                        street = addr.street || addr.fullAddress || "";
+                        city = addr.city || "";
+                        postalCode = addr.postalCode || "";
+                    } else {
+                        street = String(user.address || "");
+                    }
+                }
+                const nameParts = (user.full_name || "").split(" ");
+                setFormData(prev => ({
+                    ...prev,
+                    firstName: prev.firstName || nameParts[0] || "",
+                    lastName: prev.lastName || nameParts.slice(1).join(" ") || "",
+                    email: prev.email || user.email || "",
+                    phone: prev.phone || user.phone || "",
+                    address: prev.address || street,
+                    city: prev.city || city,
+                    postalCode: prev.postalCode || postalCode,
+                }));
+            }
+        };
+        fetchUser();
     }, []);
 
     const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
@@ -143,16 +183,29 @@ export default function CheckoutPage() {
                                         />
                                     </div>
                                 </div>
-                                <div className="space-y-4">
-                                    <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Email Address</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleInputChange}
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all"
-                                        placeholder="hello@taprovia.com"
-                                    />
+                                <div className="grid grid-cols-2 gap-8">
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Email Address</label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all"
+                                            placeholder="hello@taprovia.com"
+                                        />
+                                    </div>
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Mobile Number</label>
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            value={formData.phone}
+                                            onChange={handleInputChange}
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl h-14 px-6 text-white text-sm focus:border-[#D2B48C] outline-none transition-all"
+                                            placeholder="+94 77 XXXXXXX"
+                                        />
+                                    </div>
                                 </div>
                                 <div className="space-y-4">
                                     <label className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Street Address</label>

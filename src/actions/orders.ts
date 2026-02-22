@@ -228,3 +228,31 @@ export async function updateOrderStatus(orderId: string, status: string) {
     revalidatePath("/admin/orders");
     return { success: true };
 }
+
+export async function getCustomerOrders(customerId: string) {
+    const { data, error } = await supabase
+        .from("orders")
+        .select(`
+            id,
+            order_number,
+            created_at,
+            total_price,
+            status,
+            payment_status,
+            items:order_items(
+                id,
+                quantity,
+                price,
+                product:products(title, images)
+            )
+        `)
+        .eq("customer_id", customerId)
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Error fetching customer orders:", error);
+        return [];
+    }
+
+    return data;
+}

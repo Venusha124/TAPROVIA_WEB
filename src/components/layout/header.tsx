@@ -2,16 +2,33 @@
 
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
-import { ShoppingBag, User, Search, Menu } from "lucide-react"
+import { ShoppingBag, User, Search, Menu, LogOut, LayoutDashboard } from "lucide-react"
 import { motion, useScroll, useTransform } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { SearchOverlay } from "./search-overlay"
+import { getCustomerUser, logoutCustomer } from "@/actions/customer-auth"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export function Header() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [user, setUser] = useState<any>(null);
     const { scrollY } = useScroll();
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userData = await getCustomerUser();
+            setUser(userData);
+        };
+        fetchUser();
+    }, []);
 
     // Transform values for marquee collapse
     const marqueeHeight = useTransform(scrollY, [0, 50], ["auto", "0px"]);
@@ -88,11 +105,47 @@ export function Header() {
 
                             {/* Right: User & Cart */}
                             <div className="flex-1 flex justify-end items-center space-x-6">
-                                <Link href="/admin/login" className="hidden md:flex">
-                                    <Button variant="ghost" size="icon" className="hover:bg-white/5 text-white/40 hover:text-white transition-all">
-                                        <User className="h-5 w-5" />
-                                    </Button>
-                                </Link>
+                                <div className="hidden md:flex">
+                                    {user ? (
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" size="icon" className="hover:bg-white/5 text-white/40 hover:text-white transition-all outline-none">
+                                                    <User className="h-5 w-5" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end" className="w-48 bg-[#0A0A0A] border-white/10 text-white">
+                                                <div className="px-2 py-2 flex flex-col space-y-1">
+                                                    <p className="text-sm font-medium leading-none">{user.full_name}</p>
+                                                    <p className="text-xs text-white/50 leading-none truncate">{user.email}</p>
+                                                </div>
+                                                <DropdownMenuSeparator className="bg-white/10" />
+                                                <Link href="/account">
+                                                    <DropdownMenuItem className="cursor-pointer focus:bg-white/10 focus:text-white">
+                                                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                                                        <span>My Account</span>
+                                                    </DropdownMenuItem>
+                                                </Link>
+                                                <DropdownMenuSeparator className="bg-white/10" />
+                                                <DropdownMenuItem
+                                                    className="cursor-pointer text-red-400 focus:bg-red-400/10 focus:text-red-400 flex items-center"
+                                                    onClick={async () => {
+                                                        await logoutCustomer();
+                                                        window.location.href = '/login';
+                                                    }}
+                                                >
+                                                    <LogOut className="mr-2 h-4 w-4" />
+                                                    <span>Log out</span>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    ) : (
+                                        <Link href="/login">
+                                            <Button variant="ghost" size="icon" className="hover:bg-white/5 text-white/40 hover:text-white transition-all">
+                                                <User className="h-5 w-5" />
+                                            </Button>
+                                        </Link>
+                                    )}
+                                </div>
                                 <Link href="/cart">
                                     <Button variant="ghost" size="icon" className="relative hover:bg-white/5 text-white/40 hover:text-white transition-all">
                                         <ShoppingBag className="h-5 w-5" />

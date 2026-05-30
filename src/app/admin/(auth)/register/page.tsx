@@ -37,7 +37,7 @@ export default function AdminRegisterPage() {
                 <Shield size={120} />
             </div>
 
-            <h2 className="text-2xl font-serif text-white mb-6 text-center relative z-10">New Clearance (Custom)</h2>
+            <h2 className="text-2xl font-serif text-white mb-6 text-center relative z-10">New Clearance</h2>
 
             {error && (
                 <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-xs text-center relative z-10">

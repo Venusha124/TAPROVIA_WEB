@@ -1,8 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import { getProducts } from "@/actions/products";
-import { Plus, Search, Filter, MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { Plus, Search, Filter, MoreHorizontal, Edit } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import DeleteProductButton from "./delete-product-button";
 
 export default async function ProductsPage() {
     const products = await getProducts();
@@ -97,6 +98,7 @@ export default async function ProductsPage() {
                                                 >
                                                     <Edit size={16} />
                                                 </Link>
+                                                <DeleteProductButton id={product.id} />
                                             </div>
                                         </td>
                                     </tr>

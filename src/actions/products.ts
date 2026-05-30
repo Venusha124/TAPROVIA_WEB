@@ -56,6 +56,10 @@ export async function createProduct(formData: FormData) {
             sku,
             inventory_quantity: inventoryQuantity,
             images,
+            grade: formData.get("grade") as string,
+            origin: formData.get("origin") as string,
+            features: (formData.get("features") as string)?.split(",").map(f => f.trim()).filter(Boolean) || [],
+            category: formData.get("category") as string,
         },
     ]);
 
@@ -64,7 +68,8 @@ export async function createProduct(formData: FormData) {
     }
 
     revalidatePath("/admin/products");
-    redirect("/admin/products");
+    revalidatePath("/admin/products");
+    return { success: true };
 }
 
 // --- UPDATE PRODUCT ---
@@ -92,6 +97,10 @@ export async function updateProduct(id: string, formData: FormData) {
             sku,
             inventory_quantity: inventoryQuantity,
             images,
+            grade: formData.get("grade") as string,
+            origin: formData.get("origin") as string,
+            features: (formData.get("features") as string)?.split(",").map(f => f.trim()).filter(Boolean) || [],
+            category: formData.get("category") as string,
             updated_at: new Date().toISOString(),
         })
         .eq("id", id);
@@ -101,7 +110,8 @@ export async function updateProduct(id: string, formData: FormData) {
     }
 
     revalidatePath("/admin/products");
-    redirect("/admin/products");
+    revalidatePath("/admin/products");
+    return { success: true };
 }
 
 // --- DELETE PRODUCT ---

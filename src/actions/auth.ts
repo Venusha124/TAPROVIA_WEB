@@ -86,3 +86,21 @@ async function createSession(userId: string) {
         path: "/",
     });
 }
+
+// --- GET CURRENT USER ---
+export async function getAdminUser() {
+    const cookieStore = await cookies();
+    const userId = cookieStore.get("admin_session")?.value;
+
+    if (!userId) return null;
+
+    const { data: user, error } = await supabase
+        .from("admin_users")
+        .select("full_name, email")
+        .eq("id", userId)
+        .single();
+
+    if (error || !user) return null;
+
+    return user;
+}

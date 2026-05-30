@@ -5,7 +5,7 @@ import Image from "next/image";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Eye, Truck, User, MapPin, Package, CheckCircle } from "lucide-react";
+import { Eye, Truck, User, MapPin, Package, CheckCircle, Printer } from "lucide-react";
 import { updateOrderStatus } from "@/actions/orders";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -50,20 +50,33 @@ export function OrderDetailsDialog({ order, open, onOpenChange }: OrderDetailsDi
         }
     };
 
+    const handlePrintInvoice = () => {
+        window.open(`/admin/invoice/${order.id}`, '_blank');
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="bg-[#0A0A0A] border border-white/10 text-[#F3EFE9] max-w-5xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <div className="flex justify-between items-center mr-8">
+                    <div className="flex justify-between items-start mr-8">
                         <div>
                             <DialogTitle className="text-2xl font-serif text-white mb-2">Order {order.order_number}</DialogTitle>
                             <p className="text-white/40 text-sm flex items-center gap-2">
                                 <ClockIcon className="w-3 h-3" /> {formatDate(order.created_at)}
                             </p>
                         </div>
-                        <div className="text-right">
-                            <span className="text-3xl font-serif text-[#D2B48C] italic">{formatCurrency(order.total_price)}</span>
-                            <div className="text-[10px] uppercase tracking-widest text-white/40 font-bold mt-1">{order.payment_status}</div>
+                        <div className="flex flex-col items-end gap-3">
+                            <div className="text-right">
+                                <span className="text-3xl font-serif text-[#D2B48C] italic">{formatCurrency(order.total_price)}</span>
+                                <div className="text-[10px] uppercase tracking-widest text-white/40 font-bold mt-1">{order.payment_status}</div>
+                            </div>
+                            <Button
+                                onClick={handlePrintInvoice}
+                                variant="outline"
+                                className="border-[#D2B48C]/30 text-[#D2B48C] hover:bg-[#D2B48C]/10 bg-transparent h-8 px-4 text-[10px] font-bold uppercase tracking-wider h-auto py-2"
+                            >
+                                <Printer size={14} className="mr-2" /> Print Invoice
+                            </Button>
                         </div>
                     </div>
                 </DialogHeader>

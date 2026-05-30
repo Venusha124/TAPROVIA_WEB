@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RotatingBackground } from "@/components/layout/RotatingBackground";
+import { getProducts } from "@/actions/products";
 
 const fallbackProducts = [
     {
@@ -244,7 +245,7 @@ export default function ProductsPage() {
         const fetchProducts = async () => {
             const fetched = await getProducts();
             if (fetched && fetched.length > 0) {
-                const mapped = fetched.map(p => ({
+                const mapped = fetched.map((p: any) => ({
                     id: p.id,
                     name: p.title || "Premium Cinnamon",
                     badge: p.status === 'active' ? 'Available' : 'Premium',
@@ -424,7 +425,7 @@ export default function ProductsPage() {
                                 </motion.div>
                                 <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black via-black/40 to-transparent">
                                     <div className="flex flex-wrap gap-3">
-                                        {selectedProduct.features.map((feat, i) => (
+                                        {selectedProduct.features.map((feat: any, i: number) => (
                                             <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
                                                 <CheckCircle2 size={10} className="text-[#D2B48C]" />
                                                 <span className="text-[9px] font-bold text-white uppercase tracking-widest">{feat}</span>
@@ -637,22 +638,11 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                     </button>
                 </div>
 
-                {/* Content Labels (Bottom Aligned for both Mobile and Desktop) */}
-                <div className="absolute inset-x-8 md:inset-x-12 bottom-12 z-10 pointer-events-none">
-                    <div className="flex items-center gap-4 mb-2 md:mb-4">
-                        <span className="w-8 h-px bg-[#D2B48C]/50" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#D2B48C]">
-                            {product.grade}
-                        </span>
-                    </div>
-                    {/* Cinematic Title styling */}
-                    <h3 className="text-4xl md:text-5xl font-serif font-light text-white leading-[1.1] md:leading-normal transition-transform duration-700 md:group-hover:translate-x-4">
-                        {product.name.split(' ').slice(0, -1).join(' ')} <br className="md:hidden" />
-                        <span className="italic text-white/40">{product.name.split(' ').slice(-1)}</span>
-                    </h3>
-
                 {/* Centered Actions Overlay (Visible on Desktop Hover) */}
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 hidden md:flex flex-col items-center justify-center gap-6 z-20 px-8">
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-[4px] opacity-0 group-hover:opacity-100 transition-all duration-500 hidden md:flex flex-col items-center justify-center gap-6 z-20 px-8">
+                    <h3 className="text-3xl font-serif font-light text-white text-center translate-y-4 group-hover:translate-y-0 transition-all duration-500 max-w-[80%]">
+                        {product.name}
+                    </h3>
                     <Button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -671,6 +661,20 @@ function GalleryItem({ product, index, isFavorite, onToggleFavorite, onSelect }:
                     >
                         <Info size={16} /> <span className="pt-0.5">Examine Detail</span>
                     </button>
+                </div>
+
+                {/* Content Labels (Bottom Aligned for both Mobile and Desktop) */}
+                <div className="absolute inset-x-8 md:inset-x-12 bottom-12 z-10 pointer-events-none transition-opacity duration-500 md:group-hover:opacity-0">
+                    <div className="flex items-center gap-4 mb-2 md:mb-4">
+                        <span className="w-8 h-px bg-[#D2B48C]/50" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#D2B48C]">
+                            {product.grade}
+                        </span>
+                    </div>
+                    {/* Cinematic Title styling */}
+                    <h3 className="text-3xl md:text-4xl font-serif font-light text-white leading-[1.1] md:leading-normal transition-transform duration-700 md:group-hover:translate-x-4">
+                        {product.name}
+                    </h3>
                 </div>
             </div>
         </motion.div>

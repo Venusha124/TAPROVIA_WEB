@@ -2,18 +2,27 @@
 
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
-import { ShoppingBag, User, Search, Menu, X } from "lucide-react"
+import { ShoppingBag, User, Search, Menu, X, LayoutDashboard, LogOut } from "lucide-react"
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { SearchOverlay } from "./search-overlay"
 import { useCart } from "@/providers/cart-provider"
+import { getCustomerUser, logoutCustomer } from "@/actions/customer-auth"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export function Header() {
     const { cartCount } = useCart();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [user, setUser] = useState<any>(null);
     const { scrollY } = useScroll();
 
     useEffect(() => {

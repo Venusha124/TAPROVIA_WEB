@@ -40,6 +40,7 @@ export async function getRecentOrders(limit: number = 3) {
                 product:products(title, images)
             )
         `)
+        .eq("status", "Pending")
         .order("created_at", { ascending: false })
         .limit(limit);
 
@@ -52,10 +53,11 @@ export async function getRecentOrders(limit: number = 3) {
 }
 
 export async function getDashboardStats() {
-    // 1. Total Revenue (Sum of all orders)
+    // 1. Total Revenue (Sum of all orders NOT Cancelled)
     const { data: revenueData, error: revenueError } = await supabase
         .from("orders")
-        .select("total_price");
+        .select("total_price")
+        .neq("status", "Cancelled");
 
     let totalRevenue = 0;
     if (!revenueError && revenueData) {

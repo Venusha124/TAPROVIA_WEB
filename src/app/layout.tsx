@@ -4,6 +4,9 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { AnalyticsTracker } from "@/components/analytics-tracker";
 import { CartProvider } from "@/providers/cart-provider";
+import { StickyQuoteBar } from "@/components/layout/StickyQuoteBar";
+import { NewsletterBanner } from "@/components/ui/NewsletterBanner";
+import { CustomCursor } from "@/components/ui/CustomCursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -55,7 +58,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-[#050505] text-[#F3EFE9]`}
       >
         <CartProvider>
+          <CustomCursor />
           {children}
+          <StickyQuoteBar />
+          <NewsletterBanner />
           <AnalyticsTracker />
           <Toaster position="top-center" />
         </CartProvider>

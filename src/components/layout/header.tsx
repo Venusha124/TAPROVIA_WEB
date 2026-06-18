@@ -1,252 +1,138 @@
 "use client";
 
-import React, { useState, useEffect } from "react"
-import Link from "next/link"
-import { ShoppingBag, User, Search, Menu, X, LayoutDashboard, LogOut } from "lucide-react"
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X, ShoppingCart, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
-import { SearchOverlay } from "./search-overlay"
-import { useCart } from "@/providers/cart-provider"
-import { getCustomerUser, logoutCustomer } from "@/actions/customer-auth"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "Products", href: "/products" },
+    { label: "Gallery", href: "/gallery" },
+    { label: "Our Story", href: "/about" },
+    { label: "About Us", href: "/about-us" },
+    { label: "Contact", href: "/contact" }
+];
 
 export function Header() {
-    const { cartCount } = useCart();
-    const [isSearchOpen, setIsSearchOpen] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [user, setUser] = useState<any>(null);
-    const { scrollY } = useScroll();
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
-        const fetchUser = async () => {
-            const userData = await getCustomerUser();
-            setUser(userData);
-        };
-        fetchUser();
+        const handleScroll = () => setIsScrolled(window.scrollY > 20);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // Transform values for marquee collapse
-    const marqueeHeight = useTransform(scrollY, [0, 50], ["auto", "0px"]);
-    const marqueeOpacity = useTransform(scrollY, [0, 30], [1, 0]);
-    const headerBackground = useTransform(
-        scrollY,
-        [0, 100],
-        ["rgba(0,0,0,0.4)", "rgba(5,5,5,0.8)"]
-    );
-    const headerBorder = useTransform(
-        scrollY,
-        [0, 100],
-        ["rgba(255,255,255,0.05)", "rgba(210,180,140,0.1)"] // Goldish hint on scroll
-    );
-
-    const navLinks = [
-        { name: "Home", href: "/" },
-        { name: "Our Products", href: "/products" },
-        { name: "Explore Products", href: "/explore" },
-        { name: "Stories", href: "/stories" },
-        { name: "Gallery", href: "/gallery" },
-        { name: "About Us", href: "/about" },
-        { name: "Contact Us", href: "/contact" }
-    ];
+    // Close mobile menu on route change
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [pathname]);
 
     return (
-        <>
-            <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-
-            {/* Cinematic Mobile Menu Overlay */}
-            <AnimatePresence>
-                {isMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[1000] bg-black/98 backdrop-blur-3xl flex flex-col p-8 md:hidden"
-                    >
-                        <div className="flex justify-between items-center mb-24">
-                            <span className="font-serif text-3xl font-light tracking-[-0.05em] text-white">
-                                TAPRO<span className="text-[#D2B48C] italic">VIA</span>
-                            </span>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setIsMenuOpen(false)}
-                                className="text-white/40 hover:text-white bg-white/5 rounded-full w-14 h-14"
-                            >
-                                <X className="h-8 w-8" />
-                            </Button>
+        <header
+            className={cn(
+                "fixed inset-x-4 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-6xl xl:max-w-7xl z-[100] transition-all duration-500 rounded-full border",
+                isScrolled 
+                    ? "top-4 bg-white/70 backdrop-blur-md shadow-xl border-white/30 py-2" 
+                    : "top-6 bg-white/95 backdrop-blur-sm shadow-sm border-gray-100 py-3"
+            )}
+        >
+            <div className="container mx-auto px-4 md:px-8">
+                <div className="flex items-center justify-between">
+                    
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center gap-2">
+                        <div className="relative w-8 h-8 md:w-10 md:h-10">
+                            <Image 
+                                src="/logo.png" 
+                                alt="Taprovia Logo" 
+                                fill 
+                                className="object-contain"
+                            />
                         </div>
+                        <span className="font-serif font-bold text-xl md:text-2xl text-gray-900 tracking-tight">TAPROVIA</span>
+                    </Link>
 
-                        <nav className="flex flex-col space-y-10">
-                            {navLinks.map((link, i) => (
-                                <motion.div
-                                    key={link.name}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: i * 0.1, duration: 0.8 }}
-                                >
-                                    <Link
-                                        href={link.href}
-                                        onClick={() => setIsMenuOpen(false)}
-                                        className="text-4xl font-serif font-light text-white/40 hover:text-[#D2B48C] transition-all italic active:text-[#D2B48C]"
-                                    >
-                                        {link.name}
-                                    </Link>
-                                </motion.div>
-                            ))}
-                        </nav>
-
-                        <div className="mt-auto pt-12 border-t border-white/5">
-                            <span className="text-[10px] font-bold tracking-[0.5em] uppercase text-[#D2B48C] mb-6 block">Registry Desk</span>
-                            <div className="space-y-2">
-                                <p className="text-white/40 text-sm font-light italic">exports@taprovia.com</p>
-                                <p className="text-white/20 text-[10px] font-bold tracking-widest uppercase mt-4">Matara Highlands, Sri Lanka</p>
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <motion.div
-                className="fixed top-0 left-0 right-0 z-[100] flex flex-col"
-            >
-                {/* Sovereign Top Bar - Collapsible */}
-                <motion.div
-                    style={{ height: marqueeHeight, opacity: marqueeOpacity }}
-                    className="bg-[#D2B48C] text-black text-[9px] font-bold tracking-[0.4em] uppercase overflow-hidden"
-                >
-                    <div className="py-2 px-4 flex">
-                        <div className="flex animate-marquee whitespace-nowrap">
-                            <span className="mx-8">EST. 1924 | THE BENCHMARK OF CEYLON</span>
-                            <span className="mx-8">•</span>
-                            <span className="mx-8">GLOBAL LOGISTICS OPTIMIZED</span>
-                            <span className="mx-8">•</span>
-                            <span className="mx-8">SOVEREIGN PURITY GUARANTEED</span>
-                            <span className="mx-8">•</span>
-                            <span className="mx-8">CURATED ARCHIVE OF RARE GRADES</span>
-                            <span className="mx-8">•</span>
-                        </div>
-                    </div>
-                </motion.div>
-
-                <motion.header
-                    style={{ backgroundColor: headerBackground, borderColor: headerBorder }}
-                    className="w-full backdrop-blur-3xl border-b transition-colors duration-500"
-                >
-                    <div className="container relative flex flex-col py-4 md:py-6 px-4">
-                        <div className="flex items-center justify-between w-full mb-4 md:mb-6">
-                            {/* Left: Search */}
-                            <div className="flex-1 flex justify-start hidden md:flex">
-                                <Button
-                                    onClick={() => setIsSearchOpen(true)}
-                                    variant="ghost"
-                                    size="icon"
-                                    className="hover:bg-white/5 text-white/40 hover:text-white transition-all"
-                                >
-                                    <Search className="h-5 w-5" />
-                                </Button>
-                            </div>
-
-                            <div className="md:hidden">
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setIsMenuOpen(true)}
-                                    className="text-white hover:bg-white/5 active:scale-95 transition-all"
-                                >
-                                    <Menu className="h-6 w-6" />
-                                </Button>
-                            </div>
-
-                            {/* Center: Logo */}
-                            <div className="flex-0 flex flex-col items-center">
-                                <Link href="/" className="flex flex-col items-center">
-                                    <span className="font-serif text-3xl md:text-4xl font-light tracking-[-0.05em] text-white">
-                                        TAPRO<span className="text-[#D2B48C] italic">VIA</span>
-                                    </span>
-                                    <span className="text-[6px] md:text-[8px] font-bold tracking-[1em] text-white/20 uppercase mt-2 hidden md:block">Sovereign Collection</span>
-                                </Link>
-                            </div>
-
-                            {/* Right: User & Cart */}
-                            <div className="flex-1 flex justify-end items-center space-x-6">
-                                <div className="hidden md:flex">
-                                    {user ? (
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="hover:bg-white/5 text-white/40 hover:text-white transition-all outline-none">
-                                                    <User className="h-5 w-5" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end" className="w-48 bg-[#0A0A0A] border-white/10 text-white">
-                                                <div className="px-2 py-2 flex flex-col space-y-1">
-                                                    <p className="text-sm font-medium leading-none">{user.full_name}</p>
-                                                    <p className="text-xs text-white/50 leading-none truncate">{user.email}</p>
-                                                </div>
-                                                <DropdownMenuSeparator className="bg-white/10" />
-                                                <Link href="/account">
-                                                    <DropdownMenuItem className="cursor-pointer focus:bg-white/10 focus:text-white">
-                                                        <LayoutDashboard className="mr-2 h-4 w-4" />
-                                                        <span>My Account</span>
-                                                    </DropdownMenuItem>
-                                                </Link>
-                                                <DropdownMenuSeparator className="bg-white/10" />
-                                                <DropdownMenuItem
-                                                    className="cursor-pointer text-red-400 focus:bg-red-400/10 focus:text-red-400 flex items-center"
-                                                    onClick={async () => {
-                                                        await logoutCustomer();
-                                                        window.location.href = '/login';
-                                                    }}
-                                                >
-                                                    <LogOut className="mr-2 h-4 w-4" />
-                                                    <span>Log out</span>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    ) : (
-                                        <Link href="/login">
-                                            <Button variant="ghost" size="icon" className="hover:bg-white/5 text-white/40 hover:text-white transition-all">
-                                                <User className="h-5 w-5" />
-                                            </Button>
-                                        </Link>
-                                    )}
-                                </div>
-                                <Link href="/cart">
-                                    <Button variant="ghost" size="icon" className="relative hover:bg-white/5 text-white/40 hover:text-white transition-all">
-                                        <ShoppingBag className="h-5 w-5" />
-                                        {cartCount > 0 && (
-                                            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#D2B48C] text-black text-[10px] font-bold flex items-center justify-center rounded-full px-1">
-                                                {cartCount}
-                                            </span>
-                                        )}
-                                    </Button>
-                                </Link>
-                            </div>
-                        </div>
-
-                        {/* BOTTOM ROW: Navigation */}
-                        <nav className="hidden md:flex items-center justify-center space-x-8 lg:space-x-12">
-                            {navLinks.map((link) => (
+                    {/* Desktop Navigation */}
+                    <nav className="hidden lg:flex items-center gap-4 xl:gap-8">
+                        {navLinks.map((link) => {
+                            const isActive = pathname === link.href;
+                            return (
                                 <Link
-                                    key={link.name}
+                                    key={link.href}
                                     href={link.href}
-                                    className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/30 hover:text-[#D2B48C] transition-all relative group whitespace-nowrap"
+                                    className={cn(
+                                        "text-[11px] xl:text-xs font-bold uppercase tracking-widest transition-colors hover:text-[#D2B48C]",
+                                        isActive ? "text-[#D2B48C]" : "text-gray-600"
+                                    )}
                                 >
-                                    {link.name}
-                                    <span className="absolute -bottom-2 left-0 w-0 h-px bg-[#D2B48C] transition-all group-hover:w-full" />
+                                    {link.label}
                                 </Link>
-                            ))}
-                        </nav>
+                            );
+                        })}
+                    </nav>
+
+                    {/* Desktop Actions */}
+                    <div className="hidden lg:flex items-center gap-4">
+                        <Link href="/contact" className="p-2 text-gray-600 hover:text-[#D2B48C] transition-colors">
+                            <User size={20} />
+                        </Link>
+                        <Link href="/contact">
+                            <Button className="bg-[#D2B48C] hover:bg-[#b09673] text-white rounded-full px-6 uppercase text-xs tracking-widest font-bold">
+                                Get a Quote
+                            </Button>
+                        </Link>
                     </div>
-                </motion.header>
-            </motion.div>
-        </>
-    )
+
+                    {/* Mobile Menu Toggle */}
+                    <button
+                        className="lg:hidden p-2 text-gray-600"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    >
+                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
+                </div>
+            </div>
+
+            {/* Mobile Navigation Dropdown */}
+            {isMobileMenuOpen && (
+                <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg py-4 rounded-b-3xl">
+                    <nav className="flex flex-col container mx-auto px-4 gap-4">
+                        {navLinks.map((link) => {
+                            const isActive = pathname === link.href;
+                            return (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className={cn(
+                                        "py-2 text-sm font-bold uppercase tracking-widest transition-colors",
+                                        isActive ? "text-[#D2B48C]" : "text-gray-600"
+                                    )}
+                                >
+                                    {link.label}
+                                </Link>
+                            );
+                        })}
+                        <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-gray-100">
+                            <Link href="/contact">
+                                <Button variant="outline" className="w-full uppercase text-xs tracking-widest font-bold text-gray-600">
+                                    <User size={16} className="mr-2" /> Login
+                                </Button>
+                            </Link>
+                            <Link href="/contact">
+                                <Button className="w-full bg-[#D2B48C] hover:bg-[#b09673] text-white uppercase text-xs tracking-widest font-bold">
+                                    Get a Quote
+                                </Button>
+                            </Link>
+                        </div>
+                    </nav>
+                </div>
+            )}
+        </header>
+    );
 }
